@@ -124,7 +124,7 @@ dat |>
 ```{r}
 dat |>
   ggplot(aes(x = frequency, y = docfreq)) +
-  geom_point() +
+  geom_jitter() +
   gghighlight::gghighlight(
     frequency > 100 & docfreq < 60
   ) +
@@ -139,6 +139,8 @@ dat |>
 ## 関連語検索（A.5.6）
 
 ## 対応分析（A.5.7）
+
+### バイプロット
 
 段落（`doc_id`）内の頻度で語彙を削ってから部（`section`）ごとに集計するために、ややめんどうなことをしている。
 
@@ -159,7 +161,12 @@ dfm <-
   dplyr::count(doc_id, token) |>
   dplyr::collect() |>
   tidytext::cast_dfm(doc_id, token, n) |>
-  quanteda::dfm_trim(min_termfreq = 75, termfreq_type = "rank")
+  quanteda::dfm_trim(
+    min_termfreq = 75,
+    termfreq_type = "rank",
+    min_docfreq = 20,
+    docfreq_type = "count"
+  )
 ```
 
 こうして`doc_id`ごとに集計した`dfm`オブジェクトを一度`tidytext::tidy()`して3つ組のデータフレームに戻し、`section`のラベルを結合する。このデータフレームをもう一度`tidytext::cast_dfm()`で疎行列に変換して、`quanteda.textmodels::textmodel_ca()`を使って対応分析にかける。
@@ -182,6 +189,8 @@ dat <- plot(ca_fit)
 ```
 
 caパッケージを読み込んでいると`plot()`でバイプロットを描ける。`factoextra::fviz_ca_biplot()`でも描けるが、見た目は`plot()`のとあまり変わらない。
+
+### バイプロット（バブルプロット）
 
 ggplot2でバイプロットを描画するには、たとえば次のようにする。`ggrepel::geom_text_repel`でラベルを出す語彙の選択の仕方はもうすこし工夫したほうがよいかもしれない。
 
@@ -256,9 +265,66 @@ dat |>
   theme_classic()
 ```
 
-## 多次元尺度構成法（MDS）
+## 多次元尺度構成法（A.5.8）
+
+### 2次元・バブルプロット
+
+`MASS::isoMDS`より`MASS::sammon`のほうがたぶん見やすい。
+
+```{r}
+simil <- dfm |>
+  quanteda::dfm_weight(scheme = "boolean") |>
+  proxyC::simil(margin = 2, method = "jaccard")
+
+dat <- MASS::sammon(1 - simil, k = 2) |>
+  purrr::pluck("points")
+```
+
+```{r}
+dat <- dat |>
+  as.data.frame() |>
+  tibble::rownames_to_column("label") |>
+  dplyr::rename(Dim1 = V1, Dim2 = V2) |>
+  dplyr::mutate(
+    size = tf[label],
+    clust = (hclust(
+      proxyC::dist(dat, method = "euclidean") |> as.dist(),
+      method = "ward.D2"
+    ) |> cutree(k = 8))[label]
+  )
+
+dat |>
+  ggplot(aes(x = Dim1, y = Dim2, label = label, col = factor(clust))) +
+  geom_point(aes(size = size), alpha = .3, show.legend = FALSE) +
+  ggrepel::geom_text_repel(show.legend = FALSE) +
+  scale_size_area(max_size = 16) +
+  theme_classic()
+```
+
+### 3次元プロット
+
+rglではなくplotlyで試してみたが、とくに見やすいということはなかったかもしれない。
+
+```{r}
+dat <- MASS::sammon(1 - simil, k = 3) |>
+  purrr::pluck("points") |>
+  as.data.frame() |>
+  tibble::rownames_to_column("label") |>
+  dplyr::rename(Dim1 = V1, Dim2 = V2, Dim3 = V3) |>
+  dplyr::mutate(term_freq = tf[label])
+```
+
+```{r}
+dat |>
+  plotly::plot_ly(x = ~Dim1, y = ~Dim2, z = ~Dim3, text = ~label, color = ~term_freq) |>
+  plotly::add_markers(opacity = .5)
+```
 
 ## 階層的クラスタリング
+
+> デンドログラムのaxisの外に棒グラフを描く処理は[このへん](https://github.com/ko-ichi-h/khcoder/blob/9fac68b9987c4c06f9b275f3d790429ad5658ae5/kh_lib/gui_window/word_cls.pm#L819)と思われる
+>
+> 透過したグラフを絶対位置で重ねるみたいな処理のよう
 
 ## 共起ネットワーク
 

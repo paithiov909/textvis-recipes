@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.4.550">
+<meta name="generator" content="quarto-1.3.450">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -23,7 +23,7 @@ ul.task-list li input[type="checkbox"] {
 }
 /* CSS for syntax highlighting */
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -67,6 +67,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <meta name="quarto:offset" content="./">
 <link href="./references.html" rel="next">
 <link href="./preprocessing.html" rel="prev">
+<link href="./favicon.ico" rel="icon">
 <script src="site_libs/quarto-html/quarto.js"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
@@ -82,13 +83,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   "collapse-after": 3,
   "panel-placement": "start",
   "type": "textbox",
-  "limit": 50,
-  "keyboard-shortcut": [
-    "f",
-    "/",
-    "s"
-  ],
-  "show-item-context": false,
+  "limit": 20,
   "language": {
     "search-no-results-text": "No results",
     "search-matching-documents-text": "matching documents",
@@ -97,12 +92,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-more-match-text": "more match in this document",
     "search-more-matches-text": "more matches in this document",
     "search-clear-button-title": "Clear",
-    "search-text-placeholder": "",
     "search-detached-cancel-button-title": "Cancel",
     "search-submit-button-title": "Submit",
     "search-label": "Search"
   }
 }</script>
+
 <script src="site_libs/core-js-2.5.3/shim.min.js"></script>
 <script src="site_libs/react-18.2.0/react.min.js"></script>
 <script src="site_libs/react-18.2.0/react-dom.min.js"></script>
@@ -110,21 +105,28 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/htmlwidgets-1.6.4/htmlwidgets.js"></script>
 <link href="site_libs/reactable-0.4.4/reactable.css" rel="stylesheet">
 <script src="site_libs/reactable-binding-0.4.4/reactable.js"></script>
+<script src="site_libs/plotly-binding-4.10.4/plotly.js"></script>
+<script src="site_libs/typedarray-0.1/typedarray.min.js"></script>
+<script src="site_libs/jquery-3.5.1/jquery.min.js"></script>
+<link href="site_libs/crosstalk-1.2.1/css/crosstalk.min.css" rel="stylesheet">
+<script src="site_libs/crosstalk-1.2.1/js/crosstalk.min.js"></script>
+<link href="site_libs/plotly-htmlwidgets-css-2.11.1/plotly-htmlwidgets.css" rel="stylesheet">
+<script src="site_libs/plotly-main-2.11.1/plotly-latest.min.js"></script>
 
 
 <meta property="og:title" content="Cookbook to Draw KHCoder-like Visualizations Using R - 2&nbsp; 抽出語メニュー">
 <meta property="og:description" content="RによるKH Coder風の可視化のレシピ集">
-<meta property="og:image" content="https://paithiov909.github.io/textvis-recipes/cover.png">
-<meta property="og:site_name" content="Cookbook to Draw KHCoder-like Visualizations Using R">
+<meta property="og:image" content="https://paithiov909.github.io/textvis-recipes/plot-words_files/figure-html/unnamed-chunk-4-1.png">
+<meta property="og:site-name" content="Cookbook to Draw KHCoder-like Visualizations Using R">
 <meta property="og:locale" content="ja">
-<meta property="og:image:height" content="1185">
-<meta property="og:image:width" content="1196">
+<meta property="og:image:height" content="960">
+<meta property="og:image:width" content="1344">
 <meta name="twitter:title" content="Cookbook to Draw KHCoder-like Visualizations Using R - 2&nbsp; 抽出語メニュー">
 <meta name="twitter:description" content="RによるKH Coder風の可視化のレシピ集">
-<meta name="twitter:image" content="https://paithiov909.github.io/textvis-recipes/cover.png">
+<meta name="twitter:image" content="https://paithiov909.github.io/textvis-recipes/plot-words_files/figure-html/unnamed-chunk-4-1.png">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image-height" content="1185">
-<meta name="twitter:image-width" content="1196">
+<meta name="twitter:image-height" content="960">
+<meta name="twitter:image-width" content="1344">
 </head>
 
 <body class="nav-sidebar floating">
@@ -133,12 +135,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <header id="quarto-header" class="headroom fixed-top">
   <nav class="quarto-secondary-nav">
     <div class="container-fluid d-flex">
-      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./plot-words.html"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">抽出語メニュー</span></a></li></ol></nav>
-        <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
-        </a>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./plot-words.html"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">抽出語メニュー</span></a></li></ol></nav>
+      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+      </a>
       <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
         <i class="bi bi-search"></i>
       </button>
@@ -148,12 +150,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <!-- content -->
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
-  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation floating overflow-auto">
     <div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
       <a href="./">Cookbook to Draw KHCoder-like Visualizations Using R</a> 
         <div class="sidebar-tools-main">
-    <a href="https://github.com/paithiov909/textvis-recipes" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+    <a href="https://github.com/paithiov909/textvis-recipes" rel="" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
 </div>
     </div>
       </div>
@@ -191,7 +193,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     </ul>
     </div>
 </nav>
-<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
         <nav id="TOC" role="doc-toc" class="toc-active">
@@ -208,8 +210,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#出現回数文書数のプロットa.5.4" id="toc-出現回数文書数のプロットa.5.4" class="nav-link" data-scroll-target="#出現回数文書数のプロットa.5.4"><span class="header-section-number">2.4</span> 出現回数・文書数のプロット（A.5.4）</a></li>
   <li><a href="#kwica.5.5" id="toc-kwica.5.5" class="nav-link" data-scroll-target="#kwica.5.5"><span class="header-section-number">2.5</span> KWIC（A.5.5）</a></li>
   <li><a href="#関連語検索a.5.6" id="toc-関連語検索a.5.6" class="nav-link" data-scroll-target="#関連語検索a.5.6"><span class="header-section-number">2.6</span> 関連語検索（A.5.6）</a></li>
-  <li><a href="#対応分析a.5.7" id="toc-対応分析a.5.7" class="nav-link" data-scroll-target="#対応分析a.5.7"><span class="header-section-number">2.7</span> 対応分析（A.5.7）</a></li>
-  <li><a href="#多次元尺度構成法mds" id="toc-多次元尺度構成法mds" class="nav-link" data-scroll-target="#多次元尺度構成法mds"><span class="header-section-number">2.8</span> 多次元尺度構成法（MDS）</a></li>
+  <li><a href="#対応分析a.5.7" id="toc-対応分析a.5.7" class="nav-link" data-scroll-target="#対応分析a.5.7"><span class="header-section-number">2.7</span> 対応分析（A.5.7）</a>
+  <ul class="collapse">
+  <li><a href="#バイプロット" id="toc-バイプロット" class="nav-link" data-scroll-target="#バイプロット"><span class="header-section-number">2.7.1</span> バイプロット</a></li>
+  <li><a href="#バイプロットバブルプロット" id="toc-バイプロットバブルプロット" class="nav-link" data-scroll-target="#バイプロットバブルプロット"><span class="header-section-number">2.7.2</span> バイプロット（バブルプロット）</a></li>
+  </ul></li>
+  <li><a href="#多次元尺度構成法a.5.8" id="toc-多次元尺度構成法a.5.8" class="nav-link" data-scroll-target="#多次元尺度構成法a.5.8"><span class="header-section-number">2.8</span> 多次元尺度構成法（A.5.8）</a>
+  <ul class="collapse">
+  <li><a href="#次元バブルプロット" id="toc-次元バブルプロット" class="nav-link" data-scroll-target="#次元バブルプロット"><span class="header-section-number">2.8.1</span> 2次元・バブルプロット</a></li>
+  <li><a href="#次元プロット" id="toc-次元プロット" class="nav-link" data-scroll-target="#次元プロット"><span class="header-section-number">2.8.2</span> 3次元プロット</a></li>
+  </ul></li>
   <li><a href="#階層的クラスタリング" id="toc-階層的クラスタリング" class="nav-link" data-scroll-target="#階層的クラスタリング"><span class="header-section-number">2.9</span> 階層的クラスタリング</a></li>
   <li><a href="#共起ネットワーク" id="toc-共起ネットワーク" class="nav-link" data-scroll-target="#共起ネットワーク"><span class="header-section-number">2.10</span> 共起ネットワーク</a></li>
   <li><a href="#自己組織化マップsom" id="toc-自己組織化マップsom" class="nav-link" data-scroll-target="#自己組織化マップsom"><span class="header-section-number">2.11</span> 自己組織化マップ（SOM）</a></li>
@@ -234,12 +244,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </div>
   
 
-
 </header>
 
-
 <div class="cell">
-<details class="code-fold">
+<details>
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">suppressPackageStartupMessages</span>({</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">library</span>(ggplot2)</span>
@@ -267,7 +275,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 data-number="2.1" class="anchored" data-anchor-id="抽出語リストa.5.1"><span class="header-section-number">2.1</span> 抽出語リスト（A.5.1）</h2>
 <p>活用語をクリックするとそれぞれの活用の出現頻度も見れるUIは、Rだとどうすれば実現できるかわからない。</p>
 <div class="cell">
-<details class="code-fold">
+<details>
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> dplyr<span class="sc">::</span><span class="fu">tbl</span>(con, <span class="st">"tokens"</span>) <span class="sc">|&gt;</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">filter</span>(</span>
@@ -286,8 +294,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
-<div class="reactable html-widget html-fill-item" id="htmlwidget-d513b0bdde1063450109" style="width:auto;height:auto;"></div>
-<script type="application/json" data-for="htmlwidget-d513b0bdde1063450109">{"x":{"tag":{"name":"Reactable","attribs":{"data":{"token":["考え","聞い","人","先生","前","出","顔","言葉","母","思っ","心","お嬢さん","K","眼","今","見","二人","妻","自分","奥さん","父"],"pos":["動詞","動詞","名詞C","名詞","副詞可能","動詞","名詞C","名詞","名詞C","動詞","名詞C","名詞","未知語","名詞C","副詞可能","動詞","タグ","名詞C","名詞","名詞","名詞C"],"n":[107,110,176,595,169,140,130,127,170,109,103,168,411,123,140,157,115,105,264,388,269]},"columns":[{"id":"token","name":"token","type":"character","cell":["考え","聞い","人","先生","前","出","顔","言葉","母","思っ","心","お嬢さん","K","眼","今","見","二人","妻","自分","奥さん","父"]},{"id":"pos","name":"pos","type":"character","cell":["動詞","動詞","名詞C","名詞","副詞可能","動詞","名詞C","名詞","名詞C","動詞","名詞C","名詞","未知語","名詞C","副詞可能","動詞","タグ","名詞C","名詞","名詞","名詞C"]},{"id":"n","name":"n","type":"numeric","cell":[{"name":"div","attribs":{},"children":[{"name":"div","attribs":{"style":{"flexGrow":1,"borderTopLeftRadius":"0px","borderBottomLeftRadius":"0px","borderTopRightRadius":"0px","borderBottomRightRadius":"0px","background":"#EEEEEE"}},"children":[{"name":"div","attribs":{"style":{"display":"flex","alignItems":"center"}},"children":[{"name":"div","attribs":{"style":{"boxShadow":null,"textAlign":"right","display":"flex","alignItems":"center","justifyContent":"flex-end","boxShadow.1":null,"borderTopLeftRadius":"0px","borderBottomLeftRadius":"0px","borderTopRightRadius":"0px","borderBottomRightRadius":"0px","border":"  ","background":"#15607AFF","backgroundImage":null,"color":"white","fontWeight":"normal","fontSize":null,"width":"17.9831932773109%","height":18,"transition":"width 1s ease","textOverflow":"ellipsis","whiteSpace":"nowrap"}},"children":["107"]}]}]}]},{"name":"div","attribs":{},"children":[{"name":"div","attribs":{"style":{"flexGrow":1,"borderTopLeftRadius":"0px","borderBottomLeftRadius":"0px","borderTopRightRadius":"0px","borderBottomRightRadius":"0px","background":"#EEEEEE"}},"children":[{"name":"div","attribs":{"style":{"display":"flex","alignItems":"center"}},"children":[{"name":"div","attribs":{"style":{"boxShadow":null,"textAlign":"right","display":"flex","alignItems":"center","justifyContent":"flex-end","boxShadow.1":null,"borderTopLeftRadius":"0px","borderBottomLeftRadius":"0px","borderTopRightRadius":"0px","borderBottomRightRadius":"0px","border":"  ","background":"#15607AFF","backgroundImage":null,"color":"white","fontWeight":"normal","fontSize":null,"width":"18.4873949579832%","height":18,"transition":"width 1s ease","textOverflow":"ellipsis","whiteSpace":"nowrap"}},"children":["110"]}]}]}]},{"name":"div","attribs":{},"children":[{"name":"div","attribs":{"style":{"flexGrow":1,"borderTopLeftRadius":"0px","borderBottomLeftRadius":"0px","borderTopRightRadius":"0px","borderBottomRightRadius":"0px","background":"#EEEEEE"}},"children":[{"name":"div","attribs":{"style":{"display":"flex","alignItems":"center"}},"children":[{"name":"div","attribs":{"style":{"boxShadow":null,"textAlign":"right","display":"flex","alignItems":"center","justifyContent":"flex-end","boxShadow.1":null,"borderTopLeftRadius":"0px","borderBottomLeftRadius":"0px","borderTopRightRadius":"0px","borderBottomRightRadius":"0px","border":"  ","background":"#15607AFF","backgroundImage":null,"color":"white","fontWeight":"normal","fontSize":null,"width":"29.5798319327731%","height":18,"transition":"width 1s ease","textOverflow":"ellipsis","whiteSpace":"nowrap"}},"children":["176"]}]}]}]},{"name":"div","attribs":{},"children":[{"name":"div","attribs":{"style":{"flexGrow":1,"borderTopLeftRadius":"0px","borderBottomLeftRadius":"0px","borderTopRightRadius":"0px","borderBottomRightRadius":"0px","background":"#EEEEEE"}},"children":[{"name":"div","attribs":{"style":{"display":"flex","alignItems":"center"}},"children":[{"name":"div","attribs":{"style":{"boxShadow":null,"textAlign":"right","display":"flex","alignItems":"center","justifyContent":"flex-end","boxShadow.1":null,"borderTopLeftRadius":"0px","borderBottomLeftRadius":"0px","borderTopRightRadius":"0px","borderBottomRightRadius":"0px","border":"  ","background":"#15607AFF","backgroundImage":null,"color":"white","fontWeight":"normal","fontSize":null,"width":"100%","height":18,"transition":"width 1s ease","textOverflow":"ellipsis","whiteSpace":"nowrap"}},"children":["595"]}]}]}]},{"name":"div","attribs":{},"children":[{"name":"div","attribs":{"style":{"flexGrow":1,"borderTopLeftRadius":"0px","borderBottomLeftRadius":"0px","borderTopRightRadius":"0px","borderBottomRightRadius":"0px","background":"#EEEEEE"}},"children":[{"name":"div","attribs":{"style":{"display":"flex","alignItems":"center"}},"children":[{"name":"div","attribs":{"style":{"boxShadow":null,"textAlign":"right","display":"flex","alignItems":"center","justifyContent":"flex-end","boxShadow.1":null,"borderTopLeftRadius":"0px","borderBottomLeftRadius":"0px","borderTopRightRadius":"0px","borderBottomRightRadius":"0px","border":"  ","background":"#15607AFF","backgroundImage":null,"color":"white","fontWeight":"normal","fontSize":null,"width":"28.4033613445378%","height":18,"transition":"width 1s ease","textOverflow":"ellipsis","whiteSpace":"nowrap"}},"children":["169"]}]}]}]},{"name":"div","attribs":{},"children":[{"name":"div","attribs":{"style":{"flexGrow":1,"borderTopLeftRadius":"0px","borderBottomLeftRadius":"0px","borderTopRightRadius":"0px","borderBottomRightRadius":"0px","background":"#EEEEEE"}},"children":[{"name":"div","attribs":{"style":{"display":"flex","alignItems":"center"}},"children":[{"name":"div","attribs":{"style":{"boxShadow":null,"textAlign":"right","display":"flex","alignItems":"center","justifyContent":"flex-end","boxShadow.1":null,"borderTopLeftRadius":"0px","borderBottomLeftRadius":"0px","borderTopRightRadius":"0px","borderBottomRightRadius":"0px","border":"  ","background":"#15607AFF","backgroundImage":null,"color":"white","fontWeight":"normal","fontSize":null,"width":"23.5294117647059%","height":18,"transition":"width 1s ease","textOverflow":"ellipsis","whiteSpace":"nowrap"}},"children":["140"]}]}]}]},{"name":"div","attribs":{},"children":[{"name":"div","attribs":{"style":{"flexGrow":1,"borderTopLeftRadius":"0px","borderBottomLeftRadius":"0px","borderTopRightRadius":"0px","borderBottomRightRadius":"0px","background":"#EEEEEE"}},"children":[{"name":"div","attribs":{"style":{"display":"flex","alignItems":"center"}},"children":[{"name":"div","attribs":{"style":{"boxShadow":null,"textAlign":"right","display":"flex","alignItems":"center","justifyContent":"flex-end","boxShadow.1":null,"borderTopLeftRadius":"0px","borderBottomLeftRadius":"0px","borderTopRightRadius":"0px","borderBottomRightRadius":"0px","border":"  ","background":"#15607AFF","backgroundImage":null,"color":"white","fontWeight":"normal","fontSize":null,"width":"21.8487394957983%","height":18,"transition":"width 1s ease","textOverflow":"ellipsis","whiteSpace":"nowrap"}},"children":["130"]}]}]}]},{"name":"div","attribs":{},"children":[{"name":"div","attribs":{"style":{"flexGrow":1,"borderTopLeftRadius":"0px","borderBottomLeftRadius":"0px","borderTopRightRadius":"0px","borderBottomRightRadius":"0px","background":"#EEEEEE"}},"children":[{"name":"div","attribs":{"style":{"display":"flex","alignItems":"center"}},"children":[{"name":"div","attribs":{"style":{"boxShadow":null,"textAlign":"right","display":"flex","alignItems":"center","justifyContent":"flex-end","boxShadow.1":null,"borderTopLeftRadius":"0px","borderBottomLeftRadius":"0px","borderTopRightRadius":"0px","borderBottomRightRadius":"0px","border":"  ","background":"#15607AFF","backgroundImage":null,"color":"white","fontWeight":"normal","fontSize":null,"width":"21.344537815126%","height":18,"transition":"width 1s ease","textOverflow":"ellipsis","whiteSpace":"nowrap"}},"children":["127"]}]}]}]},{"name":"div","attribs":{},"children":[{"name":"div","attribs":{"style":{"flexGrow":1,"borderTopLeftRadius":"0px","borderBottomLeftRadius":"0px","borderTopRightRadius":"0px","borderBottomRightRadius":"0px","background":"#EEEEEE"}},"children":[{"name":"div","attribs":{"style":{"display":"flex","alignItems":"center"}},"children":[{"name":"div","attribs":{"style":{"boxShadow":null,"textAlign":"right","display":"flex","alignItems":"center","justifyContent":"flex-end","boxShadow.1":null,"borderTopLeftRadius":"0px","borderBottomLeftRadius":"0px","borderTopRightRadius":"0px","borderBottomRightRadius":"0px","border":"  ","background":"#15607AFF","backgroundImage":null,"color":"white","fontWeight":"normal","fontSize":null,"width":"28.5714285714286%","height":18,"transition":"width 1s ease","textOverflow":"ellipsis","whiteSpace":"nowrap"}},"children":["170"]}]}]}]},{"name":"div","attribs":{},"children":[{"name":"div","attribs":{"style":{"flexGrow":1,"borderTopLeftRadius":"0px","borderBottomLeftRadius":"0px","borderTopRightRadius":"0px","borderBottomRightRadius":"0px","background":"#EEEEEE"}},"children":[{"name":"div","attribs":{"style":{"display":"flex","alignItems":"center"}},"children":[{"name":"div","attribs":{"style":{"boxShadow":null,"textAlign":"right","display":"flex","alignItems":"center","justifyContent":"flex-end","boxShadow.1":null,"borderTopLeftRadius":"0px","borderBottomLeftRadius":"0px","borderTopRightRadius":"0px","borderBottomRightRadius":"0px","border":"  ","background":"#15607AFF","backgroundImage":null,"color":"white","fontWeight":"normal","fontSize":null,"width":"18.3193277310924%","height":18,"transition":"width 1s ease","textOverflow":"ellipsis","whiteSpace":"nowrap"}},"children":["109"]}]}]}]},{"name":"div","attribs":{},"children":[{"name":"div","attribs":{"style":{"flexGrow":1,"borderTopLeftRadius":"0px","borderBottomLeftRadius":"0px","borderTopRightRadius":"0px","borderBottomRightRadius":"0px","background":"#EEEEEE"}},"children":[{"name":"div","attribs":{"style":{"display":"flex","alignItems":"center"}},"children":[{"name":"div","attribs":{"style":{"boxShadow":null,"textAlign":"right","display":"flex","alignItems":"center","justifyContent":"flex-end","boxShadow.1":null,"borderTopLeftRadius":"0px","borderBottomLeftRadius":"0px","borderTopRightRadius":"0px","borderBottomRightRadius":"0px","border":"  ","background":"#15607AFF","backgroundImage":null,"color":"white","fontWeight":"normal","fontSize":null,"width":"17.3109243697479%","height":18,"transition":"width 1s ease","textOverflow":"ellipsis","whiteSpace":"nowrap"}},"children":["103"]}]}]}]},{"name":"div","attribs":{},"children":[{"name":"div","attribs":{"style":{"flexGrow":1,"borderTopLeftRadius":"0px","borderBottomLeftRadius":"0px","borderTopRightRadius":"0px","borderBottomRightRadius":"0px","background":"#EEEEEE"}},"children":[{"name":"div","attribs":{"style":{"display":"flex","alignItems":"center"}},"children":[{"name":"div","attribs":{"style":{"boxShadow":null,"textAlign":"right","display":"flex","alignItems":"center","justifyContent":"flex-end","boxShadow.1":null,"borderTopLeftRadius":"0px","borderBottomLeftRadius":"0px","borderTopRightRadius":"0px","borderBottomRightRadius":"0px","border":"  ","background":"#15607AFF","backgroundImage":null,"color":"white","fontWeight":"normal","fontSize":null,"width":"28.2352941176471%","height":18,"transition":"width 1s ease","textOverflow":"ellipsis","whiteSpace":"nowrap"}},"children":["168"]}]}]}]},{"name":"div","attribs":{},"children":[{"name":"div","attribs":{"style":{"flexGrow":1,"borderTopLeftRadius":"0px","borderBottomLeftRadius":"0px","borderTopRightRadius":"0px","borderBottomRightRadius":"0px","background":"#EEEEEE"}},"children":[{"name":"div","attribs":{"style":{"display":"flex","alignItems":"center"}},"children":[{"name":"div","attribs":{"style":{"boxShadow":null,"textAlign":"right","display":"flex","alignItems":"center","justifyContent":"flex-end","boxShadow.1":null,"borderTopLeftRadius":"0px","borderBottomLeftRadius":"0px","borderTopRightRadius":"0px","borderBottomRightRadius":"0px","border":"  ","background":"#15607AFF","backgroundImage":null,"color":"white","fontWeight":"normal","fontSize":null,"width":"69.0756302521008%","height":18,"transition":"width 1s ease","textOverflow":"ellipsis","whiteSpace":"nowrap"}},"children":["411"]}]}]}]},{"name":"div","attribs":{},"children":[{"name":"div","attribs":{"style":{"flexGrow":1,"borderTopLeftRadius":"0px","borderBottomLeftRadius":"0px","borderTopRightRadius":"0px","borderBottomRightRadius":"0px","background":"#EEEEEE"}},"children":[{"name":"div","attribs":{"style":{"display":"flex","alignItems":"center"}},"children":[{"name":"div","attribs":{"style":{"boxShadow":null,"textAlign":"right","display":"flex","alignItems":"center","justifyContent":"flex-end","boxShadow.1":null,"borderTopLeftRadius":"0px","borderBottomLeftRadius":"0px","borderTopRightRadius":"0px","borderBottomRightRadius":"0px","border":"  ","background":"#15607AFF","backgroundImage":null,"color":"white","fontWeight":"normal","fontSize":null,"width":"20.672268907563%","height":18,"transition":"width 1s ease","textOverflow":"ellipsis","whiteSpace":"nowrap"}},"children":["123"]}]}]}]},{"name":"div","attribs":{},"children":[{"name":"div","attribs":{"style":{"flexGrow":1,"borderTopLeftRadius":"0px","borderBottomLeftRadius":"0px","borderTopRightRadius":"0px","borderBottomRightRadius":"0px","background":"#EEEEEE"}},"children":[{"name":"div","attribs":{"style":{"display":"flex","alignItems":"center"}},"children":[{"name":"div","attribs":{"style":{"boxShadow":null,"textAlign":"right","display":"flex","alignItems":"center","justifyContent":"flex-end","boxShadow.1":null,"borderTopLeftRadius":"0px","borderBottomLeftRadius":"0px","borderTopRightRadius":"0px","borderBottomRightRadius":"0px","border":"  ","background":"#15607AFF","backgroundImage":null,"color":"white","fontWeight":"normal","fontSize":null,"width":"23.5294117647059%","height":18,"transition":"width 1s ease","textOverflow":"ellipsis","whiteSpace":"nowrap"}},"children":["140"]}]}]}]},{"name":"div","attribs":{},"children":[{"name":"div","attribs":{"style":{"flexGrow":1,"borderTopLeftRadius":"0px","borderBottomLeftRadius":"0px","borderTopRightRadius":"0px","borderBottomRightRadius":"0px","background":"#EEEEEE"}},"children":[{"name":"div","attribs":{"style":{"display":"flex","alignItems":"center"}},"children":[{"name":"div","attribs":{"style":{"boxShadow":null,"textAlign":"right","display":"flex","alignItems":"center","justifyContent":"flex-end","boxShadow.1":null,"borderTopLeftRadius":"0px","borderBottomLeftRadius":"0px","borderTopRightRadius":"0px","borderBottomRightRadius":"0px","border":"  ","background":"#15607AFF","backgroundImage":null,"color":"white","fontWeight":"normal","fontSize":null,"width":"26.3865546218487%","height":18,"transition":"width 1s ease","textOverflow":"ellipsis","whiteSpace":"nowrap"}},"children":["157"]}]}]}]},{"name":"div","attribs":{},"children":[{"name":"div","attribs":{"style":{"flexGrow":1,"borderTopLeftRadius":"0px","borderBottomLeftRadius":"0px","borderTopRightRadius":"0px","borderBottomRightRadius":"0px","background":"#EEEEEE"}},"children":[{"name":"div","attribs":{"style":{"display":"flex","alignItems":"center"}},"children":[{"name":"div","attribs":{"style":{"boxShadow":null,"textAlign":"right","display":"flex","alignItems":"center","justifyContent":"flex-end","boxShadow.1":null,"borderTopLeftRadius":"0px","borderBottomLeftRadius":"0px","borderTopRightRadius":"0px","borderBottomRightRadius":"0px","border":"  ","background":"#15607AFF","backgroundImage":null,"color":"white","fontWeight":"normal","fontSize":null,"width":"19.327731092437%","height":18,"transition":"width 1s ease","textOverflow":"ellipsis","whiteSpace":"nowrap"}},"children":["115"]}]}]}]},{"name":"div","attribs":{},"children":[{"name":"div","attribs":{"style":{"flexGrow":1,"borderTopLeftRadius":"0px","borderBottomLeftRadius":"0px","borderTopRightRadius":"0px","borderBottomRightRadius":"0px","background":"#EEEEEE"}},"children":[{"name":"div","attribs":{"style":{"display":"flex","alignItems":"center"}},"children":[{"name":"div","attribs":{"style":{"boxShadow":null,"textAlign":"right","display":"flex","alignItems":"center","justifyContent":"flex-end","boxShadow.1":null,"borderTopLeftRadius":"0px","borderBottomLeftRadius":"0px","borderTopRightRadius":"0px","borderBottomRightRadius":"0px","border":"  ","background":"#15607AFF","backgroundImage":null,"color":"white","fontWeight":"normal","fontSize":null,"width":"17.6470588235294%","height":18,"transition":"width 1s ease","textOverflow":"ellipsis","whiteSpace":"nowrap"}},"children":["105"]}]}]}]},{"name":"div","attribs":{},"children":[{"name":"div","attribs":{"style":{"flexGrow":1,"borderTopLeftRadius":"0px","borderBottomLeftRadius":"0px","borderTopRightRadius":"0px","borderBottomRightRadius":"0px","background":"#EEEEEE"}},"children":[{"name":"div","attribs":{"style":{"display":"flex","alignItems":"center"}},"children":[{"name":"div","attribs":{"style":{"boxShadow":null,"textAlign":"right","display":"flex","alignItems":"center","justifyContent":"flex-end","boxShadow.1":null,"borderTopLeftRadius":"0px","borderBottomLeftRadius":"0px","borderTopRightRadius":"0px","borderBottomRightRadius":"0px","border":"  ","background":"#15607AFF","backgroundImage":null,"color":"white","fontWeight":"normal","fontSize":null,"width":"44.3697478991597%","height":18,"transition":"width 1s ease","textOverflow":"ellipsis","whiteSpace":"nowrap"}},"children":["264"]}]}]}]},{"name":"div","attribs":{},"children":[{"name":"div","attribs":{"style":{"flexGrow":1,"borderTopLeftRadius":"0px","borderBottomLeftRadius":"0px","borderTopRightRadius":"0px","borderBottomRightRadius":"0px","background":"#EEEEEE"}},"children":[{"name":"div","attribs":{"style":{"display":"flex","alignItems":"center"}},"children":[{"name":"div","attribs":{"style":{"boxShadow":null,"textAlign":"right","display":"flex","alignItems":"center","justifyContent":"flex-end","boxShadow.1":null,"borderTopLeftRadius":"0px","borderBottomLeftRadius":"0px","borderTopRightRadius":"0px","borderBottomRightRadius":"0px","border":"  ","background":"#15607AFF","backgroundImage":null,"color":"white","fontWeight":"normal","fontSize":null,"width":"65.2100840336134%","height":18,"transition":"width 1s ease","textOverflow":"ellipsis","whiteSpace":"nowrap"}},"children":["388"]}]}]}]},{"name":"div","attribs":{},"children":[{"name":"div","attribs":{"style":{"flexGrow":1,"borderTopLeftRadius":"0px","borderBottomLeftRadius":"0px","borderTopRightRadius":"0px","borderBottomRightRadius":"0px","background":"#EEEEEE"}},"children":[{"name":"div","attribs":{"style":{"display":"flex","alignItems":"center"}},"children":[{"name":"div","attribs":{"style":{"boxShadow":null,"textAlign":"right","display":"flex","alignItems":"center","justifyContent":"flex-end","boxShadow.1":null,"borderTopLeftRadius":"0px","borderBottomLeftRadius":"0px","borderTopRightRadius":"0px","borderBottomRightRadius":"0px","border":"  ","background":"#15607AFF","backgroundImage":null,"color":"white","fontWeight":"normal","fontSize":null,"width":"45.2100840336134%","height":18,"transition":"width 1s ease","textOverflow":"ellipsis","whiteSpace":"nowrap"}},"children":["269"]}]}]}]}]}],"filterable":true,"dataKey":"0b742d9038db2bca88b9d666d391d465"},"children":[]},"class":"reactR_markup"},"evals":[],"jsHooks":[]}</script>
+
+<div class="reactable html-widget html-fill-item" id="htmlwidget-d53467789e1abca46941" style="width:auto;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-d53467789e1abca46941">{"x":{"tag":{"name":"Reactable","attribs":{"data":{"token":["母","思っ","心","お嬢さん","K","考え","聞い","人","先生","前","出","顔","言葉","自分","奥さん","父","見","二人","妻","眼","今"],"pos":["名詞C","動詞","名詞C","名詞","未知語","動詞","動詞","名詞C","名詞","副詞可能","動詞","名詞C","名詞","名詞","名詞","名詞C","動詞","タグ","名詞C","名詞C","副詞可能"],"n":[170,109,103,168,411,107,110,176,595,169,140,130,127,264,388,269,157,115,105,123,140]},"columns":[{"id":"token","name":"token","type":"character","cell":["母","思っ","心","お嬢さん","K","考え","聞い","人","先生","前","出","顔","言葉","自分","奥さん","父","見","二人","妻","眼","今"]},{"id":"pos","name":"pos","type":"character","cell":["名詞C","動詞","名詞C","名詞","未知語","動詞","動詞","名詞C","名詞","副詞可能","動詞","名詞C","名詞","名詞","名詞","名詞C","動詞","タグ","名詞C","名詞C","副詞可能"]},{"id":"n","name":"n","type":"numeric","cell":[{"name":"div","attribs":{},"children":[{"name":"div","attribs":{"style":{"flexGrow":1,"borderTopLeftRadius":"0px","borderBottomLeftRadius":"0px","borderTopRightRadius":"0px","borderBottomRightRadius":"0px","background":"#EEEEEE"}},"children":[{"name":"div","attribs":{"style":{"display":"flex","alignItems":"center"}},"children":[{"name":"div","attribs":{"style":{"boxShadow":null,"textAlign":"right","display":"flex","alignItems":"center","justifyContent":"flex-end","boxShadow.1":null,"borderTopLeftRadius":"0px","borderBottomLeftRadius":"0px","borderTopRightRadius":"0px","borderBottomRightRadius":"0px","border":"  ","background":"#15607AFF","backgroundImage":null,"color":"white","fontWeight":"normal","fontSize":null,"width":"28.5714285714286%","height":18,"transition":"width 1s ease","textOverflow":"ellipsis","whiteSpace":"nowrap"}},"children":["170"]}]}]}]},{"name":"div","attribs":{},"children":[{"name":"div","attribs":{"style":{"flexGrow":1,"borderTopLeftRadius":"0px","borderBottomLeftRadius":"0px","borderTopRightRadius":"0px","borderBottomRightRadius":"0px","background":"#EEEEEE"}},"children":[{"name":"div","attribs":{"style":{"display":"flex","alignItems":"center"}},"children":[{"name":"div","attribs":{"style":{"boxShadow":null,"textAlign":"right","display":"flex","alignItems":"center","justifyContent":"flex-end","boxShadow.1":null,"borderTopLeftRadius":"0px","borderBottomLeftRadius":"0px","borderTopRightRadius":"0px","borderBottomRightRadius":"0px","border":"  ","background":"#15607AFF","backgroundImage":null,"color":"white","fontWeight":"normal","fontSize":null,"width":"18.3193277310924%","height":18,"transition":"width 1s ease","textOverflow":"ellipsis","whiteSpace":"nowrap"}},"children":["109"]}]}]}]},{"name":"div","attribs":{},"children":[{"name":"div","attribs":{"style":{"flexGrow":1,"borderTopLeftRadius":"0px","borderBottomLeftRadius":"0px","borderTopRightRadius":"0px","borderBottomRightRadius":"0px","background":"#EEEEEE"}},"children":[{"name":"div","attribs":{"style":{"display":"flex","alignItems":"center"}},"children":[{"name":"div","attribs":{"style":{"boxShadow":null,"textAlign":"right","display":"flex","alignItems":"center","justifyContent":"flex-end","boxShadow.1":null,"borderTopLeftRadius":"0px","borderBottomLeftRadius":"0px","borderTopRightRadius":"0px","borderBottomRightRadius":"0px","border":"  ","background":"#15607AFF","backgroundImage":null,"color":"white","fontWeight":"normal","fontSize":null,"width":"17.3109243697479%","height":18,"transition":"width 1s ease","textOverflow":"ellipsis","whiteSpace":"nowrap"}},"children":["103"]}]}]}]},{"name":"div","attribs":{},"children":[{"name":"div","attribs":{"style":{"flexGrow":1,"borderTopLeftRadius":"0px","borderBottomLeftRadius":"0px","borderTopRightRadius":"0px","borderBottomRightRadius":"0px","background":"#EEEEEE"}},"children":[{"name":"div","attribs":{"style":{"display":"flex","alignItems":"center"}},"children":[{"name":"div","attribs":{"style":{"boxShadow":null,"textAlign":"right","display":"flex","alignItems":"center","justifyContent":"flex-end","boxShadow.1":null,"borderTopLeftRadius":"0px","borderBottomLeftRadius":"0px","borderTopRightRadius":"0px","borderBottomRightRadius":"0px","border":"  ","background":"#15607AFF","backgroundImage":null,"color":"white","fontWeight":"normal","fontSize":null,"width":"28.2352941176471%","height":18,"transition":"width 1s ease","textOverflow":"ellipsis","whiteSpace":"nowrap"}},"children":["168"]}]}]}]},{"name":"div","attribs":{},"children":[{"name":"div","attribs":{"style":{"flexGrow":1,"borderTopLeftRadius":"0px","borderBottomLeftRadius":"0px","borderTopRightRadius":"0px","borderBottomRightRadius":"0px","background":"#EEEEEE"}},"children":[{"name":"div","attribs":{"style":{"display":"flex","alignItems":"center"}},"children":[{"name":"div","attribs":{"style":{"boxShadow":null,"textAlign":"right","display":"flex","alignItems":"center","justifyContent":"flex-end","boxShadow.1":null,"borderTopLeftRadius":"0px","borderBottomLeftRadius":"0px","borderTopRightRadius":"0px","borderBottomRightRadius":"0px","border":"  ","background":"#15607AFF","backgroundImage":null,"color":"white","fontWeight":"normal","fontSize":null,"width":"69.0756302521008%","height":18,"transition":"width 1s ease","textOverflow":"ellipsis","whiteSpace":"nowrap"}},"children":["411"]}]}]}]},{"name":"div","attribs":{},"children":[{"name":"div","attribs":{"style":{"flexGrow":1,"borderTopLeftRadius":"0px","borderBottomLeftRadius":"0px","borderTopRightRadius":"0px","borderBottomRightRadius":"0px","background":"#EEEEEE"}},"children":[{"name":"div","attribs":{"style":{"display":"flex","alignItems":"center"}},"children":[{"name":"div","attribs":{"style":{"boxShadow":null,"textAlign":"right","display":"flex","alignItems":"center","justifyContent":"flex-end","boxShadow.1":null,"borderTopLeftRadius":"0px","borderBottomLeftRadius":"0px","borderTopRightRadius":"0px","borderBottomRightRadius":"0px","border":"  ","background":"#15607AFF","backgroundImage":null,"color":"white","fontWeight":"normal","fontSize":null,"width":"17.9831932773109%","height":18,"transition":"width 1s ease","textOverflow":"ellipsis","whiteSpace":"nowrap"}},"children":["107"]}]}]}]},{"name":"div","attribs":{},"children":[{"name":"div","attribs":{"style":{"flexGrow":1,"borderTopLeftRadius":"0px","borderBottomLeftRadius":"0px","borderTopRightRadius":"0px","borderBottomRightRadius":"0px","background":"#EEEEEE"}},"children":[{"name":"div","attribs":{"style":{"display":"flex","alignItems":"center"}},"children":[{"name":"div","attribs":{"style":{"boxShadow":null,"textAlign":"right","display":"flex","alignItems":"center","justifyContent":"flex-end","boxShadow.1":null,"borderTopLeftRadius":"0px","borderBottomLeftRadius":"0px","borderTopRightRadius":"0px","borderBottomRightRadius":"0px","border":"  ","background":"#15607AFF","backgroundImage":null,"color":"white","fontWeight":"normal","fontSize":null,"width":"18.4873949579832%","height":18,"transition":"width 1s ease","textOverflow":"ellipsis","whiteSpace":"nowrap"}},"children":["110"]}]}]}]},{"name":"div","attribs":{},"children":[{"name":"div","attribs":{"style":{"flexGrow":1,"borderTopLeftRadius":"0px","borderBottomLeftRadius":"0px","borderTopRightRadius":"0px","borderBottomRightRadius":"0px","background":"#EEEEEE"}},"children":[{"name":"div","attribs":{"style":{"display":"flex","alignItems":"center"}},"children":[{"name":"div","attribs":{"style":{"boxShadow":null,"textAlign":"right","display":"flex","alignItems":"center","justifyContent":"flex-end","boxShadow.1":null,"borderTopLeftRadius":"0px","borderBottomLeftRadius":"0px","borderTopRightRadius":"0px","borderBottomRightRadius":"0px","border":"  ","background":"#15607AFF","backgroundImage":null,"color":"white","fontWeight":"normal","fontSize":null,"width":"29.5798319327731%","height":18,"transition":"width 1s ease","textOverflow":"ellipsis","whiteSpace":"nowrap"}},"children":["176"]}]}]}]},{"name":"div","attribs":{},"children":[{"name":"div","attribs":{"style":{"flexGrow":1,"borderTopLeftRadius":"0px","borderBottomLeftRadius":"0px","borderTopRightRadius":"0px","borderBottomRightRadius":"0px","background":"#EEEEEE"}},"children":[{"name":"div","attribs":{"style":{"display":"flex","alignItems":"center"}},"children":[{"name":"div","attribs":{"style":{"boxShadow":null,"textAlign":"right","display":"flex","alignItems":"center","justifyContent":"flex-end","boxShadow.1":null,"borderTopLeftRadius":"0px","borderBottomLeftRadius":"0px","borderTopRightRadius":"0px","borderBottomRightRadius":"0px","border":"  ","background":"#15607AFF","backgroundImage":null,"color":"white","fontWeight":"normal","fontSize":null,"width":"100%","height":18,"transition":"width 1s ease","textOverflow":"ellipsis","whiteSpace":"nowrap"}},"children":["595"]}]}]}]},{"name":"div","attribs":{},"children":[{"name":"div","attribs":{"style":{"flexGrow":1,"borderTopLeftRadius":"0px","borderBottomLeftRadius":"0px","borderTopRightRadius":"0px","borderBottomRightRadius":"0px","background":"#EEEEEE"}},"children":[{"name":"div","attribs":{"style":{"display":"flex","alignItems":"center"}},"children":[{"name":"div","attribs":{"style":{"boxShadow":null,"textAlign":"right","display":"flex","alignItems":"center","justifyContent":"flex-end","boxShadow.1":null,"borderTopLeftRadius":"0px","borderBottomLeftRadius":"0px","borderTopRightRadius":"0px","borderBottomRightRadius":"0px","border":"  ","background":"#15607AFF","backgroundImage":null,"color":"white","fontWeight":"normal","fontSize":null,"width":"28.4033613445378%","height":18,"transition":"width 1s ease","textOverflow":"ellipsis","whiteSpace":"nowrap"}},"children":["169"]}]}]}]},{"name":"div","attribs":{},"children":[{"name":"div","attribs":{"style":{"flexGrow":1,"borderTopLeftRadius":"0px","borderBottomLeftRadius":"0px","borderTopRightRadius":"0px","borderBottomRightRadius":"0px","background":"#EEEEEE"}},"children":[{"name":"div","attribs":{"style":{"display":"flex","alignItems":"center"}},"children":[{"name":"div","attribs":{"style":{"boxShadow":null,"textAlign":"right","display":"flex","alignItems":"center","justifyContent":"flex-end","boxShadow.1":null,"borderTopLeftRadius":"0px","borderBottomLeftRadius":"0px","borderTopRightRadius":"0px","borderBottomRightRadius":"0px","border":"  ","background":"#15607AFF","backgroundImage":null,"color":"white","fontWeight":"normal","fontSize":null,"width":"23.5294117647059%","height":18,"transition":"width 1s ease","textOverflow":"ellipsis","whiteSpace":"nowrap"}},"children":["140"]}]}]}]},{"name":"div","attribs":{},"children":[{"name":"div","attribs":{"style":{"flexGrow":1,"borderTopLeftRadius":"0px","borderBottomLeftRadius":"0px","borderTopRightRadius":"0px","borderBottomRightRadius":"0px","background":"#EEEEEE"}},"children":[{"name":"div","attribs":{"style":{"display":"flex","alignItems":"center"}},"children":[{"name":"div","attribs":{"style":{"boxShadow":null,"textAlign":"right","display":"flex","alignItems":"center","justifyContent":"flex-end","boxShadow.1":null,"borderTopLeftRadius":"0px","borderBottomLeftRadius":"0px","borderTopRightRadius":"0px","borderBottomRightRadius":"0px","border":"  ","background":"#15607AFF","backgroundImage":null,"color":"white","fontWeight":"normal","fontSize":null,"width":"21.8487394957983%","height":18,"transition":"width 1s ease","textOverflow":"ellipsis","whiteSpace":"nowrap"}},"children":["130"]}]}]}]},{"name":"div","attribs":{},"children":[{"name":"div","attribs":{"style":{"flexGrow":1,"borderTopLeftRadius":"0px","borderBottomLeftRadius":"0px","borderTopRightRadius":"0px","borderBottomRightRadius":"0px","background":"#EEEEEE"}},"children":[{"name":"div","attribs":{"style":{"display":"flex","alignItems":"center"}},"children":[{"name":"div","attribs":{"style":{"boxShadow":null,"textAlign":"right","display":"flex","alignItems":"center","justifyContent":"flex-end","boxShadow.1":null,"borderTopLeftRadius":"0px","borderBottomLeftRadius":"0px","borderTopRightRadius":"0px","borderBottomRightRadius":"0px","border":"  ","background":"#15607AFF","backgroundImage":null,"color":"white","fontWeight":"normal","fontSize":null,"width":"21.344537815126%","height":18,"transition":"width 1s ease","textOverflow":"ellipsis","whiteSpace":"nowrap"}},"children":["127"]}]}]}]},{"name":"div","attribs":{},"children":[{"name":"div","attribs":{"style":{"flexGrow":1,"borderTopLeftRadius":"0px","borderBottomLeftRadius":"0px","borderTopRightRadius":"0px","borderBottomRightRadius":"0px","background":"#EEEEEE"}},"children":[{"name":"div","attribs":{"style":{"display":"flex","alignItems":"center"}},"children":[{"name":"div","attribs":{"style":{"boxShadow":null,"textAlign":"right","display":"flex","alignItems":"center","justifyContent":"flex-end","boxShadow.1":null,"borderTopLeftRadius":"0px","borderBottomLeftRadius":"0px","borderTopRightRadius":"0px","borderBottomRightRadius":"0px","border":"  ","background":"#15607AFF","backgroundImage":null,"color":"white","fontWeight":"normal","fontSize":null,"width":"44.3697478991597%","height":18,"transition":"width 1s ease","textOverflow":"ellipsis","whiteSpace":"nowrap"}},"children":["264"]}]}]}]},{"name":"div","attribs":{},"children":[{"name":"div","attribs":{"style":{"flexGrow":1,"borderTopLeftRadius":"0px","borderBottomLeftRadius":"0px","borderTopRightRadius":"0px","borderBottomRightRadius":"0px","background":"#EEEEEE"}},"children":[{"name":"div","attribs":{"style":{"display":"flex","alignItems":"center"}},"children":[{"name":"div","attribs":{"style":{"boxShadow":null,"textAlign":"right","display":"flex","alignItems":"center","justifyContent":"flex-end","boxShadow.1":null,"borderTopLeftRadius":"0px","borderBottomLeftRadius":"0px","borderTopRightRadius":"0px","borderBottomRightRadius":"0px","border":"  ","background":"#15607AFF","backgroundImage":null,"color":"white","fontWeight":"normal","fontSize":null,"width":"65.2100840336134%","height":18,"transition":"width 1s ease","textOverflow":"ellipsis","whiteSpace":"nowrap"}},"children":["388"]}]}]}]},{"name":"div","attribs":{},"children":[{"name":"div","attribs":{"style":{"flexGrow":1,"borderTopLeftRadius":"0px","borderBottomLeftRadius":"0px","borderTopRightRadius":"0px","borderBottomRightRadius":"0px","background":"#EEEEEE"}},"children":[{"name":"div","attribs":{"style":{"display":"flex","alignItems":"center"}},"children":[{"name":"div","attribs":{"style":{"boxShadow":null,"textAlign":"right","display":"flex","alignItems":"center","justifyContent":"flex-end","boxShadow.1":null,"borderTopLeftRadius":"0px","borderBottomLeftRadius":"0px","borderTopRightRadius":"0px","borderBottomRightRadius":"0px","border":"  ","background":"#15607AFF","backgroundImage":null,"color":"white","fontWeight":"normal","fontSize":null,"width":"45.2100840336134%","height":18,"transition":"width 1s ease","textOverflow":"ellipsis","whiteSpace":"nowrap"}},"children":["269"]}]}]}]},{"name":"div","attribs":{},"children":[{"name":"div","attribs":{"style":{"flexGrow":1,"borderTopLeftRadius":"0px","borderBottomLeftRadius":"0px","borderTopRightRadius":"0px","borderBottomRightRadius":"0px","background":"#EEEEEE"}},"children":[{"name":"div","attribs":{"style":{"display":"flex","alignItems":"center"}},"children":[{"name":"div","attribs":{"style":{"boxShadow":null,"textAlign":"right","display":"flex","alignItems":"center","justifyContent":"flex-end","boxShadow.1":null,"borderTopLeftRadius":"0px","borderBottomLeftRadius":"0px","borderTopRightRadius":"0px","borderBottomRightRadius":"0px","border":"  ","background":"#15607AFF","backgroundImage":null,"color":"white","fontWeight":"normal","fontSize":null,"width":"26.3865546218487%","height":18,"transition":"width 1s ease","textOverflow":"ellipsis","whiteSpace":"nowrap"}},"children":["157"]}]}]}]},{"name":"div","attribs":{},"children":[{"name":"div","attribs":{"style":{"flexGrow":1,"borderTopLeftRadius":"0px","borderBottomLeftRadius":"0px","borderTopRightRadius":"0px","borderBottomRightRadius":"0px","background":"#EEEEEE"}},"children":[{"name":"div","attribs":{"style":{"display":"flex","alignItems":"center"}},"children":[{"name":"div","attribs":{"style":{"boxShadow":null,"textAlign":"right","display":"flex","alignItems":"center","justifyContent":"flex-end","boxShadow.1":null,"borderTopLeftRadius":"0px","borderBottomLeftRadius":"0px","borderTopRightRadius":"0px","borderBottomRightRadius":"0px","border":"  ","background":"#15607AFF","backgroundImage":null,"color":"white","fontWeight":"normal","fontSize":null,"width":"19.327731092437%","height":18,"transition":"width 1s ease","textOverflow":"ellipsis","whiteSpace":"nowrap"}},"children":["115"]}]}]}]},{"name":"div","attribs":{},"children":[{"name":"div","attribs":{"style":{"flexGrow":1,"borderTopLeftRadius":"0px","borderBottomLeftRadius":"0px","borderTopRightRadius":"0px","borderBottomRightRadius":"0px","background":"#EEEEEE"}},"children":[{"name":"div","attribs":{"style":{"display":"flex","alignItems":"center"}},"children":[{"name":"div","attribs":{"style":{"boxShadow":null,"textAlign":"right","display":"flex","alignItems":"center","justifyContent":"flex-end","boxShadow.1":null,"borderTopLeftRadius":"0px","borderBottomLeftRadius":"0px","borderTopRightRadius":"0px","borderBottomRightRadius":"0px","border":"  ","background":"#15607AFF","backgroundImage":null,"color":"white","fontWeight":"normal","fontSize":null,"width":"17.6470588235294%","height":18,"transition":"width 1s ease","textOverflow":"ellipsis","whiteSpace":"nowrap"}},"children":["105"]}]}]}]},{"name":"div","attribs":{},"children":[{"name":"div","attribs":{"style":{"flexGrow":1,"borderTopLeftRadius":"0px","borderBottomLeftRadius":"0px","borderTopRightRadius":"0px","borderBottomRightRadius":"0px","background":"#EEEEEE"}},"children":[{"name":"div","attribs":{"style":{"display":"flex","alignItems":"center"}},"children":[{"name":"div","attribs":{"style":{"boxShadow":null,"textAlign":"right","display":"flex","alignItems":"center","justifyContent":"flex-end","boxShadow.1":null,"borderTopLeftRadius":"0px","borderBottomLeftRadius":"0px","borderTopRightRadius":"0px","borderBottomRightRadius":"0px","border":"  ","background":"#15607AFF","backgroundImage":null,"color":"white","fontWeight":"normal","fontSize":null,"width":"20.672268907563%","height":18,"transition":"width 1s ease","textOverflow":"ellipsis","whiteSpace":"nowrap"}},"children":["123"]}]}]}]},{"name":"div","attribs":{},"children":[{"name":"div","attribs":{"style":{"flexGrow":1,"borderTopLeftRadius":"0px","borderBottomLeftRadius":"0px","borderTopRightRadius":"0px","borderBottomRightRadius":"0px","background":"#EEEEEE"}},"children":[{"name":"div","attribs":{"style":{"display":"flex","alignItems":"center"}},"children":[{"name":"div","attribs":{"style":{"boxShadow":null,"textAlign":"right","display":"flex","alignItems":"center","justifyContent":"flex-end","boxShadow.1":null,"borderTopLeftRadius":"0px","borderBottomLeftRadius":"0px","borderTopRightRadius":"0px","borderBottomRightRadius":"0px","border":"  ","background":"#15607AFF","backgroundImage":null,"color":"white","fontWeight":"normal","fontSize":null,"width":"23.5294117647059%","height":18,"transition":"width 1s ease","textOverflow":"ellipsis","whiteSpace":"nowrap"}},"children":["140"]}]}]}]}]}],"filterable":true,"dataKey":"ef8bebb5030ca2d0986b1cd3a1785b31"},"children":[]},"class":"reactR_markup"},"evals":[],"jsHooks":[]}</script>
 </div>
 </div>
 </section>
@@ -296,7 +305,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="度数分布表" class="level3" data-number="2.2.1">
 <h3 data-number="2.2.1" class="anchored" data-anchor-id="度数分布表"><span class="header-section-number">2.2.1</span> 度数分布表</h3>
 <div class="cell">
-<details class="code-fold">
+<details>
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">tbl</span>(con, <span class="st">"tokens"</span>) <span class="sc">|&gt;</span></span>
@@ -342,7 +351,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="折れ線グラフ" class="level3" data-number="2.2.2">
 <h3 data-number="2.2.2" class="anchored" data-anchor-id="折れ線グラフ"><span class="header-section-number">2.2.2</span> 折れ線グラフ</h3>
 <div class="cell">
-<details class="code-fold">
+<details>
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>dat <span class="sc">|&gt;</span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">filter</span>(cum_prop <span class="sc">&lt;</span> .<span class="dv">8</span>) <span class="sc">|&gt;</span></span>
@@ -352,11 +361,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"出現回数"</span>, <span class="at">y =</span> <span class="st">"度数"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="plot-words_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
+<p><img src="plot-words_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 </section>
@@ -365,7 +370,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 data-number="2.3" class="anchored" data-anchor-id="文書数の分布a.5.3"><span class="header-section-number">2.3</span> 文書数の分布（A.5.3）</h2>
 <p>段落（<code>doc_id</code>）ではなく、章ラベル（<code>label</code>）でグルーピングして集計している。<code>docfreq</code>について上でやったのと同様に処理すれば度数分布表にできる。</p>
 <div class="cell">
-<details class="code-fold">
+<details>
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">tbl</span>(con, <span class="st">"tokens"</span>) <span class="sc">|&gt;</span></span>
@@ -400,7 +405,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p>度数分布をグラフで確認したいだけなら、このかたちからヒストグラムを描いたほうが楽。</p>
 <div class="cell">
-<details class="code-fold">
+<details>
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>dat <span class="sc">|&gt;</span></span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> docfreq)) <span class="sc">+</span></span>
@@ -410,11 +415,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"文書数"</span>, <span class="at">y =</span> <span class="st">"度数"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="plot-words_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
+<p><img src="plot-words_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 </section>
@@ -422,11 +423,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 data-number="2.4" class="anchored" data-anchor-id="出現回数文書数のプロットa.5.4"><span class="header-section-number">2.4</span> 出現回数・文書数のプロット（A.5.4）</h2>
 <p>図 A.25のようなグラフの例。ggplot2で<code>graphics::identify</code>のようなことをするやり方がわからないので、適当に条件を指定してgghighlightでハイライトしている。</p>
 <div class="cell">
-<details class="code-fold">
+<details>
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>dat <span class="sc">|&gt;</span></span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> frequency, <span class="at">y =</span> docfreq)) <span class="sc">+</span></span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_jitter</span>() <span class="sc">+</span></span>
 <span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  gghighlight<span class="sc">::</span><span class="fu">gghighlight</span>(</span>
 <span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>    frequency <span class="sc">&gt;</span> <span class="dv">100</span> <span class="sc">&amp;</span> docfreq <span class="sc">&lt;</span> <span class="dv">60</span></span>
 <span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
@@ -436,11 +437,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"出現回数"</span>, <span class="at">y =</span> <span class="st">"文書数"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="plot-words_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
+<p><img src="plot-words_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 </section>
@@ -452,9 +449,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="対応分析a.5.7" class="level2" data-number="2.7">
 <h2 data-number="2.7" class="anchored" data-anchor-id="対応分析a.5.7"><span class="header-section-number">2.7</span> 対応分析（A.5.7）</h2>
+<section id="バイプロット" class="level3" data-number="2.7.1">
+<h3 data-number="2.7.1" class="anchored" data-anchor-id="バイプロット"><span class="header-section-number">2.7.1</span> バイプロット</h3>
 <p>段落（<code>doc_id</code>）内の頻度で語彙を削ってから部（<code>section</code>）ごとに集計するために、ややめんどうなことをしている。</p>
 <div class="cell">
-<details class="code-fold">
+<details>
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>dfm <span class="ot">&lt;-</span></span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">tbl</span>(con, <span class="st">"tokens"</span>) <span class="sc">|&gt;</span></span>
@@ -472,13 +471,18 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">count</span>(doc_id, token) <span class="sc">|&gt;</span></span>
 <span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">collect</span>() <span class="sc">|&gt;</span></span>
 <span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>  tidytext<span class="sc">::</span><span class="fu">cast_dfm</span>(doc_id, token, n) <span class="sc">|&gt;</span></span>
-<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a>  quanteda<span class="sc">::</span><span class="fu">dfm_trim</span>(<span class="at">min_termfreq =</span> <span class="dv">75</span>, <span class="at">termfreq_type =</span> <span class="st">"rank"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a>  quanteda<span class="sc">::</span><span class="fu">dfm_trim</span>(</span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">min_termfreq =</span> <span class="dv">75</span>,</span>
+<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">termfreq_type =</span> <span class="st">"rank"</span>,</span>
+<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">min_docfreq =</span> <span class="dv">20</span>,</span>
+<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">docfreq_type =</span> <span class="st">"count"</span></span>
+<span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <p>こうして<code>doc_id</code>ごとに集計した<code>dfm</code>オブジェクトを一度<code>tidytext::tidy()</code>して3つ組のデータフレームに戻し、<code>section</code>のラベルを結合する。このデータフレームをもう一度<code>tidytext::cast_dfm()</code>で疎行列に変換して、<code>quanteda.textmodels::textmodel_ca()</code>を使って対応分析にかける。</p>
 <p>この関数は疎行列に対して計算をおこなえるため、比較的大きな行列を渡しても大丈夫。</p>
 <div class="cell">
-<details class="code-fold">
+<details>
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ca)</span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
@@ -494,18 +498,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> <span class="fu">plot</span>(ca_fit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="plot-words_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
+<p><img src="plot-words_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>caパッケージを読み込んでいると<code>plot()</code>でバイプロットを描ける。<code>factoextra::fviz_ca_biplot()</code>でも描けるが、見た目は<code>plot()</code>のとあまり変わらない。</p>
+</section>
+<section id="バイプロットバブルプロット" class="level3" data-number="2.7.2">
+<h3 data-number="2.7.2" class="anchored" data-anchor-id="バイプロットバブルプロット"><span class="header-section-number">2.7.2</span> バイプロット（バブルプロット）</h3>
 <p>ggplot2でバイプロットを描画するには、たとえば次のようにする。<code>ggrepel::geom_text_repel</code>でラベルを出す語彙の選択の仕方はもうすこし工夫したほうがよいかもしれない。</p>
 <p>なお、このコードは<a href="https://www.r-bloggers.com/2019/08/correspondence-analysis-visualization-using-ggplot/">Correspondence Analysis visualization using ggplot | R-bloggers</a>を参考にした。</p>
 <div class="cell">
-<details class="code-fold">
+<details>
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>tf <span class="ot">&lt;-</span> dfm <span class="sc">|&gt;</span></span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  tidytext<span class="sc">::</span><span class="fu">tidy</span>() <span class="sc">|&gt;</span></span>
@@ -575,23 +578,106 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb12-66"><a href="#cb12-66" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_classic</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stderr">
-<pre><code>Warning: ggrepel: 24 unlabeled data points (too many overlaps). Consider
+<pre><code>Warning: ggrepel: 22 unlabeled data points (too many overlaps). Consider
 increasing max.overlaps</code></pre>
 </div>
 <div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="plot-words_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
+<p><img src="plot-words_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 </section>
-<section id="多次元尺度構成法mds" class="level2" data-number="2.8">
-<h2 data-number="2.8" class="anchored" data-anchor-id="多次元尺度構成法mds"><span class="header-section-number">2.8</span> 多次元尺度構成法（MDS）</h2>
+</section>
+<section id="多次元尺度構成法a.5.8" class="level2" data-number="2.8">
+<h2 data-number="2.8" class="anchored" data-anchor-id="多次元尺度構成法a.5.8"><span class="header-section-number">2.8</span> 多次元尺度構成法（A.5.8）</h2>
+<section id="次元バブルプロット" class="level3" data-number="2.8.1">
+<h3 data-number="2.8.1" class="anchored" data-anchor-id="次元バブルプロット"><span class="header-section-number">2.8.1</span> 2次元・バブルプロット</h3>
+<p><code>MASS::isoMDS</code>より<code>MASS::sammon</code>のほうがたぶん見やすい。</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>simil <span class="ot">&lt;-</span> dfm <span class="sc">|&gt;</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  quanteda<span class="sc">::</span><span class="fu">dfm_weight</span>(<span class="at">scheme =</span> <span class="st">"boolean"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  proxyC<span class="sc">::</span><span class="fu">simil</span>(<span class="at">margin =</span> <span class="dv">2</span>, <span class="at">method =</span> <span class="st">"jaccard"</span>)</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> MASS<span class="sc">::</span><span class="fu">sammon</span>(<span class="dv">1</span> <span class="sc">-</span> simil, <span class="at">k =</span> <span class="dv">2</span>) <span class="sc">|&gt;</span></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>  purrr<span class="sc">::</span><span class="fu">pluck</span>(<span class="st">"points"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Initial stress        : 0.62279
+stress after   0 iters: 0.62279</code></pre>
+</div>
+</div>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> dat <span class="sc">|&gt;</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.data.frame</span>() <span class="sc">|&gt;</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  tibble<span class="sc">::</span><span class="fu">rownames_to_column</span>(<span class="st">"label"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">rename</span>(<span class="at">Dim1 =</span> V1, <span class="at">Dim2 =</span> V2) <span class="sc">|&gt;</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">size =</span> tf[label],</span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">clust =</span> (<span class="fu">hclust</span>(</span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>      proxyC<span class="sc">::</span><span class="fu">dist</span>(dat, <span class="at">method =</span> <span class="st">"euclidean"</span>) <span class="sc">|&gt;</span> <span class="fu">as.dist</span>(),</span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>      <span class="at">method =</span> <span class="st">"ward.D2"</span></span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">|&gt;</span> <span class="fu">cutree</span>(<span class="at">k =</span> <span class="dv">8</span>))[label]</span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a>dat <span class="sc">|&gt;</span></span>
+<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> Dim1, <span class="at">y =</span> Dim2, <span class="at">label =</span> label, <span class="at">col =</span> <span class="fu">factor</span>(clust))) <span class="sc">+</span></span>
+<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">size =</span> size), <span class="at">alpha =</span> .<span class="dv">3</span>, <span class="at">show.legend =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a>  ggrepel<span class="sc">::</span><span class="fu">geom_text_repel</span>(<span class="at">show.legend =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb16-17"><a href="#cb16-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_size_area</span>(<span class="at">max_size =</span> <span class="dv">16</span>) <span class="sc">+</span></span>
+<span id="cb16-18"><a href="#cb16-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_classic</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: ggrepel: 23 unlabeled data points (too many overlaps). Consider
+increasing max.overlaps</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="plot-words_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="次元プロット" class="level3" data-number="2.8.2">
+<h3 data-number="2.8.2" class="anchored" data-anchor-id="次元プロット"><span class="header-section-number">2.8.2</span> 3次元プロット</h3>
+<p>rglではなくplotlyで試してみたが、とくに見やすいということはなかったかもしれない。</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> MASS<span class="sc">::</span><span class="fu">sammon</span>(<span class="dv">1</span> <span class="sc">-</span> simil, <span class="at">k =</span> <span class="dv">3</span>) <span class="sc">|&gt;</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  purrr<span class="sc">::</span><span class="fu">pluck</span>(<span class="st">"points"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.data.frame</span>() <span class="sc">|&gt;</span></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>  tibble<span class="sc">::</span><span class="fu">rownames_to_column</span>(<span class="st">"label"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">rename</span>(<span class="at">Dim1 =</span> V1, <span class="at">Dim2 =</span> V2, <span class="at">Dim3 =</span> V3) <span class="sc">|&gt;</span></span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="at">term_freq =</span> tf[label])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Initial stress        : 0.53925
+stress after  10 iters: 0.18929, magic = 0.092
+stress after  20 iters: 0.14417, magic = 0.043
+stress after  21 iters: 0.13794</code></pre>
+</div>
+</div>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>dat <span class="sc">|&gt;</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>  plotly<span class="sc">::</span><span class="fu">plot_ly</span>(<span class="at">x =</span> <span class="sc">~</span>Dim1, <span class="at">y =</span> <span class="sc">~</span>Dim2, <span class="at">z =</span> <span class="sc">~</span>Dim3, <span class="at">text =</span> <span class="sc">~</span>label, <span class="at">color =</span> <span class="sc">~</span>term_freq) <span class="sc">|&gt;</span></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>  plotly<span class="sc">::</span><span class="fu">add_markers</span>(<span class="at">opacity =</span> .<span class="dv">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div class="plotly html-widget html-fill-item" id="htmlwidget-b4c7a9dba609b786e030" style="width:100%;height:464px;"></div>
+<script type="application/json" data-for="htmlwidget-b4c7a9dba609b786e030">{"x":{"visdat":{"8c5061030807":["function () ","plotlyVisDat"]},"cur_data":"8c5061030807","attrs":{"8c5061030807":{"x":{},"y":{},"z":{},"text":{},"color":{},"alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"type":"scatter3d","mode":"markers","opacity":0.5,"inherit":true}},"layout":{"margin":{"b":40,"l":60,"t":25,"r":10},"scene":{"xaxis":{"title":"Dim1"},"yaxis":{"title":"Dim2"},"zaxis":{"title":"Dim3"}},"hovermode":"closest","showlegend":false,"legend":{"yanchor":"top","y":0.5}},"source":"A","config":{"modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"data":[{"x":[-0.29024368260389732,0.13801562422516869,0.11274255567192265,0.52925302630269322,-0.22567135510179315,-0.096006950061875901,0.1185207234601495,0.27471207755232008,-0.25176197862788496,0.27961578243595564,-0.74142851375226393,0.064659101092767568,-0.3499111858614361,-0.049791361881257004,0.14358348331688464,0.51513868728874512,0.32114162713968092,-0.0048597858632848014,0.51906287622089586,0.041475536670014482,0.0081091748178647571,0.5982955226186667,-0.18162956859584911,0.1547885658710412,-0.13996443880081436,-0.021551736762280595,0.096459404127409692,-0.36339588103852588,0.19202717460264557,0.52594862854096225,0.55416970969690194,-0.033123831426936215,0.12488061607760408,0.16885253797034061,0.24301590242225285,0.5280787595613986,0.18713807825148801,0.0036516070182167921,-0.4202139503383534,-0.33254078961862821,-0.19411160045201736,-0.055654830239385944,-0.0047133294382981899,-0.29625898566657655,0.06907369804566682,0.01876716371061888,0.14558802033952414,0.22286050019941242,0.34473706082607597,0.25839561983169801,-0.068695131549823776,0.33272464326599782,-0.53151443881781602,-0.10393336689681927,-0.92692607889571577,-0.41832009072153981,-0.55244779765590324,-0.043669456046599456,-0.49480551286435193,-0.29865729092603044,0.10263359273059837,-0.27429573532355478,0.18592428491835347,0.021165990692784416,0.38270828979312294,-1.6692665238935589,-0.61487057730189765,0.16093682975311061,-0.080552226341383038,-0.50496758007216702,0.42732523768292241,0.18413815184241192,0.43544273512398463,-0.30472416776779326,-0.46778430749658362,0.75946464950235537,0.91304078749026596],"y":[0.43987518019441257,-0.13079321823084264,0.54989380800106014,-0.47101590882539573,-0.090510107603070378,-0.65875392010581812,-0.22411382724216483,0.48500755949712543,0.56034425136250676,0.38142470093850089,0.029533617867402023,-0.68213695194238555,0.54332652864801123,0.35094683794027709,-0.12516853434921621,0.12379977263811894,0.18923924252194535,-0.64580265572893658,0.10313386780717548,-0.42508658997144272,0.51274426617208446,0.42016413531881702,-0.35750838034496857,0.14449697072023682,0.14139906122584261,-0.016893078944619309,-0.01543511614489719,-0.091984660205715649,-0.010232553377124956,-0.29226819561168155,0.39359913850559014,-0.44585964864523631,0.94883976956439853,-0.11422890447677128,0.63956161559003954,-0.013711779422808212,0.016329272387420823,0.046607992280138295,0.42615525712178726,-0.10005079028326634,0.08383356384120412,-0.094572919322505014,0.091223789060300445,-0.20084757381481003,-0.011263622390007579,-0.563391076002,-0.42891678453043841,0.27921986693972578,-0.63523452115660239,0.16219779576687662,0.25015382128880836,0.31775466192071883,-0.34788400547124593,-0.78341841107747578,0.10772929053125123,0.83461951001508383,0.058747508500961977,0.73214014960943341,0.2722489203946773,-0.68158000036883026,-0.30698695076932736,-0.11669381616202859,0.3619935362019796,0.39888906059090662,-0.69356921688436235,0.12208234680810214,0.26674081584390918,-0.31121363045468947,-0.52701641531249188,0.2514787594917729,0.32225708770392553,-0.7324898664806897,-0.19559016282373215,-0.6450924720914567,-0.43986827103729981,0.24766747182103105,0.019783734972794412],"z":[0.4110326904192646,-0.022690214132323333,0.57492452872580835,0.084605164831906929,0.15144492372037627,0.11192249392071625,0.15439267717393035,-0.02438533286821222,0.019476741180642184,0.46251154059789823,-0.21499674041876132,0.10340571882798177,0.061032311718247877,-0.46284446747658819,-0.13756372839445508,0.19315124534722605,0.6783242091645818,0.42412569644517373,-0.17178753762504248,0.17622575059042492,-0.096355896335071148,0.1257815130963042,-0.086591999893401869,0.56940662158539113,0.6026361147710837,0.83150843154431808,0.18036964789826271,0.21551192873893607,-0.48898209023463712,-0.0036369361369401436,-0.18231373405354501,-0.3960127748369085,-0.043752925245147921,0.53411947693880446,0.088745640831822445,-0.17657475973862807,0.35856169409253152,-1.0788285045358428,-0.27994160124329126,-0.058071490778605454,-0.59368854879503519,-0.0952907110635276,0.51595031625784482,-0.5262845382286423,-1.0966795549352364,-0.10534768200184813,-0.11135053771190911,0.083046235987401254,0.0074349732072191404,-0.61032786333560285,-0.57236112006019524,0.43787984022522097,-0.11990393437824697,-0.29313648200306713,-0.087210023702342154,0.1469943355580671,0.35044247018206115,-0.16483967617958903,0.41297345810680752,0.0079178048759715042,-0.062385178274714043,0.45421849063988845,-0.078964802404680443,-0.05728008014847203,0.018997865507337858,-0.063590082625237507,-0.11122015208704067,0.5265494175644273,0.3231480181699713,-0.35502843633970999,-0.52199512310898422,-0.46544566269717197,-0.57257671490394135,-0.20894584211905695,0.45802633769851908,-0.061149219541609109,0.0035363744508917364],"text":["先生/名詞","取る/動詞","思う/動詞","女/名詞C","一人/タグ","風/名詞C","知れる/動詞","立つ/動詞","来る/動詞","見る/動詞","置く/動詞","頭/名詞C","帰る/動詞","見せる/動詞","気/名詞C","二人/タグ","顔/名詞C","違う/動詞","眼/名詞C","起る/動詞","行く/動詞","奥さん/名詞","外/名詞C","出る/動詞","言葉/名詞","人/名詞C","様子/名詞","間/名詞C","黙る/動詞","態度/名詞","答える/動詞","先/名詞C","宅/名詞C","考える/動詞","聞く/動詞","笑う/動詞","口/名詞C","呼ぶ/動詞","出す/動詞","分る/動詞","傍/名詞C","解る/動詞","知る/動詞","一つ/名詞","声/名詞C","動く/動詞","歩く/動詞","見える/動詞","胸/名詞C","坐る/動詞","手/名詞C","自分/名詞","死ぬ/動詞","眺める/動詞","書く/動詞","母/名詞C","東京/地名","持つ/動詞","父/名詞C","他/名詞C","心持/名詞","家/名詞C","通り/名詞","話す/動詞","男/名詞C","手紙/名詞","兄/名詞C","心/名詞C","人間/名詞","読む/動詞","室/名詞C","向う/動詞","付く/動詞","妻/名詞C","叔父/名詞","お嬢さん/名詞","K/未知語"],"type":"scatter3d","mode":"markers","opacity":0.5,"marker":{"colorbar":{"title":"term_freq","ticklen":2},"cmin":40,"cmax":595,"colorscale":[["0","rgba(68,1,84,1)"],["0.0416666666666667","rgba(70,19,97,1)"],["0.0833333333333333","rgba(72,32,111,1)"],["0.125","rgba(71,45,122,1)"],["0.166666666666667","rgba(68,58,128,1)"],["0.208333333333333","rgba(64,70,135,1)"],["0.25","rgba(60,82,138,1)"],["0.291666666666667","rgba(56,93,140,1)"],["0.333333333333333","rgba(49,104,142,1)"],["0.375","rgba(46,114,142,1)"],["0.416666666666667","rgba(42,123,142,1)"],["0.458333333333333","rgba(38,133,141,1)"],["0.5","rgba(37,144,140,1)"],["0.541666666666667","rgba(33,154,138,1)"],["0.583333333333333","rgba(39,164,133,1)"],["0.625","rgba(47,174,127,1)"],["0.666666666666667","rgba(53,183,121,1)"],["0.708333333333333","rgba(79,191,110,1)"],["0.75","rgba(98,199,98,1)"],["0.791666666666667","rgba(119,207,85,1)"],["0.833333333333333","rgba(147,214,70,1)"],["0.875","rgba(172,220,52,1)"],["0.916666666666667","rgba(199,225,42,1)"],["0.958333333333333","rgba(226,228,40,1)"],["1","rgba(253,231,37,1)"]],"showscale":false,"color":[595,56,293,77,73,42,79,96,137,225,47,73,153,43,65,115,130,47,123,51,113,388,61,179,127,176,61,85,40,54,92,41,75,129,218,52,89,48,67,47,41,71,114,41,60,47,51,97,40,54,71,264,90,42,73,170,74,48,269,40,57,70,82,60,66,74,62,103,70,50,72,40,55,105,70,168,411],"line":{"colorbar":{"title":"","ticklen":2},"cmin":40,"cmax":595,"colorscale":[["0","rgba(68,1,84,1)"],["0.0416666666666667","rgba(70,19,97,1)"],["0.0833333333333333","rgba(72,32,111,1)"],["0.125","rgba(71,45,122,1)"],["0.166666666666667","rgba(68,58,128,1)"],["0.208333333333333","rgba(64,70,135,1)"],["0.25","rgba(60,82,138,1)"],["0.291666666666667","rgba(56,93,140,1)"],["0.333333333333333","rgba(49,104,142,1)"],["0.375","rgba(46,114,142,1)"],["0.416666666666667","rgba(42,123,142,1)"],["0.458333333333333","rgba(38,133,141,1)"],["0.5","rgba(37,144,140,1)"],["0.541666666666667","rgba(33,154,138,1)"],["0.583333333333333","rgba(39,164,133,1)"],["0.625","rgba(47,174,127,1)"],["0.666666666666667","rgba(53,183,121,1)"],["0.708333333333333","rgba(79,191,110,1)"],["0.75","rgba(98,199,98,1)"],["0.791666666666667","rgba(119,207,85,1)"],["0.833333333333333","rgba(147,214,70,1)"],["0.875","rgba(172,220,52,1)"],["0.916666666666667","rgba(199,225,42,1)"],["0.958333333333333","rgba(226,228,40,1)"],["1","rgba(253,231,37,1)"]],"showscale":false,"color":[595,56,293,77,73,42,79,96,137,225,47,73,153,43,65,115,130,47,123,51,113,388,61,179,127,176,61,85,40,54,92,41,75,129,218,52,89,48,67,47,41,71,114,41,60,47,51,97,40,54,71,264,90,42,73,170,74,48,269,40,57,70,82,60,66,74,62,103,70,50,72,40,55,105,70,168,411]}},"frame":null},{"x":[-1.6692665238935589,0.91304078749026596],"y":[-0.78341841107747578,0.94883976956439853],"type":"scatter3d","mode":"markers","opacity":0,"hoverinfo":"none","showlegend":false,"marker":{"colorbar":{"title":"term_freq","ticklen":2,"len":0.5,"lenmode":"fraction","y":1,"yanchor":"top"},"cmin":40,"cmax":595,"colorscale":[["0","rgba(68,1,84,1)"],["0.0416666666666667","rgba(70,19,97,1)"],["0.0833333333333333","rgba(72,32,111,1)"],["0.125","rgba(71,45,122,1)"],["0.166666666666667","rgba(68,58,128,1)"],["0.208333333333333","rgba(64,70,135,1)"],["0.25","rgba(60,82,138,1)"],["0.291666666666667","rgba(56,93,140,1)"],["0.333333333333333","rgba(49,104,142,1)"],["0.375","rgba(46,114,142,1)"],["0.416666666666667","rgba(42,123,142,1)"],["0.458333333333333","rgba(38,133,141,1)"],["0.5","rgba(37,144,140,1)"],["0.541666666666667","rgba(33,154,138,1)"],["0.583333333333333","rgba(39,164,133,1)"],["0.625","rgba(47,174,127,1)"],["0.666666666666667","rgba(53,183,121,1)"],["0.708333333333333","rgba(79,191,110,1)"],["0.75","rgba(98,199,98,1)"],["0.791666666666667","rgba(119,207,85,1)"],["0.833333333333333","rgba(147,214,70,1)"],["0.875","rgba(172,220,52,1)"],["0.916666666666667","rgba(199,225,42,1)"],["0.958333333333333","rgba(226,228,40,1)"],["1","rgba(253,231,37,1)"]],"showscale":true,"color":[40,595],"line":{"color":"rgba(255,127,14,1)"}},"z":[-1.0966795549352364,0.83150843154431808],"frame":null}],"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.20000000000000001,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+</section>
 </section>
 <section id="階層的クラスタリング" class="level2" data-number="2.9">
 <h2 data-number="2.9" class="anchored" data-anchor-id="階層的クラスタリング"><span class="header-section-number">2.9</span> 階層的クラスタリング</h2>
+<blockquote class="blockquote">
+<p>デンドログラムのaxisの外に棒グラフを描く処理は<a href="https://github.com/ko-ichi-h/khcoder/blob/9fac68b9987c4c06f9b275f3d790429ad5658ae5/kh_lib/gui_window/word_cls.pm#L819">このへん</a>と思われる</p>
+<p>透過したグラフを絶対位置で重ねるみたいな処理のよう</p>
+</blockquote>
 </section>
 <section id="共起ネットワーク" class="level2" data-number="2.10">
 <h2 data-number="2.10" class="anchored" data-anchor-id="共起ネットワーク"><span class="header-section-number">2.10</span> 共起ネットワーク</h2>
@@ -600,10 +686,10 @@ increasing max.overlaps</code></pre>
 <h2 data-number="2.11" class="anchored" data-anchor-id="自己組織化マップsom"><span class="header-section-number">2.11</span> 自己組織化マップ（SOM）</h2>
 <hr>
 <div class="cell">
-<details class="code-fold">
+<details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>duckdb<span class="sc">::</span><span class="fu">dbDisconnect</span>(con)</span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>duckdb<span class="sc">::</span><span class="fu">duckdb_shutdown</span>(drv)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>duckdb<span class="sc">::</span><span class="fu">dbDisconnect</span>(con)</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>duckdb<span class="sc">::</span><span class="fu">duckdb_shutdown</span>(drv)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 
@@ -690,9 +776,10 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     // clear code selection
     e.clearSelection();
   });
-  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+  function tippyHover(el, contentFn) {
     const config = {
       allowHTML: true,
+      content: contentFn,
       maxWidth: 500,
       delay: 100,
       arrow: false,
@@ -702,17 +789,8 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       interactive: true,
       interactiveBorder: 10,
       theme: 'quarto',
-      placement: 'bottom-start',
+      placement: 'bottom-start'
     };
-    if (contentFn) {
-      config.content = contentFn;
-    }
-    if (onTriggerFn) {
-      config.onTrigger = onTriggerFn;
-    }
-    if (onUntriggerFn) {
-      config.onUntrigger = onUntriggerFn;
-    }
     window.tippy(el, config); 
   }
   const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
@@ -725,125 +803,6 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       const id = href.replace(/^#\/?/, "");
       const note = window.document.getElementById(id);
       return note.innerHTML;
-    });
-  }
-  const xrefs = window.document.querySelectorAll('a.quarto-xref');
-  const processXRef = (id, note) => {
-    // Strip column container classes
-    const stripColumnClz = (el) => {
-      el.classList.remove("page-full", "page-columns");
-      if (el.children) {
-        for (const child of el.children) {
-          stripColumnClz(child);
-        }
-      }
-    }
-    stripColumnClz(note)
-    if (id === null || id.startsWith('sec-')) {
-      // Special case sections, only their first couple elements
-      const container = document.createElement("div");
-      if (note.children && note.children.length > 2) {
-        container.appendChild(note.children[0].cloneNode(true));
-        for (let i = 1; i < note.children.length; i++) {
-          const child = note.children[i];
-          if (child.tagName === "P" && child.innerText === "") {
-            continue;
-          } else {
-            container.appendChild(child.cloneNode(true));
-            break;
-          }
-        }
-        if (window.Quarto?.typesetMath) {
-          window.Quarto.typesetMath(container);
-        }
-        return container.innerHTML
-      } else {
-        if (window.Quarto?.typesetMath) {
-          window.Quarto.typesetMath(note);
-        }
-        return note.innerHTML;
-      }
-    } else {
-      // Remove any anchor links if they are present
-      const anchorLink = note.querySelector('a.anchorjs-link');
-      if (anchorLink) {
-        anchorLink.remove();
-      }
-      if (window.Quarto?.typesetMath) {
-        window.Quarto.typesetMath(note);
-      }
-      // TODO in 1.5, we should make sure this works without a callout special case
-      if (note.classList.contains("callout")) {
-        return note.outerHTML;
-      } else {
-        return note.innerHTML;
-      }
-    }
-  }
-  for (var i=0; i<xrefs.length; i++) {
-    const xref = xrefs[i];
-    tippyHover(xref, undefined, function(instance) {
-      instance.disable();
-      let url = xref.getAttribute('href');
-      let hash = undefined; 
-      if (url.startsWith('#')) {
-        hash = url;
-      } else {
-        try { hash = new URL(url).hash; } catch {}
-      }
-      if (hash) {
-        const id = hash.replace(/^#\/?/, "");
-        const note = window.document.getElementById(id);
-        if (note !== null) {
-          try {
-            const html = processXRef(id, note.cloneNode(true));
-            instance.setContent(html);
-          } finally {
-            instance.enable();
-            instance.show();
-          }
-        } else {
-          // See if we can fetch this
-          fetch(url.split('#')[0])
-          .then(res => res.text())
-          .then(html => {
-            const parser = new DOMParser();
-            const htmlDoc = parser.parseFromString(html, "text/html");
-            const note = htmlDoc.getElementById(id);
-            if (note !== null) {
-              const html = processXRef(id, note);
-              instance.setContent(html);
-            } 
-          }).finally(() => {
-            instance.enable();
-            instance.show();
-          });
-        }
-      } else {
-        // See if we can fetch a full url (with no hash to target)
-        // This is a special case and we should probably do some content thinning / targeting
-        fetch(url)
-        .then(res => res.text())
-        .then(html => {
-          const parser = new DOMParser();
-          const htmlDoc = parser.parseFromString(html, "text/html");
-          const note = htmlDoc.querySelector('main.content');
-          if (note !== null) {
-            // This should only happen for chapter cross references
-            // (since there is no id in the URL)
-            // remove the first header
-            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
-              note.children[0].remove();
-            }
-            const html = processXRef(null, note);
-            instance.setContent(html);
-          } 
-        }).finally(() => {
-          instance.enable();
-          instance.show();
-        });
-      }
-    }, function(instance) {
     });
   }
       let selectedAnnoteEl;
@@ -887,7 +846,6 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
             }
             div.style.top = top - 2 + "px";
             div.style.height = height + 4 + "px";
-            div.style.left = 0;
             let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
             if (gutterDiv === null) {
               gutterDiv = window.document.createElement("div");
@@ -913,32 +871,6 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
         });
         selectedAnnoteEl = undefined;
       };
-        // Handle positioning of the toggle
-    window.addEventListener(
-      "resize",
-      throttle(() => {
-        elRect = undefined;
-        if (selectedAnnoteEl) {
-          selectCodeLines(selectedAnnoteEl);
-        }
-      }, 10)
-    );
-    function throttle(fn, ms) {
-    let throttle = false;
-    let timer;
-      return (...args) => {
-        if(!throttle) { // first call gets through
-            fn.apply(this, args);
-            throttle = true;
-        } else { // all the others get throttled
-            if(timer) clearTimeout(timer); // cancel #2
-            timer = setTimeout(() => {
-              fn.apply(this, args);
-              timer = throttle = false;
-            }, ms);
-        }
-      };
-    }
       // Attach click handler to the DT
       const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
       for (const annoteDlNode of annoteDls) {
@@ -998,20 +930,21 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   }
 });
 </script>
+<script src="https://giscus.app/client.js" data-repo="paithiov909/textvis-recipes" data-repo-id="R_kgDOLWfubw" data-category="Announcements" data-category-id="DIC_kwDOLWfub84Cdg5_" data-mapping="pathname" data-reactions-enabled="1" data-emit-metadata="0" data-input-position="top" data-theme="light" data-lang="ja" crossorigin="anonymous" data-loading="lazy" async="">
+</script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./preprocessing.html" class="pagination-link" aria-label="テキストの前処理">
+      <a href="./preprocessing.html" class="pagination-link">
         <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">テキストの前処理</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./references.html" class="pagination-link" aria-label="References">
+      <a href="./references.html" class="pagination-link">
         <span class="nav-page-text">References</span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
 </div> <!-- /content -->
-
 
 
 
