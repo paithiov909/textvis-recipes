@@ -1,0 +1,33 @@
+project:
+  type: book
+  output-dir: docs
+  # resources:
+    # - search_console.html
+
+book:
+  repo-url: https://github.com/paithiov909/textvis-recipes
+  site-url: https://paithiov909.github.io/textvis-recipes
+  title: "Cookbook to Draw KHCoder-like Visualizations Using R"
+  author: "Akiru Kato"
+  description: "RによるKH Coder風の可視化のレシピ集"
+  cover-image: cover.png
+  cover-image-alt: "Cookbook to Draw KHCoder-like Visualizations Using R"
+  image: cover.png
+  open-graph:
+    locale: ja
+  twitter-card:
+    card-style: summary
+  chapters:
+    - index.qmd
+    - preprocessing.qmd
+    - plot-words.qmd
+    - references.qmd
+
+bibliography: references.bib
+
+format:
+  html:
+    theme:
+      - cosmo
+    mainfont: '-apple-system, "BlinkMacSystemFont", "Helvetica Neue", Helvetica, "Arial", "ヒラギノ角ゴ ProN W3", "Hiragino Kaku Gothic ProN", "メイリオ", Meiryo, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"'
+    code-fold: true

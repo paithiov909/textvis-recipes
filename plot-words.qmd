@@ -1,0 +1,272 @@
+# 抽出語メニュー
+
+```{r}
+suppressPackageStartupMessages({
+  library(ggplot2)
+  library(duckdb)
+  library(ca)
+})
+drv <- duckdb::duckdb()
+con <- duckdb::dbConnect(drv, dbdir = "tutorial_jp/kokoro.duckdb", read_only = TRUE)
+
+tbl <-
+  readxl::read_xls("tutorial_jp/kokoro.xls",
+    col_names = c("text", "section", "chapter", "label"),
+    skip = 1
+  ) |>
+  dplyr::mutate(
+    doc_id = factor(dplyr::row_number()),
+    dplyr::across(where(is.character), ~ audubon::strj_normalize(.))
+  ) |>
+  dplyr::filter(!gibasa::is_blank(text)) |>
+  dplyr::relocate(doc_id, text, section, label, chapter)
+```
+
+---
+
+## 抽出語リスト（A.5.1）
+
+活用語をクリックするとそれぞれの活用の出現頻度も見れるUIは、Rだとどうすれば実現できるかわからない。
+
+```{r}
+dat <- dplyr::tbl(con, "tokens") |>
+  dplyr::filter(
+    !pos %in% c("その他", "名詞B", "動詞B", "形容詞B", "副詞B", "否定助動詞", "形容詞（非自立）")
+  ) |>
+  dplyr::count(token, pos) |>
+  dplyr::filter(n >= 100) |>
+  dplyr::collect()
+
+reactable::reactable(
+  dat,
+  filterable = TRUE,
+  defaultColDef = reactable::colDef(
+    cell = reactablefmtr::data_bars(dat)
+  )
+)
+```
+
+## 出現回数の分布（A.5.2）
+
+### 度数分布表
+
+```{r}
+dat <-
+  dplyr::tbl(con, "tokens") |>
+  dplyr::filter(
+    !pos %in% c("その他", "名詞B", "動詞B", "形容詞B", "副詞B", "否定助動詞", "形容詞（非自立）")
+  ) |>
+  dplyr::count(token, pos) |>
+  dplyr::summarise(
+    degree = sum(n, na.rm = TRUE),
+    .by = n
+  ) |>
+  dplyr::mutate(
+    prop = degree / sum(degree, na.rm = TRUE)
+  ) |>
+  dplyr::arrange(n) |>
+  dplyr::compute() |>
+  dplyr::mutate(
+    cum_degree = cumsum(degree),
+    cum_prop = cumsum(prop)
+  ) |>
+  dplyr::collect()
+
+dat
+```
+
+### 折れ線グラフ
+
+```{r}
+dat |>
+  dplyr::filter(cum_prop < .8) |>
+  ggplot(aes(x = n, y = degree)) +
+  geom_line() +
+  theme_bw() +
+  labs(x = "出現回数", y = "度数")
+```
+
+## 文書数の分布（A.5.3）
+
+段落（`doc_id`）ではなく、章ラベル（`label`）でグルーピングして集計している。`docfreq`について上でやったのと同様に処理すれば度数分布表にできる。
+
+```{r}
+dat <-
+  dplyr::tbl(con, "tokens") |>
+  dplyr::filter(
+    !pos %in% c("その他", "名詞B", "動詞B", "形容詞B", "副詞B", "否定助動詞", "形容詞（非自立）")
+  ) |>
+  dplyr::mutate(token = paste(token, pos, sep = "/")) |>
+  dplyr::count(label, token) |>
+  dplyr::collect() |>
+  tidytext::cast_dfm(label, token, n) |>
+  quanteda.textstats::textstat_frequency() |>
+  dplyr::as_tibble()
+
+dat
+```
+
+度数分布をグラフで確認したいだけなら、このかたちからヒストグラムを描いたほうが楽。
+
+```{r}
+dat |>
+  ggplot(aes(x = docfreq)) +
+  geom_histogram(binwidth = 3) +
+  scale_y_sqrt() +
+  theme_bw() +
+  labs(x = "文書数", y = "度数")
+```
+
+## 出現回数・文書数のプロット（A.5.4）
+
+図 A.25のようなグラフの例。ggplot2で`graphics::identify`のようなことをするやり方がわからないので、適当に条件を指定してgghighlightでハイライトしている。
+
+```{r}
+dat |>
+  ggplot(aes(x = frequency, y = docfreq)) +
+  geom_point() +
+  gghighlight::gghighlight(
+    frequency > 100 & docfreq < 60
+  ) +
+  ggrepel::geom_text_repel(aes(label = feature)) +
+  scale_x_log10() +
+  theme_bw() +
+  labs(x = "出現回数", y = "文書数")
+```
+
+## KWIC（A.5.5）
+
+## 関連語検索（A.5.6）
+
+## 対応分析（A.5.7）
+
+段落（`doc_id`）内の頻度で語彙を削ってから部（`section`）ごとに集計するために、ややめんどうなことをしている。
+
+```{r}
+dfm <-
+  dplyr::tbl(con, "tokens") |>
+  dplyr::filter(
+    pos %in% c(
+      "名詞", "名詞B", "名詞C",
+      "地名", "人名", "組織名", "固有名詞",
+      "動詞", "未知語", "タグ"
+    )
+  ) |>
+  dplyr::mutate(
+    token = dplyr::if_else(is.na(original), token, original),
+    token = paste(token, pos, sep = "/")
+  ) |>
+  dplyr::count(doc_id, token) |>
+  dplyr::collect() |>
+  tidytext::cast_dfm(doc_id, token, n) |>
+  quanteda::dfm_trim(min_termfreq = 75, termfreq_type = "rank")
+```
+
+こうして`doc_id`ごとに集計した`dfm`オブジェクトを一度`tidytext::tidy()`して3つ組のデータフレームに戻し、`section`のラベルを結合する。このデータフレームをもう一度`tidytext::cast_dfm()`で疎行列に変換して、`quanteda.textmodels::textmodel_ca()`を使って対応分析にかける。
+
+この関数は疎行列に対して計算をおこなえるため、比較的大きな行列を渡しても大丈夫。
+
+```{r}
+library(ca)
+
+ca_fit <- dfm |>
+  tidytext::tidy() |>
+  dplyr::left_join(
+    dplyr::select(tbl, doc_id, section),
+    by = dplyr::join_by(document == doc_id)
+  ) |>
+  tidytext::cast_dfm(section, term, count) |>
+  quanteda.textmodels::textmodel_ca(nd = 2, sparse = TRUE)
+
+dat <- plot(ca_fit)
+```
+
+caパッケージを読み込んでいると`plot()`でバイプロットを描ける。`factoextra::fviz_ca_biplot()`でも描けるが、見た目は`plot()`のとあまり変わらない。
+
+ggplot2でバイプロットを描画するには、たとえば次のようにする。`ggrepel::geom_text_repel`でラベルを出す語彙の選択の仕方はもうすこし工夫したほうがよいかもしれない。
+
+なお、このコードは[Correspondence Analysis visualization using ggplot | R-bloggers](https://www.r-bloggers.com/2019/08/correspondence-analysis-visualization-using-ggplot/)を参考にした。
+
+```{r}
+tf <- dfm |>
+  tidytext::tidy() |>
+  dplyr::left_join(
+    dplyr::select(tbl, doc_id, section),
+    by = dplyr::join_by(document == doc_id)
+  ) |>
+  dplyr::summarise(tf = sum(count), .by = term) |>
+  dplyr::pull(tf, term)
+
+# modified from https://www.r-bloggers.com/2019/08/correspondence-analysis-visualization-using-ggplot/
+make_ca_plot_df <- function(ca.plot.obj, row.lab = "Rows", col.lab = "Columns") {
+  tibble::tibble(
+    Label = c(
+      rownames(ca.plot.obj$rows),
+      rownames(ca.plot.obj$cols)
+    ),
+    Dim1 = c(
+      ca.plot.obj$rows[, 1],
+      ca.plot.obj$cols[, 1]
+    ),
+    Dim2 = c(
+      ca.plot.obj$rows[, 2],
+      ca.plot.obj$cols[, 2]
+    ),
+    Variable = c(
+      rep(row.lab, nrow(ca.plot.obj$rows)),
+      rep(col.lab, nrow(ca.plot.obj$cols))
+    )
+  )
+}
+dat <- dat |>
+  make_ca_plot_df(row.lab = "Construction", col.lab = "Medium") |>
+  dplyr::mutate(
+    Size = dplyr::if_else(Variable == "Construction", mean(tf), tf[Label])
+  )
+# 非ASCII文字のラベルに対してwarningを出さないようにする
+suppressWarnings({
+  ca_sum <- summary(ca_fit)
+  dim_var_percs <- ca_sum$scree[, "values2"]
+})
+
+dat |>
+  ggplot(aes(x = Dim1, y = Dim2, col = Variable, label = Label)) +
+  geom_vline(xintercept = 0, lty = "dashed", alpha = .5) +
+  geom_hline(yintercept = 0, lty = "dashed", alpha = .5) +
+  geom_jitter(aes(size = Size), alpha = .3, show.legend = FALSE) +
+  ggrepel::geom_label_repel(
+    data = \(x) dplyr::filter(x, Variable == "Construction"),
+    show.legend = FALSE
+  ) +
+  ggrepel::geom_text_repel(
+    data = \(x) dplyr::filter(x, Variable == "Medium", sqrt(Dim1^2 + Dim2^2) > 0.25),
+    show.legend = FALSE
+  ) +
+  scale_x_continuous(
+    limits = range(dat$Dim1) +
+      c(diff(range(dat$Dim1)) * -0.2, diff(range(dat$Dim1)) * 0.2)) +
+  scale_y_continuous(
+    limits = range(dat$Dim2) +
+      c(diff(range(dat$Dim2)) * -0.2, diff(range(dat$Dim2)) * 0.2)) +
+  scale_size_area(max_size = 16) +
+  labs(
+    x = paste0("Dimension 1 (", signif(dim_var_percs[1], 3), "%)"),
+    y = paste0("Dimension 2 (", signif(dim_var_percs[2], 3), "%)")
+  ) +
+  theme_classic()
+```
+
+## 多次元尺度構成法（MDS）
+
+## 階層的クラスタリング
+
+## 共起ネットワーク
+
+## 自己組織化マップ（SOM）
+
+---
+
+```{r}
+duckdb::dbDisconnect(con)
+duckdb::duckdb_shutdown(drv)
+```

@@ -1,0 +1,222 @@
+# テキストの前処理
+
+## 使用するデータセット
+
+KH Coderの[チュートリアル](https://khcoder.net/tutorial.html)用のデータを使う。`tutorial_data_3x.zip`の中に含まれている`tutorial_jp/kokoro.xls`というxlsファイルを次のように読み込んでおく。
+
+```{r}
+tbl <-
+  readxl::read_xls("tutorial_jp/kokoro.xls",
+    col_names = c("text", "section", "chapter", "label"),
+    skip = 1
+  ) |>
+  dplyr::mutate(
+    doc_id = dplyr::row_number(),
+    dplyr::across(where(is.character), ~ audubon::strj_normalize(.))
+  ) |>
+  dplyr::filter(!gibasa::is_blank(text)) |>
+  dplyr::relocate(doc_id, text, section, label, chapter)
+
+tbl
+```
+
+このデータでは、夏目漱石の『こころ』が段落（`doc_id`）ごとにひとつのテキストとして打ち込まれている。『こころ』は上中下の3部（`section`）で構成されていて、それぞれの部が複数の章（`label`, `chapter`）に分かれている。
+
+## 語の抽出（A.2.2）
+
+[gibasa](https://github.com/paithiov909/gibasa)を使って形態素解析をおこない、語を抽出する。
+
+このデータをIPA辞書を使って形態素解析すると、延べ語数は105,000語程度になる。これくらいの語数であれば、形態素解析した結果をデータフレームとしてメモリ上に読み込んでも問題ないと思われるが、ここではより大規模なテキストデータを扱う場合を想定し、結果を[DuckDB](https://duckdb.org/docs/api/r.html)データベースに書き込むことにする。
+
+ここでは`chapter`ごとにグルーピングしながら、段落は文に分割せずに処理している。MeCabはバッファサイズの都合上、一度に262万字くらいまで一つの文として入力できるらしいが、極端に長い入力に対してはコスト計算ができず、エラーが出る可能性がある。また、多くの文を与えればそれだけ多くの行からなるデータフレームが返されるため、一度に処理する分量は利用している環境にあわせて適当に加減したほうがよい。
+
+KH Coderでは、IPA辞書の品詞体系をもとに変更した品詞体系が使われている。そのため、KH Coderで前処理した結果をある程度再現するためには、一部の品詞情報を書き換える必要がある。KH Coder内で使われている品詞体系については、KH Coderのレファレンスを参照されたい。
+
+また、このデータを使っているチュートリアルでは、強制抽出する語として「一人」「二人」という語を指定している。こうした語についてはMeCabのユーザー辞書に追加してしまったほうがよいが、簡単に処理するために、ここではgibasaの制約付き解析機能によって「タグ」として抽出している（KH Coderは強制抽出した語に対して「タグ」という品詞名を与える）。
+
+```{r}
+suppressPackageStartupMessages({
+  library(duckdb)
+})
+drv <- duckdb::duckdb()
+
+if (!fs::file_exists("tutorial_jp/kokoro.duckdb")) {
+
+  con <- duckdb::dbConnect(drv, dbdir = "tutorial_jp/kokoro.duckdb", read_only = FALSE)
+
+  dbCreateTable(
+    con, "tokens",
+    data.frame(
+      doc_id = integer(),
+      section = character(),
+      label = character(),
+      token_id = integer(),
+      token = character(),
+      pos = character(),
+      original = character(),
+      stringsAsFactors = FALSE
+    )
+  )
+
+  tbl |>
+    dplyr::group_by(chapter) |>
+    dplyr::group_walk(~ {
+      df <- .x |>
+        dplyr::mutate(
+          text = stringi::stri_replace_all_regex(text, "(?<codes>([一二三四五六七八九]{1}人))", "\n${codes}\tタグ\n") |>
+            stringi::stri_trim_both()
+        ) |>
+        gibasa::tokenize(text, doc_id, partial = TRUE) |>
+        gibasa::prettify(
+          col_select = c("POS1", "POS2", "POS3", "Original")
+        ) |>
+        dplyr::mutate(
+          pos = dplyr::case_when(
+            (POS1 == "タグ") ~ "タグ",
+            (is.na(Original) & stringr::str_detect(token, "^[[:alpha:]]+$")) ~ "未知語",
+            (POS1 == "感動詞") ~ "感動詞",
+            (POS1 == "名詞" & POS2 == "一般" & stringr::str_detect(token, "^[\\p{Han}]{1}$")) ~ "名詞C",
+            (POS1 == "名詞" & POS2 == "一般" & stringr::str_detect(token, "^[\\p{Hiragana}]+$")) ~ "名詞B",
+            (POS1 == "名詞" & POS2 == "一般") ~ "名詞",
+            (POS1 == "名詞" & POS2 == "固有名詞" & POS3 == "地域") ~ "地名",
+            (POS1 == "名詞" & POS2 == "固有名詞" & POS3 == "人名") ~ "人名",
+            (POS1 == "名詞" & POS2 == "固有名詞" & POS3 == "組織") ~ "組織名",
+            (POS1 == "名詞" & POS2 == "形容動詞語幹") ~ "形容動詞",
+            (POS1 == "名詞" & POS2 == "ナイ形容詞語幹") ~ "ナイ形容詞",
+            (POS1 == "名詞" & POS2 == "固有名詞") ~ "固有名詞",
+            (POS1 == "名詞" & POS2 == "サ変接続") ~ "サ変名詞",
+            (POS1 == "名詞" & POS2 == "副詞可能") ~ "副詞可能",
+            (POS1 == "動詞" & POS2 == "自立" & stringr::str_detect(token, "^[\\p{Hiragana}]+$")) ~ "動詞B",
+            (POS1 == "動詞" & POS2 == "自立") ~ "動詞",
+            (POS1 == "形容詞" & stringr::str_detect(token, "^[\\p{Hiragana}]+$")) ~ "形容詞B",
+            (POS1 == "形容詞" & POS2 == "非自立") ~ "形容詞（非自立）",
+            (POS1 == "形容詞") ~ "形容詞",
+            (POS1 == "副詞" & stringr::str_detect(token, "^[\\p{Hiragana}]+$")) ~ "副詞B",
+            (POS1 == "副詞") ~ "副詞",
+            (POS1 == "助動詞" & Original %in% c("ない", "まい", "ぬ", "ん")) ~ "否定助動詞",
+            .default = "その他"
+          )
+        ) |>
+        dplyr::select(doc_id, section, label, token_id, token, pos, Original) |>
+        dplyr::rename(original = Original)
+
+      dbAppendTable(con, "tokens", df)
+    })
+} else {
+  con <- duckdb::dbConnect(drv, dbdir = "tutorial_jp/kokoro.duckdb", read_only = TRUE)
+}
+```
+
+## コーディングルール（A.2.5）
+
+KH Coderの強力な機能のひとつとして、「コーディングルール」によるトークンへのタグ付けというのがある。KH Coderのコーディングルールはかなり複雑な記法を扱うため、Rで完璧に再現するには相応の手間がかかる。一方で、コードを与えるべき抽出語を基本形とマッチングする程度であれば、次のように比較的少ないコード量で似たようなことを実現できる。
+
+```{r}
+rules <- list(
+  "人の死" = c("死後", "死病", "死期", "死因", "死骸", "生死", "自殺", "殉死", "頓死", "変死", "亡", "死ぬ", "亡くなる", "殺す", "亡くす", "死"),
+  "恋愛" = c("愛", "恋", "愛す", "愛情", "恋人", "愛人", "恋愛", "失恋", "恋しい"),
+  "友情" = c("友達", "友人", "旧友", "親友", "朋友", "友", "級友"),
+  "信用・不信" = c("信用", "信じる", "信ずる", "不信", "疑い", "疑惑", "疑念", "猜疑", "狐疑", "疑問", "疑い深い", "疑う", "疑る", "警戒"),
+  "病気" = c("医者", "病人", "病室", "病院", "病症", "病状", "持病", "死病", "主治医", "精神病", "仮病", "病気", "看病", "大病", "病む", "病")
+)
+
+codes <-
+  dplyr::tbl(con, "tokens") |>
+  dplyr::filter(original %in% purrr::flatten_chr(rules)) |>
+  dplyr::collect() |>
+  dplyr::mutate(
+    codings = purrr::map(original,
+      ~ purrr::imap(rules, \(.x, .y) tibble::tibble(code = .y, flag = . %in% .x)) |>
+      purrr::list_rbind() |>
+      dplyr::filter(flag == TRUE) |>
+      dplyr::select(!flag)
+    )
+  ) |>
+  tidyr::unnest(codings)
+
+codes
+```
+
+## 抽出語リスト（A.3.4）
+
+「エクスポート」メニューから得られるような抽出語リストをデータフレームとして得る例。
+
+Excel向けの出力は見やすいようにカラムを分けているが、Rのデータフレームとして扱うならtidyな縦長のデータにしたほうがよい。
+
+### 品詞別・上位15語
+
+```{r}
+dplyr::tbl(con, "tokens") |>
+  dplyr::filter(
+    !pos %in% c("その他", "名詞B", "動詞B", "形容詞B", "副詞B", "否定助動詞", "形容詞（非自立）")
+  ) |>
+  dplyr::mutate(token = dplyr::if_else(is.na(original), token, original)) |>
+  dplyr::count(token, pos) |>
+  dplyr::slice_max(n, n = 15, by = pos) |>
+  dplyr::collect()
+```
+
+### 頻出150語
+
+```{r}
+dplyr::tbl(con, "tokens") |>
+  dplyr::filter(
+    !is.na(original),
+    !pos %in% c("その他", "名詞B", "動詞B", "形容詞B", "副詞B", "否定助動詞", "形容詞（非自立）")
+  ) |>
+  dplyr::mutate(token = dplyr::if_else(is.na(original), token, original)) |>
+  dplyr::count(token, pos) |>
+  dplyr::slice_max(n, n = 150) |>
+  dplyr::collect()
+```
+
+## 「文書・抽出語」表（A.3.5）
+
+いわゆる文書単語行列の例。`dplyr::collect`した後に`tidyr::pivot_wider()`などで横に展開してもよいが、多くの場合、疎行列のオブジェクトにしてしまったほうが、この後にRでの解析に用いる上では扱いやすいと思われる。quantedaの`dfm`オブジェクトをふつうの密な行列にしたいときは、`as.matrix(dfm)`すればよい。
+
+```{r}
+dfm <-
+  dplyr::tbl(con, "tokens") |>
+  dplyr::filter(
+    !is.na(original),
+    !pos %in% c("その他", "名詞B", "動詞B", "形容詞B", "副詞B", "否定助動詞", "形容詞（非自立）")
+  ) |>
+  dplyr::mutate(
+    token = dplyr::if_else(is.na(original), token, original),
+    token = paste(token, pos, sep = "/")
+  ) |>
+  dplyr::count(doc_id, token) |>
+  dplyr::collect() |>
+  tidytext::cast_dfm(doc_id, token, n) |>
+  quanteda::dfm_trim(min_termfreq = 75, termfreq_type = "rank")
+
+quanteda::docvars(dfm, "section") <-
+  dplyr::filter(tbl, doc_id %in% quanteda::docnames(dfm)) |>
+  dplyr::pull("section")
+
+dfm
+```
+
+## 「文書・コード」表（A.3.6）
+
+「文書・コード」行列の例。コードの出現頻度ではなく「コードの有無をあらわす2値変数」を出力する。
+
+```{r}
+dfm <- codes |>
+  dplyr::count(doc_id, code) |>
+  tidytext::cast_dfm(doc_id, code, n) |>
+  quanteda::dfm_weight(scheme = "boolean")
+
+quanteda::docvars(dfm, "section") <-
+  dplyr::filter(tbl, doc_id %in% quanteda::docnames(dfm)) |>
+  dplyr::pull("section")
+
+dfm
+```
+
+---
+
+```{r}
+duckdb::dbDisconnect(con)
+duckdb::duckdb_shutdown(drv)
+```
