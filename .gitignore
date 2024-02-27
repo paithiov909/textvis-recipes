@@ -3,5 +3,5 @@
 .Rhistory
 tutorial_jp
 plot-*
-!docs/plot-*
+!docs/**/*
 !*.qmd
