@@ -1,6 +1,7 @@
 # 抽出語メニュー
 
 ```{r}
+#| label: setup
 suppressPackageStartupMessages({
   library(ggplot2)
   library(duckdb)
@@ -26,9 +27,10 @@ tbl <-
 
 ## 抽出語リスト（A.5.1）
 
-活用語をクリックするとそれぞれの活用の出現頻度も見れるUIは、Rだとどうすれば実現できるかわからない。
+活用語をクリックするとそれぞれの活用の出現頻度も見れるUIについては、Rだとどうすれば実現できるかわからない。
 
 ```{r}
+#| label: freq-list
 dat <- dplyr::tbl(con, "tokens") |>
   dplyr::filter(
     !pos %in% c("その他", "名詞B", "動詞B", "形容詞B", "副詞B", "否定助動詞", "形容詞（非自立）")
@@ -51,6 +53,7 @@ reactable::reactable(
 ### 度数分布表
 
 ```{r}
+#| label: calc-tf
 dat <-
   dplyr::tbl(con, "tokens") |>
   dplyr::filter(
@@ -78,6 +81,7 @@ dat
 ### 折れ線グラフ
 
 ```{r}
+#| label: plot-tf-dist
 dat |>
   dplyr::filter(cum_prop < .8) |>
   ggplot(aes(x = n, y = degree)) +
@@ -91,6 +95,7 @@ dat |>
 段落（`doc_id`）ではなく、章ラベル（`label`）でグルーピングして集計している。`docfreq`について上でやったのと同様に処理すれば度数分布表にできる。
 
 ```{r}
+#| label: calc-df
 dat <-
   dplyr::tbl(con, "tokens") |>
   dplyr::filter(
@@ -109,6 +114,7 @@ dat
 度数分布をグラフで確認したいだけなら、このかたちからヒストグラムを描いたほうが楽。
 
 ```{r}
+#| label: plot-df-hist
 dat |>
   ggplot(aes(x = docfreq)) +
   geom_histogram(binwidth = 3) +
@@ -122,6 +128,7 @@ dat |>
 図 A.25のようなグラフの例。ggplot2で`graphics::identify`のようなことをするやり方がわからないので、適当に条件を指定してgghighlightでハイライトしている。
 
 ```{r}
+#| label: plot-tf-df
 dat |>
   ggplot(aes(x = frequency, y = docfreq)) +
   geom_jitter() +
@@ -140,11 +147,12 @@ dat |>
 
 ## 対応分析（A.5.7）
 
-### バイプロット
+### 文書・抽出語行列
 
 段落（`doc_id`）内の頻度で語彙を削ってから部（`section`）ごとに集計するために、ややめんどうなことをしている。
 
 ```{r}
+#| label: create-dfm
 dfm <-
   dplyr::tbl(con, "tokens") |>
   dplyr::filter(
@@ -164,7 +172,7 @@ dfm <-
   quanteda::dfm_trim(
     min_termfreq = 75,
     termfreq_type = "rank",
-    min_docfreq = 20,
+    min_docfreq = 30,
     docfreq_type = "count"
   )
 ```
@@ -173,7 +181,11 @@ dfm <-
 
 この関数は疎行列に対して計算をおこなえるため、比較的大きな行列を渡しても大丈夫。
 
+### バイプロット
+
 ```{r}
+#| label: fit-ca
+#| cache: true
 library(ca)
 
 ca_fit <- dfm |>
@@ -197,6 +209,7 @@ ggplot2でバイプロットを描画するには、たとえば次のように�
 なお、このコードは[Correspondence Analysis visualization using ggplot | R-bloggers](https://www.r-bloggers.com/2019/08/correspondence-analysis-visualization-using-ggplot/)を参考にした。
 
 ```{r}
+#| label: plot-ca
 tf <- dfm |>
   tidytext::tidy() |>
   dplyr::left_join(
@@ -272,6 +285,8 @@ dat |>
 `MASS::isoMDS`より`MASS::sammon`のほうがたぶん見やすい。
 
 ```{r}
+#| label: mds-2d
+#| cache: true
 simil <- dfm |>
   quanteda::dfm_weight(scheme = "boolean") |>
   proxyC::simil(margin = 2, method = "jaccard")
@@ -281,6 +296,7 @@ dat <- MASS::sammon(1 - simil, k = 2) |>
 ```
 
 ```{r}
+#| label: plot-mds-2d
 dat <- dat |>
   as.data.frame() |>
   tibble::rownames_to_column("label") |>
@@ -290,7 +306,7 @@ dat <- dat |>
     clust = (hclust(
       proxyC::dist(dat, method = "euclidean") |> as.dist(),
       method = "ward.D2"
-    ) |> cutree(k = 8))[label]
+    ) |> cutree(k = 6))[label]
   )
 
 dat |>
@@ -306,6 +322,8 @@ dat |>
 rglではなくplotlyで試してみたが、とくに見やすいということはなかったかもしれない。
 
 ```{r}
+#| label: mds-3d
+#| cache: true
 dat <- MASS::sammon(1 - simil, k = 3) |>
   purrr::pluck("points") |>
   as.data.frame() |>
@@ -315,16 +333,85 @@ dat <- MASS::sammon(1 - simil, k = 3) |>
 ```
 
 ```{r}
+#| label: plot-mds-3d
 dat |>
   plotly::plot_ly(x = ~Dim1, y = ~Dim2, z = ~Dim3, text = ~label, color = ~term_freq) |>
   plotly::add_markers(opacity = .5)
 ```
 
-## 階層的クラスタリング
+## 階層的クラスター分析（A.5.9）
 
-> デンドログラムのaxisの外に棒グラフを描く処理は[このへん](https://github.com/ko-ichi-h/khcoder/blob/9fac68b9987c4c06f9b275f3d790429ad5658ae5/kh_lib/gui_window/word_cls.pm#L819)と思われる
->
-> 透過したグラフを絶対位置で重ねるみたいな処理のよう
+### 非類似度のヒートマップ📌
+
+Jaccard係数を指定して非類似度のヒートマップを描くと、そもそもパターンが何も見えなかった。
+
+```{r}
+#| label: heatmap
+dat <- dfm |>
+  quanteda::dfm_trim(min_termfreq = 30, termfreq_type = "rank") |>
+  quanteda::dfm_weight(scheme = "boolean") |>
+  proxyC::simil(margin = 2, method = "dice") |>
+  rlang::as_function(~ 1 - .)()
+
+factoextra::fviz_dist(as.dist(dat))
+```
+
+### 階層的クラスタリング
+
+```{r}
+#| label: hclust
+clusters <-
+  as.dist(dat) |>
+  hclust(method = "ward.D2")
+```
+
+### シルエット分析📌
+
+```{r}
+#| label: hclust-avg-silhoutte
+factoextra::fviz_nbclust(
+  as.matrix(dat),
+  FUNcluster = factoextra::hcut,
+  k.max = ceiling(sqrt(nrow(dat)))
+)
+```
+
+```{r}
+#| label: hclust-silhoutte
+cluster::silhouette(cutree(clusters, k = 4), dist = dat) |>
+  factoextra::fviz_silhouette(print.summary = FALSE) +
+  theme_classic()
+```
+
+### デンドログラム
+
+デンドログラムについては、似たような表現を手軽に実現できる方法が見つけられない。ラベルの位置が左右反転しているが、`factoextra::fviz_dend(horiz = TRUE)`とするのが簡単かもしれない。
+
+```{r}
+#| label: hclust-factoextra
+factoextra::fviz_dend(clusters, h = 1.0, horiz = TRUE, labels_track_height = 0.3)
+```
+
+### デンドログラムと棒グラフ
+
+KH Coderのソースコードを見た感じ、デンドログラムと一緒に語の出現回数を描いている表現は、やや独特なことをしている。むしろ語の出現回数のほうが主な情報になってよいなら、ふつうの棒グラフの横に`ggh4x::scale_y_dendrogram()`でデンドログラムを描くことができる。
+
+```{r}
+#| label: hclust-ggplot2
+dfm |>
+  quanteda::dfm_trim(min_termfreq = 30, termfreq_type = "rank") |>
+  quanteda::colSums() |>
+  tibble::enframe() |>
+  dplyr::mutate(
+    clust = (clusters |> cutree(h = 1.0))[name]
+  ) |>
+  ggplot(aes(x = value, y = name, fill = factor(clust))) +
+  geom_bar(stat = "identity", show.legend = FALSE) +
+  scale_x_sqrt() +
+  ggh4x::scale_y_dendrogram(hclust = clusters) +
+  labs(x = "出現回数", y = element_blank()) +
+  theme_bw()
+```
 
 ## 共起ネットワーク
 
@@ -333,6 +420,9 @@ dat |>
 ---
 
 ```{r}
+#| label: cleanup
 duckdb::dbDisconnect(con)
 duckdb::duckdb_shutdown(drv)
+
+sessioninfo::session_info(info = "packages")
 ```

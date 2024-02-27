@@ -2,3 +2,6 @@
 .Rproj.user
 .Rhistory
 tutorial_jp
+plot-*
+!docs/plot-*
+!*.qmd

@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.3.450">
+<meta name="generator" content="quarto-1.4.550">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -23,7 +23,7 @@ ul.task-list li input[type="checkbox"] {
 }
 /* CSS for syntax highlighting */
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span { line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -83,7 +83,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   "collapse-after": 3,
   "panel-placement": "start",
   "type": "textbox",
-  "limit": 20,
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
   "language": {
     "search-no-results-text": "No results",
     "search-matching-documents-text": "matching documents",
@@ -92,6 +98,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-more-match-text": "more match in this document",
     "search-more-matches-text": "more matches in this document",
     "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
     "search-detached-cancel-button-title": "Cancel",
     "search-submit-button-title": "Submit",
     "search-label": "Search"
@@ -101,11 +108,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <meta property="og:title" content="Cookbook to Draw KHCoder-like Visualizations Using R - 1&nbsp; テキストの前処理">
 <meta property="og:description" content="RによるKH Coder風の可視化のレシピ集">
-<meta property="og:site-name" content="Cookbook to Draw KHCoder-like Visualizations Using R">
+<meta property="og:image" content="https://paithiov909.github.io/textvis-recipes/cover.png">
+<meta property="og:site_name" content="Cookbook to Draw KHCoder-like Visualizations Using R">
 <meta property="og:locale" content="ja">
+<meta property="og:image:height" content="1185">
+<meta property="og:image:width" content="1196">
 <meta name="twitter:title" content="Cookbook to Draw KHCoder-like Visualizations Using R - 1&nbsp; テキストの前処理">
 <meta name="twitter:description" content="RによるKH Coder風の可視化のレシピ集">
+<meta name="twitter:image" content="https://paithiov909.github.io/textvis-recipes/cover.png">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image-height" content="1185">
+<meta name="twitter:image-width" content="1196">
 </head>
 
 <body class="nav-sidebar floating">
@@ -114,12 +127,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <header id="quarto-header" class="headroom fixed-top">
   <nav class="quarto-secondary-nav">
     <div class="container-fluid d-flex">
-      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./preprocessing.html"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">テキストの前処理</span></a></li></ol></nav>
-      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
-      </a>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./preprocessing.html"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">テキストの前処理</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
       <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
         <i class="bi bi-search"></i>
       </button>
@@ -129,12 +142,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <!-- content -->
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
-  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation floating overflow-auto">
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
     <div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
       <a href="./">Cookbook to Draw KHCoder-like Visualizations Using R</a> 
         <div class="sidebar-tools-main">
-    <a href="https://github.com/paithiov909/textvis-recipes" rel="" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+    <a href="https://github.com/paithiov909/textvis-recipes" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
 </div>
     </div>
       </div>
@@ -172,7 +185,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     </ul>
     </div>
 </nav>
-<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
         <nav id="TOC" role="doc-toc" class="toc-active">
@@ -210,13 +223,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </div>
   
 
+
 </header>
+
 
 <section id="使用するデータセット" class="level2" data-number="1.1">
 <h2 data-number="1.1" class="anchored" data-anchor-id="使用するデータセット"><span class="header-section-number">1.1</span> 使用するデータセット</h2>
 <p>KH Coderの<a href="https://khcoder.net/tutorial.html">チュートリアル</a>用のデータを使う。<code>tutorial_data_3x.zip</code>の中に含まれている<code>tutorial_jp/kokoro.xls</code>というxlsファイルを次のように読み込んでおく。</p>
 <div class="cell">
-<details>
+<details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>tbl <span class="ot">&lt;-</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  readxl<span class="sc">::</span><span class="fu">read_xls</span>(<span class="st">"tutorial_jp/kokoro.xls"</span>,</span>
@@ -230,24 +245,22 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">filter</span>(<span class="sc">!</span>gibasa<span class="sc">::</span><span class="fu">is_blank</span>(text)) <span class="sc">|&gt;</span></span>
 <span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">relocate</span>(doc_id, text, section, label, chapter)</span>
 <span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>tbl</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>tbl</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 1,213 × 5</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    doc_id text                                            section label  chapter</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     &lt;int&gt; &lt;chr&gt;                                           &lt;chr&gt;   &lt;chr&gt;  &lt;chr&gt;  </span></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  1      1 私はその人を常に先生と呼んでいた。だからここで… [1]上_… 上・一 1_01   </span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  2      2 私が先生と知り合いになったのは鎌倉である。その… [1]上_… 上・一 1_01   </span></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  3      3 学校の授業が始まるにはまだ大分日数があるので鎌… [1]上_… 上・一 1_01   </span></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  4      4 宿は鎌倉でも辺鄙な方角にあった。玉突きだのアイ… [1]上_… 上・一 1_01   </span></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  5      5 私は毎日海へはいりに出掛けた。古い燻ぶり返った… [1]上_… 上・一 1_01   </span></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  6      6 私は実に先生をこの雑沓の間に見付け出したのであ… [1]上_… 上・一 1_01   </span></span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  7      7 私がその掛茶屋で先生を見た時は、先生がちょうど… [1]上_… 上・二 1_02   </span></span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  8      8 その西洋人の優れて白い皮膚の色が、掛茶屋へ入る… [1]上_… 上・二 1_02   </span></span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  9      9 彼はやがて自分の傍を顧みて、そこにこごんでいる… [1]上_… 上・二 1_02   </span></span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 10     10 私は単に好奇心のために、並んで浜辺を下りて行く… [1]上_… 上・二 1_02   </span></span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # ℹ 1,203 more rows</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
-<div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 1,213 × 5
-   doc_id text                                            section label  chapter
-    &lt;int&gt; &lt;chr&gt;                                           &lt;chr&gt;   &lt;chr&gt;  &lt;chr&gt;  
- 1      1 私はその人を常に先生と呼んでいた。だからここで… [1]上_… 上・一 1_01   
- 2      2 私が先生と知り合いになったのは鎌倉である。その… [1]上_… 上・一 1_01   
- 3      3 学校の授業が始まるにはまだ大分日数があるので鎌… [1]上_… 上・一 1_01   
- 4      4 宿は鎌倉でも辺鄙な方角にあった。玉突きだのアイ… [1]上_… 上・一 1_01   
- 5      5 私は毎日海へはいりに出掛けた。古い燻ぶり返った… [1]上_… 上・一 1_01   
- 6      6 私は実に先生をこの雑沓の間に見付け出したのであ… [1]上_… 上・一 1_01   
- 7      7 私がその掛茶屋で先生を見た時は、先生がちょうど… [1]上_… 上・二 1_02   
- 8      8 その西洋人の優れて白い皮膚の色が、掛茶屋へ入る… [1]上_… 上・二 1_02   
- 9      9 彼はやがて自分の傍を顧みて、そこにこごんでいる… [1]上_… 上・二 1_02   
-10     10 私は単に好奇心のために、並んで浜辺を下りて行く… [1]上_… 上・二 1_02   
-# ℹ 1,203 more rows</code></pre>
-</div>
 </div>
 <p>このデータでは、夏目漱石の『こころ』が段落（<code>doc_id</code>）ごとにひとつのテキストとして打ち込まれている。『こころ』は上中下の3部（<code>section</code>）で構成されていて、それぞれの部が複数の章（<code>label</code>, <code>chapter</code>）に分かれている。</p>
 </section>
@@ -259,78 +272,77 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>KH Coderでは、IPA辞書の品詞体系をもとに変更した品詞体系が使われている。そのため、KH Coderで前処理した結果をある程度再現するためには、一部の品詞情報を書き換える必要がある。KH Coder内で使われている品詞体系については、KH Coderのレファレンスを参照されたい。</p>
 <p>また、このデータを使っているチュートリアルでは、強制抽出する語として「一人」「二人」という語を指定している。こうした語についてはMeCabのユーザー辞書に追加してしまったほうがよいが、簡単に処理するために、ここではgibasaの制約付き解析機能によって「タグ」として抽出している（KH Coderは強制抽出した語に対して「タグ」という品詞名を与える）。</p>
 <div class="cell">
-<details>
+<details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">suppressPackageStartupMessages</span>({</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">library</span>(duckdb)</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>})</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>drv <span class="ot">&lt;-</span> duckdb<span class="sc">::</span><span class="fu">duckdb</span>()</span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span>fs<span class="sc">::</span><span class="fu">file_exists</span>(<span class="st">"tutorial_jp/kokoro.duckdb"</span>)) {</span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>  con <span class="ot">&lt;-</span> duckdb<span class="sc">::</span><span class="fu">dbConnect</span>(drv, <span class="at">dbdir =</span> <span class="st">"tutorial_jp/kokoro.duckdb"</span>, <span class="at">read_only =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">dbCreateTable</span>(</span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>    con, <span class="st">"tokens"</span>,</span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">data.frame</span>(</span>
-<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>      <span class="at">doc_id =</span> <span class="fu">integer</span>(),</span>
-<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>      <span class="at">section =</span> <span class="fu">character</span>(),</span>
-<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>      <span class="at">label =</span> <span class="fu">character</span>(),</span>
-<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>      <span class="at">token_id =</span> <span class="fu">integer</span>(),</span>
-<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>      <span class="at">token =</span> <span class="fu">character</span>(),</span>
-<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>      <span class="at">pos =</span> <span class="fu">character</span>(),</span>
-<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>      <span class="at">original =</span> <span class="fu">character</span>(),</span>
-<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>      <span class="at">stringsAsFactors =</span> <span class="cn">FALSE</span></span>
-<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>  tbl <span class="sc">|&gt;</span></span>
-<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>    dplyr<span class="sc">::</span><span class="fu">group_by</span>(chapter) <span class="sc">|&gt;</span></span>
-<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>    dplyr<span class="sc">::</span><span class="fu">group_walk</span>(<span class="sc">~</span> {</span>
-<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>      df <span class="ot">&lt;-</span> .x <span class="sc">|&gt;</span></span>
-<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>        dplyr<span class="sc">::</span><span class="fu">mutate</span>(</span>
-<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a>          <span class="at">text =</span> stringi<span class="sc">::</span><span class="fu">stri_replace_all_regex</span>(text, <span class="st">"(?&lt;codes&gt;([一二三四五六七八九]{1}人))"</span>, <span class="st">"</span><span class="sc">\n</span><span class="st">${codes}</span><span class="sc">\t</span><span class="st">タグ</span><span class="sc">\n</span><span class="st">"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a>            stringi<span class="sc">::</span><span class="fu">stri_trim_both</span>()</span>
-<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a>        ) <span class="sc">|&gt;</span></span>
-<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a>        gibasa<span class="sc">::</span><span class="fu">tokenize</span>(text, doc_id, <span class="at">partial =</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span></span>
-<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a>        gibasa<span class="sc">::</span><span class="fu">prettify</span>(</span>
-<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a>          <span class="at">col_select =</span> <span class="fu">c</span>(<span class="st">"POS1"</span>, <span class="st">"POS2"</span>, <span class="st">"POS3"</span>, <span class="st">"Original"</span>)</span>
-<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a>        ) <span class="sc">|&gt;</span></span>
-<span id="cb3-36"><a href="#cb3-36" aria-hidden="true" tabindex="-1"></a>        dplyr<span class="sc">::</span><span class="fu">mutate</span>(</span>
-<span id="cb3-37"><a href="#cb3-37" aria-hidden="true" tabindex="-1"></a>          <span class="at">pos =</span> dplyr<span class="sc">::</span><span class="fu">case_when</span>(</span>
-<span id="cb3-38"><a href="#cb3-38" aria-hidden="true" tabindex="-1"></a>            (POS1 <span class="sc">==</span> <span class="st">"タグ"</span>) <span class="sc">~</span> <span class="st">"タグ"</span>,</span>
-<span id="cb3-39"><a href="#cb3-39" aria-hidden="true" tabindex="-1"></a>            (<span class="fu">is.na</span>(Original) <span class="sc">&amp;</span> stringr<span class="sc">::</span><span class="fu">str_detect</span>(token, <span class="st">"^[[:alpha:]]+$"</span>)) <span class="sc">~</span> <span class="st">"未知語"</span>,</span>
-<span id="cb3-40"><a href="#cb3-40" aria-hidden="true" tabindex="-1"></a>            (POS1 <span class="sc">==</span> <span class="st">"感動詞"</span>) <span class="sc">~</span> <span class="st">"感動詞"</span>,</span>
-<span id="cb3-41"><a href="#cb3-41" aria-hidden="true" tabindex="-1"></a>            (POS1 <span class="sc">==</span> <span class="st">"名詞"</span> <span class="sc">&amp;</span> POS2 <span class="sc">==</span> <span class="st">"一般"</span> <span class="sc">&amp;</span> stringr<span class="sc">::</span><span class="fu">str_detect</span>(token, <span class="st">"^[</span><span class="sc">\\</span><span class="st">p{Han}]{1}$"</span>)) <span class="sc">~</span> <span class="st">"名詞C"</span>,</span>
-<span id="cb3-42"><a href="#cb3-42" aria-hidden="true" tabindex="-1"></a>            (POS1 <span class="sc">==</span> <span class="st">"名詞"</span> <span class="sc">&amp;</span> POS2 <span class="sc">==</span> <span class="st">"一般"</span> <span class="sc">&amp;</span> stringr<span class="sc">::</span><span class="fu">str_detect</span>(token, <span class="st">"^[</span><span class="sc">\\</span><span class="st">p{Hiragana}]+$"</span>)) <span class="sc">~</span> <span class="st">"名詞B"</span>,</span>
-<span id="cb3-43"><a href="#cb3-43" aria-hidden="true" tabindex="-1"></a>            (POS1 <span class="sc">==</span> <span class="st">"名詞"</span> <span class="sc">&amp;</span> POS2 <span class="sc">==</span> <span class="st">"一般"</span>) <span class="sc">~</span> <span class="st">"名詞"</span>,</span>
-<span id="cb3-44"><a href="#cb3-44" aria-hidden="true" tabindex="-1"></a>            (POS1 <span class="sc">==</span> <span class="st">"名詞"</span> <span class="sc">&amp;</span> POS2 <span class="sc">==</span> <span class="st">"固有名詞"</span> <span class="sc">&amp;</span> POS3 <span class="sc">==</span> <span class="st">"地域"</span>) <span class="sc">~</span> <span class="st">"地名"</span>,</span>
-<span id="cb3-45"><a href="#cb3-45" aria-hidden="true" tabindex="-1"></a>            (POS1 <span class="sc">==</span> <span class="st">"名詞"</span> <span class="sc">&amp;</span> POS2 <span class="sc">==</span> <span class="st">"固有名詞"</span> <span class="sc">&amp;</span> POS3 <span class="sc">==</span> <span class="st">"人名"</span>) <span class="sc">~</span> <span class="st">"人名"</span>,</span>
-<span id="cb3-46"><a href="#cb3-46" aria-hidden="true" tabindex="-1"></a>            (POS1 <span class="sc">==</span> <span class="st">"名詞"</span> <span class="sc">&amp;</span> POS2 <span class="sc">==</span> <span class="st">"固有名詞"</span> <span class="sc">&amp;</span> POS3 <span class="sc">==</span> <span class="st">"組織"</span>) <span class="sc">~</span> <span class="st">"組織名"</span>,</span>
-<span id="cb3-47"><a href="#cb3-47" aria-hidden="true" tabindex="-1"></a>            (POS1 <span class="sc">==</span> <span class="st">"名詞"</span> <span class="sc">&amp;</span> POS2 <span class="sc">==</span> <span class="st">"形容動詞語幹"</span>) <span class="sc">~</span> <span class="st">"形容動詞"</span>,</span>
-<span id="cb3-48"><a href="#cb3-48" aria-hidden="true" tabindex="-1"></a>            (POS1 <span class="sc">==</span> <span class="st">"名詞"</span> <span class="sc">&amp;</span> POS2 <span class="sc">==</span> <span class="st">"ナイ形容詞語幹"</span>) <span class="sc">~</span> <span class="st">"ナイ形容詞"</span>,</span>
-<span id="cb3-49"><a href="#cb3-49" aria-hidden="true" tabindex="-1"></a>            (POS1 <span class="sc">==</span> <span class="st">"名詞"</span> <span class="sc">&amp;</span> POS2 <span class="sc">==</span> <span class="st">"固有名詞"</span>) <span class="sc">~</span> <span class="st">"固有名詞"</span>,</span>
-<span id="cb3-50"><a href="#cb3-50" aria-hidden="true" tabindex="-1"></a>            (POS1 <span class="sc">==</span> <span class="st">"名詞"</span> <span class="sc">&amp;</span> POS2 <span class="sc">==</span> <span class="st">"サ変接続"</span>) <span class="sc">~</span> <span class="st">"サ変名詞"</span>,</span>
-<span id="cb3-51"><a href="#cb3-51" aria-hidden="true" tabindex="-1"></a>            (POS1 <span class="sc">==</span> <span class="st">"名詞"</span> <span class="sc">&amp;</span> POS2 <span class="sc">==</span> <span class="st">"副詞可能"</span>) <span class="sc">~</span> <span class="st">"副詞可能"</span>,</span>
-<span id="cb3-52"><a href="#cb3-52" aria-hidden="true" tabindex="-1"></a>            (POS1 <span class="sc">==</span> <span class="st">"動詞"</span> <span class="sc">&amp;</span> POS2 <span class="sc">==</span> <span class="st">"自立"</span> <span class="sc">&amp;</span> stringr<span class="sc">::</span><span class="fu">str_detect</span>(token, <span class="st">"^[</span><span class="sc">\\</span><span class="st">p{Hiragana}]+$"</span>)) <span class="sc">~</span> <span class="st">"動詞B"</span>,</span>
-<span id="cb3-53"><a href="#cb3-53" aria-hidden="true" tabindex="-1"></a>            (POS1 <span class="sc">==</span> <span class="st">"動詞"</span> <span class="sc">&amp;</span> POS2 <span class="sc">==</span> <span class="st">"自立"</span>) <span class="sc">~</span> <span class="st">"動詞"</span>,</span>
-<span id="cb3-54"><a href="#cb3-54" aria-hidden="true" tabindex="-1"></a>            (POS1 <span class="sc">==</span> <span class="st">"形容詞"</span> <span class="sc">&amp;</span> stringr<span class="sc">::</span><span class="fu">str_detect</span>(token, <span class="st">"^[</span><span class="sc">\\</span><span class="st">p{Hiragana}]+$"</span>)) <span class="sc">~</span> <span class="st">"形容詞B"</span>,</span>
-<span id="cb3-55"><a href="#cb3-55" aria-hidden="true" tabindex="-1"></a>            (POS1 <span class="sc">==</span> <span class="st">"形容詞"</span> <span class="sc">&amp;</span> POS2 <span class="sc">==</span> <span class="st">"非自立"</span>) <span class="sc">~</span> <span class="st">"形容詞（非自立）"</span>,</span>
-<span id="cb3-56"><a href="#cb3-56" aria-hidden="true" tabindex="-1"></a>            (POS1 <span class="sc">==</span> <span class="st">"形容詞"</span>) <span class="sc">~</span> <span class="st">"形容詞"</span>,</span>
-<span id="cb3-57"><a href="#cb3-57" aria-hidden="true" tabindex="-1"></a>            (POS1 <span class="sc">==</span> <span class="st">"副詞"</span> <span class="sc">&amp;</span> stringr<span class="sc">::</span><span class="fu">str_detect</span>(token, <span class="st">"^[</span><span class="sc">\\</span><span class="st">p{Hiragana}]+$"</span>)) <span class="sc">~</span> <span class="st">"副詞B"</span>,</span>
-<span id="cb3-58"><a href="#cb3-58" aria-hidden="true" tabindex="-1"></a>            (POS1 <span class="sc">==</span> <span class="st">"副詞"</span>) <span class="sc">~</span> <span class="st">"副詞"</span>,</span>
-<span id="cb3-59"><a href="#cb3-59" aria-hidden="true" tabindex="-1"></a>            (POS1 <span class="sc">==</span> <span class="st">"助動詞"</span> <span class="sc">&amp;</span> Original <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"ない"</span>, <span class="st">"まい"</span>, <span class="st">"ぬ"</span>, <span class="st">"ん"</span>)) <span class="sc">~</span> <span class="st">"否定助動詞"</span>,</span>
-<span id="cb3-60"><a href="#cb3-60" aria-hidden="true" tabindex="-1"></a>            <span class="at">.default =</span> <span class="st">"その他"</span></span>
-<span id="cb3-61"><a href="#cb3-61" aria-hidden="true" tabindex="-1"></a>          )</span>
-<span id="cb3-62"><a href="#cb3-62" aria-hidden="true" tabindex="-1"></a>        ) <span class="sc">|&gt;</span></span>
-<span id="cb3-63"><a href="#cb3-63" aria-hidden="true" tabindex="-1"></a>        dplyr<span class="sc">::</span><span class="fu">select</span>(doc_id, section, label, token_id, token, pos, Original) <span class="sc">|&gt;</span></span>
-<span id="cb3-64"><a href="#cb3-64" aria-hidden="true" tabindex="-1"></a>        dplyr<span class="sc">::</span><span class="fu">rename</span>(<span class="at">original =</span> Original)</span>
-<span id="cb3-65"><a href="#cb3-65" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-66"><a href="#cb3-66" aria-hidden="true" tabindex="-1"></a>      <span class="fu">dbAppendTable</span>(con, <span class="st">"tokens"</span>, df)</span>
-<span id="cb3-67"><a href="#cb3-67" aria-hidden="true" tabindex="-1"></a>    })</span>
-<span id="cb3-68"><a href="#cb3-68" aria-hidden="true" tabindex="-1"></a>} <span class="cf">else</span> {</span>
-<span id="cb3-69"><a href="#cb3-69" aria-hidden="true" tabindex="-1"></a>  con <span class="ot">&lt;-</span> duckdb<span class="sc">::</span><span class="fu">dbConnect</span>(drv, <span class="at">dbdir =</span> <span class="st">"tutorial_jp/kokoro.duckdb"</span>, <span class="at">read_only =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb3-70"><a href="#cb3-70" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">suppressPackageStartupMessages</span>({</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">library</span>(duckdb)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>drv <span class="ot">&lt;-</span> duckdb<span class="sc">::</span><span class="fu">duckdb</span>()</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span>fs<span class="sc">::</span><span class="fu">file_exists</span>(<span class="st">"tutorial_jp/kokoro.duckdb"</span>)) {</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  con <span class="ot">&lt;-</span> duckdb<span class="sc">::</span><span class="fu">dbConnect</span>(drv, <span class="at">dbdir =</span> <span class="st">"tutorial_jp/kokoro.duckdb"</span>, <span class="at">read_only =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">dbCreateTable</span>(</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>    con, <span class="st">"tokens"</span>,</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">data.frame</span>(</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>      <span class="at">doc_id =</span> <span class="fu">integer</span>(),</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>      <span class="at">section =</span> <span class="fu">character</span>(),</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>      <span class="at">label =</span> <span class="fu">character</span>(),</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>      <span class="at">token_id =</span> <span class="fu">integer</span>(),</span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>      <span class="at">token =</span> <span class="fu">character</span>(),</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>      <span class="at">pos =</span> <span class="fu">character</span>(),</span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>      <span class="at">original =</span> <span class="fu">character</span>(),</span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>      <span class="at">stringsAsFactors =</span> <span class="cn">FALSE</span></span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>  tbl <span class="sc">|&gt;</span></span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>    dplyr<span class="sc">::</span><span class="fu">group_by</span>(chapter) <span class="sc">|&gt;</span></span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>    dplyr<span class="sc">::</span><span class="fu">group_walk</span>(<span class="sc">~</span> {</span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>      df <span class="ot">&lt;-</span> .x <span class="sc">|&gt;</span></span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>        dplyr<span class="sc">::</span><span class="fu">mutate</span>(</span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>          <span class="at">text =</span> stringi<span class="sc">::</span><span class="fu">stri_replace_all_regex</span>(text, <span class="st">"(?&lt;codes&gt;([一二三四五六七八九]{1}人))"</span>, <span class="st">"</span><span class="sc">\n</span><span class="st">${codes}</span><span class="sc">\t</span><span class="st">タグ</span><span class="sc">\n</span><span class="st">"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>            stringi<span class="sc">::</span><span class="fu">stri_trim_both</span>()</span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a>        ) <span class="sc">|&gt;</span></span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a>        gibasa<span class="sc">::</span><span class="fu">tokenize</span>(text, doc_id, <span class="at">partial =</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span></span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a>        gibasa<span class="sc">::</span><span class="fu">prettify</span>(</span>
+<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a>          <span class="at">col_select =</span> <span class="fu">c</span>(<span class="st">"POS1"</span>, <span class="st">"POS2"</span>, <span class="st">"POS3"</span>, <span class="st">"Original"</span>)</span>
+<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a>        ) <span class="sc">|&gt;</span></span>
+<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a>        dplyr<span class="sc">::</span><span class="fu">mutate</span>(</span>
+<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a>          <span class="at">pos =</span> dplyr<span class="sc">::</span><span class="fu">case_when</span>(</span>
+<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a>            (POS1 <span class="sc">==</span> <span class="st">"タグ"</span>) <span class="sc">~</span> <span class="st">"タグ"</span>,</span>
+<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a>            (<span class="fu">is.na</span>(Original) <span class="sc">&amp;</span> stringr<span class="sc">::</span><span class="fu">str_detect</span>(token, <span class="st">"^[[:alpha:]]+$"</span>)) <span class="sc">~</span> <span class="st">"未知語"</span>,</span>
+<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a>            (POS1 <span class="sc">==</span> <span class="st">"感動詞"</span>) <span class="sc">~</span> <span class="st">"感動詞"</span>,</span>
+<span id="cb2-40"><a href="#cb2-40" aria-hidden="true" tabindex="-1"></a>            (POS1 <span class="sc">==</span> <span class="st">"名詞"</span> <span class="sc">&amp;</span> POS2 <span class="sc">==</span> <span class="st">"一般"</span> <span class="sc">&amp;</span> stringr<span class="sc">::</span><span class="fu">str_detect</span>(token, <span class="st">"^[</span><span class="sc">\\</span><span class="st">p{Han}]{1}$"</span>)) <span class="sc">~</span> <span class="st">"名詞C"</span>,</span>
+<span id="cb2-41"><a href="#cb2-41" aria-hidden="true" tabindex="-1"></a>            (POS1 <span class="sc">==</span> <span class="st">"名詞"</span> <span class="sc">&amp;</span> POS2 <span class="sc">==</span> <span class="st">"一般"</span> <span class="sc">&amp;</span> stringr<span class="sc">::</span><span class="fu">str_detect</span>(token, <span class="st">"^[</span><span class="sc">\\</span><span class="st">p{Hiragana}]+$"</span>)) <span class="sc">~</span> <span class="st">"名詞B"</span>,</span>
+<span id="cb2-42"><a href="#cb2-42" aria-hidden="true" tabindex="-1"></a>            (POS1 <span class="sc">==</span> <span class="st">"名詞"</span> <span class="sc">&amp;</span> POS2 <span class="sc">==</span> <span class="st">"一般"</span>) <span class="sc">~</span> <span class="st">"名詞"</span>,</span>
+<span id="cb2-43"><a href="#cb2-43" aria-hidden="true" tabindex="-1"></a>            (POS1 <span class="sc">==</span> <span class="st">"名詞"</span> <span class="sc">&amp;</span> POS2 <span class="sc">==</span> <span class="st">"固有名詞"</span> <span class="sc">&amp;</span> POS3 <span class="sc">==</span> <span class="st">"地域"</span>) <span class="sc">~</span> <span class="st">"地名"</span>,</span>
+<span id="cb2-44"><a href="#cb2-44" aria-hidden="true" tabindex="-1"></a>            (POS1 <span class="sc">==</span> <span class="st">"名詞"</span> <span class="sc">&amp;</span> POS2 <span class="sc">==</span> <span class="st">"固有名詞"</span> <span class="sc">&amp;</span> POS3 <span class="sc">==</span> <span class="st">"人名"</span>) <span class="sc">~</span> <span class="st">"人名"</span>,</span>
+<span id="cb2-45"><a href="#cb2-45" aria-hidden="true" tabindex="-1"></a>            (POS1 <span class="sc">==</span> <span class="st">"名詞"</span> <span class="sc">&amp;</span> POS2 <span class="sc">==</span> <span class="st">"固有名詞"</span> <span class="sc">&amp;</span> POS3 <span class="sc">==</span> <span class="st">"組織"</span>) <span class="sc">~</span> <span class="st">"組織名"</span>,</span>
+<span id="cb2-46"><a href="#cb2-46" aria-hidden="true" tabindex="-1"></a>            (POS1 <span class="sc">==</span> <span class="st">"名詞"</span> <span class="sc">&amp;</span> POS2 <span class="sc">==</span> <span class="st">"形容動詞語幹"</span>) <span class="sc">~</span> <span class="st">"形容動詞"</span>,</span>
+<span id="cb2-47"><a href="#cb2-47" aria-hidden="true" tabindex="-1"></a>            (POS1 <span class="sc">==</span> <span class="st">"名詞"</span> <span class="sc">&amp;</span> POS2 <span class="sc">==</span> <span class="st">"ナイ形容詞語幹"</span>) <span class="sc">~</span> <span class="st">"ナイ形容詞"</span>,</span>
+<span id="cb2-48"><a href="#cb2-48" aria-hidden="true" tabindex="-1"></a>            (POS1 <span class="sc">==</span> <span class="st">"名詞"</span> <span class="sc">&amp;</span> POS2 <span class="sc">==</span> <span class="st">"固有名詞"</span>) <span class="sc">~</span> <span class="st">"固有名詞"</span>,</span>
+<span id="cb2-49"><a href="#cb2-49" aria-hidden="true" tabindex="-1"></a>            (POS1 <span class="sc">==</span> <span class="st">"名詞"</span> <span class="sc">&amp;</span> POS2 <span class="sc">==</span> <span class="st">"サ変接続"</span>) <span class="sc">~</span> <span class="st">"サ変名詞"</span>,</span>
+<span id="cb2-50"><a href="#cb2-50" aria-hidden="true" tabindex="-1"></a>            (POS1 <span class="sc">==</span> <span class="st">"名詞"</span> <span class="sc">&amp;</span> POS2 <span class="sc">==</span> <span class="st">"副詞可能"</span>) <span class="sc">~</span> <span class="st">"副詞可能"</span>,</span>
+<span id="cb2-51"><a href="#cb2-51" aria-hidden="true" tabindex="-1"></a>            (POS1 <span class="sc">==</span> <span class="st">"動詞"</span> <span class="sc">&amp;</span> POS2 <span class="sc">==</span> <span class="st">"自立"</span> <span class="sc">&amp;</span> stringr<span class="sc">::</span><span class="fu">str_detect</span>(token, <span class="st">"^[</span><span class="sc">\\</span><span class="st">p{Hiragana}]+$"</span>)) <span class="sc">~</span> <span class="st">"動詞B"</span>,</span>
+<span id="cb2-52"><a href="#cb2-52" aria-hidden="true" tabindex="-1"></a>            (POS1 <span class="sc">==</span> <span class="st">"動詞"</span> <span class="sc">&amp;</span> POS2 <span class="sc">==</span> <span class="st">"自立"</span>) <span class="sc">~</span> <span class="st">"動詞"</span>,</span>
+<span id="cb2-53"><a href="#cb2-53" aria-hidden="true" tabindex="-1"></a>            (POS1 <span class="sc">==</span> <span class="st">"形容詞"</span> <span class="sc">&amp;</span> stringr<span class="sc">::</span><span class="fu">str_detect</span>(token, <span class="st">"^[</span><span class="sc">\\</span><span class="st">p{Hiragana}]+$"</span>)) <span class="sc">~</span> <span class="st">"形容詞B"</span>,</span>
+<span id="cb2-54"><a href="#cb2-54" aria-hidden="true" tabindex="-1"></a>            (POS1 <span class="sc">==</span> <span class="st">"形容詞"</span> <span class="sc">&amp;</span> POS2 <span class="sc">==</span> <span class="st">"非自立"</span>) <span class="sc">~</span> <span class="st">"形容詞（非自立）"</span>,</span>
+<span id="cb2-55"><a href="#cb2-55" aria-hidden="true" tabindex="-1"></a>            (POS1 <span class="sc">==</span> <span class="st">"形容詞"</span>) <span class="sc">~</span> <span class="st">"形容詞"</span>,</span>
+<span id="cb2-56"><a href="#cb2-56" aria-hidden="true" tabindex="-1"></a>            (POS1 <span class="sc">==</span> <span class="st">"副詞"</span> <span class="sc">&amp;</span> stringr<span class="sc">::</span><span class="fu">str_detect</span>(token, <span class="st">"^[</span><span class="sc">\\</span><span class="st">p{Hiragana}]+$"</span>)) <span class="sc">~</span> <span class="st">"副詞B"</span>,</span>
+<span id="cb2-57"><a href="#cb2-57" aria-hidden="true" tabindex="-1"></a>            (POS1 <span class="sc">==</span> <span class="st">"副詞"</span>) <span class="sc">~</span> <span class="st">"副詞"</span>,</span>
+<span id="cb2-58"><a href="#cb2-58" aria-hidden="true" tabindex="-1"></a>            (POS1 <span class="sc">==</span> <span class="st">"助動詞"</span> <span class="sc">&amp;</span> Original <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"ない"</span>, <span class="st">"まい"</span>, <span class="st">"ぬ"</span>, <span class="st">"ん"</span>)) <span class="sc">~</span> <span class="st">"否定助動詞"</span>,</span>
+<span id="cb2-59"><a href="#cb2-59" aria-hidden="true" tabindex="-1"></a>            <span class="at">.default =</span> <span class="st">"その他"</span></span>
+<span id="cb2-60"><a href="#cb2-60" aria-hidden="true" tabindex="-1"></a>          )</span>
+<span id="cb2-61"><a href="#cb2-61" aria-hidden="true" tabindex="-1"></a>        ) <span class="sc">|&gt;</span></span>
+<span id="cb2-62"><a href="#cb2-62" aria-hidden="true" tabindex="-1"></a>        dplyr<span class="sc">::</span><span class="fu">select</span>(doc_id, section, label, token_id, token, pos, Original) <span class="sc">|&gt;</span></span>
+<span id="cb2-63"><a href="#cb2-63" aria-hidden="true" tabindex="-1"></a>        dplyr<span class="sc">::</span><span class="fu">rename</span>(<span class="at">original =</span> Original)</span>
+<span id="cb2-64"><a href="#cb2-64" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-65"><a href="#cb2-65" aria-hidden="true" tabindex="-1"></a>      <span class="fu">dbAppendTable</span>(con, <span class="st">"tokens"</span>, df)</span>
+<span id="cb2-66"><a href="#cb2-66" aria-hidden="true" tabindex="-1"></a>    })</span>
+<span id="cb2-67"><a href="#cb2-67" aria-hidden="true" tabindex="-1"></a>} <span class="cf">else</span> {</span>
+<span id="cb2-68"><a href="#cb2-68" aria-hidden="true" tabindex="-1"></a>  con <span class="ot">&lt;-</span> duckdb<span class="sc">::</span><span class="fu">dbConnect</span>(drv, <span class="at">dbdir =</span> <span class="st">"tutorial_jp/kokoro.duckdb"</span>, <span class="at">read_only =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb2-69"><a href="#cb2-69" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 </section>
@@ -338,48 +350,47 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 data-number="1.3" class="anchored" data-anchor-id="コーディングルールa.2.5"><span class="header-section-number">1.3</span> コーディングルール（A.2.5）</h2>
 <p>KH Coderの強力な機能のひとつとして、「コーディングルール」によるトークンへのタグ付けというのがある。KH Coderのコーディングルールはかなり複雑な記法を扱うため、Rで完璧に再現するには相応の手間がかかる。一方で、コードを与えるべき抽出語を基本形とマッチングする程度であれば、次のように比較的少ないコード量で似たようなことを実現できる。</p>
 <div class="cell">
-<details>
+<details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>rules <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">"人の死"</span> <span class="ot">=</span> <span class="fu">c</span>(<span class="st">"死後"</span>, <span class="st">"死病"</span>, <span class="st">"死期"</span>, <span class="st">"死因"</span>, <span class="st">"死骸"</span>, <span class="st">"生死"</span>, <span class="st">"自殺"</span>, <span class="st">"殉死"</span>, <span class="st">"頓死"</span>, <span class="st">"変死"</span>, <span class="st">"亡"</span>, <span class="st">"死ぬ"</span>, <span class="st">"亡くなる"</span>, <span class="st">"殺す"</span>, <span class="st">"亡くす"</span>, <span class="st">"死"</span>),</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">"恋愛"</span> <span class="ot">=</span> <span class="fu">c</span>(<span class="st">"愛"</span>, <span class="st">"恋"</span>, <span class="st">"愛す"</span>, <span class="st">"愛情"</span>, <span class="st">"恋人"</span>, <span class="st">"愛人"</span>, <span class="st">"恋愛"</span>, <span class="st">"失恋"</span>, <span class="st">"恋しい"</span>),</span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">"友情"</span> <span class="ot">=</span> <span class="fu">c</span>(<span class="st">"友達"</span>, <span class="st">"友人"</span>, <span class="st">"旧友"</span>, <span class="st">"親友"</span>, <span class="st">"朋友"</span>, <span class="st">"友"</span>, <span class="st">"級友"</span>),</span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="st">"信用・不信"</span> <span class="ot">=</span> <span class="fu">c</span>(<span class="st">"信用"</span>, <span class="st">"信じる"</span>, <span class="st">"信ずる"</span>, <span class="st">"不信"</span>, <span class="st">"疑い"</span>, <span class="st">"疑惑"</span>, <span class="st">"疑念"</span>, <span class="st">"猜疑"</span>, <span class="st">"狐疑"</span>, <span class="st">"疑問"</span>, <span class="st">"疑い深い"</span>, <span class="st">"疑う"</span>, <span class="st">"疑る"</span>, <span class="st">"警戒"</span>),</span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  <span class="st">"病気"</span> <span class="ot">=</span> <span class="fu">c</span>(<span class="st">"医者"</span>, <span class="st">"病人"</span>, <span class="st">"病室"</span>, <span class="st">"病院"</span>, <span class="st">"病症"</span>, <span class="st">"病状"</span>, <span class="st">"持病"</span>, <span class="st">"死病"</span>, <span class="st">"主治医"</span>, <span class="st">"精神病"</span>, <span class="st">"仮病"</span>, <span class="st">"病気"</span>, <span class="st">"看病"</span>, <span class="st">"大病"</span>, <span class="st">"病む"</span>, <span class="st">"病"</span>)</span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>codes <span class="ot">&lt;-</span></span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">tbl</span>(con, <span class="st">"tokens"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">filter</span>(original <span class="sc">%in%</span> purrr<span class="sc">::</span><span class="fu">flatten_chr</span>(rules)) <span class="sc">|&gt;</span></span>
-<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">collect</span>() <span class="sc">|&gt;</span></span>
-<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(</span>
-<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">codings =</span> purrr<span class="sc">::</span><span class="fu">map</span>(original,</span>
-<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>      <span class="sc">~</span> purrr<span class="sc">::</span><span class="fu">imap</span>(rules, \(.x, .y) tibble<span class="sc">::</span><span class="fu">tibble</span>(<span class="at">code =</span> .y, <span class="at">flag =</span> . <span class="sc">%in%</span> .x)) <span class="sc">|&gt;</span></span>
-<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>      purrr<span class="sc">::</span><span class="fu">list_rbind</span>() <span class="sc">|&gt;</span></span>
-<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>      dplyr<span class="sc">::</span><span class="fu">filter</span>(flag <span class="sc">==</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span></span>
-<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>      dplyr<span class="sc">::</span><span class="fu">select</span>(<span class="sc">!</span>flag)</span>
-<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
-<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>  tidyr<span class="sc">::</span><span class="fu">unnest</span>(codings)</span>
-<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>codes</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>rules <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">"人の死"</span> <span class="ot">=</span> <span class="fu">c</span>(<span class="st">"死後"</span>, <span class="st">"死病"</span>, <span class="st">"死期"</span>, <span class="st">"死因"</span>, <span class="st">"死骸"</span>, <span class="st">"生死"</span>, <span class="st">"自殺"</span>, <span class="st">"殉死"</span>, <span class="st">"頓死"</span>, <span class="st">"変死"</span>, <span class="st">"亡"</span>, <span class="st">"死ぬ"</span>, <span class="st">"亡くなる"</span>, <span class="st">"殺す"</span>, <span class="st">"亡くす"</span>, <span class="st">"死"</span>),</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">"恋愛"</span> <span class="ot">=</span> <span class="fu">c</span>(<span class="st">"愛"</span>, <span class="st">"恋"</span>, <span class="st">"愛す"</span>, <span class="st">"愛情"</span>, <span class="st">"恋人"</span>, <span class="st">"愛人"</span>, <span class="st">"恋愛"</span>, <span class="st">"失恋"</span>, <span class="st">"恋しい"</span>),</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">"友情"</span> <span class="ot">=</span> <span class="fu">c</span>(<span class="st">"友達"</span>, <span class="st">"友人"</span>, <span class="st">"旧友"</span>, <span class="st">"親友"</span>, <span class="st">"朋友"</span>, <span class="st">"友"</span>, <span class="st">"級友"</span>),</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="st">"信用・不信"</span> <span class="ot">=</span> <span class="fu">c</span>(<span class="st">"信用"</span>, <span class="st">"信じる"</span>, <span class="st">"信ずる"</span>, <span class="st">"不信"</span>, <span class="st">"疑い"</span>, <span class="st">"疑惑"</span>, <span class="st">"疑念"</span>, <span class="st">"猜疑"</span>, <span class="st">"狐疑"</span>, <span class="st">"疑問"</span>, <span class="st">"疑い深い"</span>, <span class="st">"疑う"</span>, <span class="st">"疑る"</span>, <span class="st">"警戒"</span>),</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  <span class="st">"病気"</span> <span class="ot">=</span> <span class="fu">c</span>(<span class="st">"医者"</span>, <span class="st">"病人"</span>, <span class="st">"病室"</span>, <span class="st">"病院"</span>, <span class="st">"病症"</span>, <span class="st">"病状"</span>, <span class="st">"持病"</span>, <span class="st">"死病"</span>, <span class="st">"主治医"</span>, <span class="st">"精神病"</span>, <span class="st">"仮病"</span>, <span class="st">"病気"</span>, <span class="st">"看病"</span>, <span class="st">"大病"</span>, <span class="st">"病む"</span>, <span class="st">"病"</span>)</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>codes <span class="ot">&lt;-</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">tbl</span>(con, <span class="st">"tokens"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">filter</span>(original <span class="sc">%in%</span> purrr<span class="sc">::</span><span class="fu">flatten_chr</span>(rules)) <span class="sc">|&gt;</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">collect</span>() <span class="sc">|&gt;</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">codings =</span> purrr<span class="sc">::</span><span class="fu">map</span>(</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>      original,</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>      <span class="sc">~</span> purrr<span class="sc">::</span><span class="fu">imap</span>(rules, \(.x, .y) tibble<span class="sc">::</span><span class="fu">tibble</span>(<span class="at">code =</span> .y, <span class="at">flag =</span> . <span class="sc">%in%</span> .x)) <span class="sc">|&gt;</span></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>        purrr<span class="sc">::</span><span class="fu">list_rbind</span>() <span class="sc">|&gt;</span></span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>        dplyr<span class="sc">::</span><span class="fu">filter</span>(flag <span class="sc">==</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span></span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>        dplyr<span class="sc">::</span><span class="fu">select</span>(<span class="sc">!</span>flag)</span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>  tidyr<span class="sc">::</span><span class="fu">unnest</span>(codings)</span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>codes</span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 537 × 8</span></span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    doc_id section        label  token_id token    pos      original code      </span></span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     &lt;int&gt; &lt;chr&gt;          &lt;chr&gt;     &lt;int&gt; &lt;chr&gt;    &lt;chr&gt;    &lt;chr&gt;    &lt;chr&gt;     </span></span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  1      2 [1]上_先生と私 上・一       36 友達     名詞     友達     友情      </span></span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  2      2 [1]上_先生と私 上・一       96 友達     名詞     友達     友情      </span></span>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  3      2 [1]上_先生と私 上・一      115 病気     サ変名詞 病気     病気      </span></span>
+<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  4      2 [1]上_先生と私 上・一      124 友達     名詞     友達     友情      </span></span>
+<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  5      2 [1]上_先生と私 上・一      128 信じ     動詞     信じる   信用・不信</span></span>
+<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  6      2 [1]上_先生と私 上・一      132 友達     名詞     友達     友情      </span></span>
+<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  7      2 [1]上_先生と私 上・一      240 病気     サ変名詞 病気     病気      </span></span>
+<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  8      3 [1]上_先生と私 上・一       44 友達     名詞     友達     友情      </span></span>
+<span id="cb3-36"><a href="#cb3-36" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  9     19 [1]上_先生と私 上・三      207 疑っ     動詞     疑う     信用・不信</span></span>
+<span id="cb3-37"><a href="#cb3-37" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 10     21 [1]上_先生と私 上・四      161 亡くなっ 動詞     亡くなる 人の死    </span></span>
+<span id="cb3-38"><a href="#cb3-38" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # ℹ 527 more rows</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
-<div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 537 × 8
-   doc_id section        label  token_id token    pos      original code      
-    &lt;int&gt; &lt;chr&gt;          &lt;chr&gt;     &lt;int&gt; &lt;chr&gt;    &lt;chr&gt;    &lt;chr&gt;    &lt;chr&gt;     
- 1      2 [1]上_先生と私 上・一       36 友達     名詞     友達     友情      
- 2      2 [1]上_先生と私 上・一       96 友達     名詞     友達     友情      
- 3      2 [1]上_先生と私 上・一      115 病気     サ変名詞 病気     病気      
- 4      2 [1]上_先生と私 上・一      124 友達     名詞     友達     友情      
- 5      2 [1]上_先生と私 上・一      128 信じ     動詞     信じる   信用・不信
- 6      2 [1]上_先生と私 上・一      132 友達     名詞     友達     友情      
- 7      2 [1]上_先生と私 上・一      240 病気     サ変名詞 病気     病気      
- 8      3 [1]上_先生と私 上・一       44 友達     名詞     友達     友情      
- 9     19 [1]上_先生と私 上・三      207 疑っ     動詞     疑う     信用・不信
-10     21 [1]上_先生と私 上・四      161 亡くなっ 動詞     亡くなる 人の死    
-# ℹ 527 more rows</code></pre>
-</div>
 </div>
 </section>
 <section id="抽出語リストa.3.4" class="level2" data-number="1.4">
@@ -389,66 +400,62 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="品詞別上位15語" class="level3" data-number="1.4.1">
 <h3 data-number="1.4.1" class="anchored" data-anchor-id="品詞別上位15語"><span class="header-section-number">1.4.1</span> 品詞別・上位15語</h3>
 <div class="cell">
-<details>
+<details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>dplyr<span class="sc">::</span><span class="fu">tbl</span>(con, <span class="st">"tokens"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">filter</span>(</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    <span class="sc">!</span>pos <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"その他"</span>, <span class="st">"名詞B"</span>, <span class="st">"動詞B"</span>, <span class="st">"形容詞B"</span>, <span class="st">"副詞B"</span>, <span class="st">"否定助動詞"</span>, <span class="st">"形容詞（非自立）"</span>)</span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="at">token =</span> dplyr<span class="sc">::</span><span class="fu">if_else</span>(<span class="fu">is.na</span>(original), token, original)) <span class="sc">|&gt;</span></span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">count</span>(token, pos) <span class="sc">|&gt;</span></span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">slice_max</span>(n, <span class="at">n =</span> <span class="dv">15</span>, <span class="at">by =</span> pos) <span class="sc">|&gt;</span></span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">collect</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>dplyr<span class="sc">::</span><span class="fu">tbl</span>(con, <span class="st">"tokens"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">filter</span>(</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    <span class="sc">!</span>pos <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"その他"</span>, <span class="st">"名詞B"</span>, <span class="st">"動詞B"</span>, <span class="st">"形容詞B"</span>, <span class="st">"副詞B"</span>, <span class="st">"否定助動詞"</span>, <span class="st">"形容詞（非自立）"</span>)</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="at">token =</span> dplyr<span class="sc">::</span><span class="fu">if_else</span>(<span class="fu">is.na</span>(original), token, original)) <span class="sc">|&gt;</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">count</span>(token, pos) <span class="sc">|&gt;</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">slice_max</span>(n, <span class="at">n =</span> <span class="dv">15</span>, <span class="at">by =</span> pos) <span class="sc">|&gt;</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">collect</span>()</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 232 × 3</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    token    pos        n</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    &lt;chr&gt;    &lt;chr&gt;  &lt;dbl&gt;</span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  1 毎日     組織名     1</span></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  2 毎日新聞 組織名     1</span></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  3 浦       組織名     1</span></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  4 丸善     組織名     1</span></span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  5 父       名詞C    269</span></span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  6 人       名詞C    176</span></span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  7 母       名詞C    170</span></span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  8 顔       名詞C    130</span></span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  9 眼       名詞C    123</span></span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 10 妻       名詞C    105</span></span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # ℹ 222 more rows</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
-<div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 232 × 3
-   token  pos          n
-   &lt;chr&gt;  &lt;chr&gt;    &lt;dbl&gt;
- 1 前     副詞可能   169
- 2 今     副詞可能   140
- 3 場合   副詞可能    38
- 4 過去   副詞可能    34
- 5 結果   副詞可能    30
- 6 すべて 副詞可能    28
- 7 平生   副詞可能    26
- 8 時間   副詞可能    25
- 9 今度   副詞可能    24
-10 事実   副詞可能    22
-# ℹ 222 more rows</code></pre>
-</div>
 </div>
 </section>
 <section id="頻出150語" class="level3" data-number="1.4.2">
 <h3 data-number="1.4.2" class="anchored" data-anchor-id="頻出150語"><span class="header-section-number">1.4.2</span> 頻出150語</h3>
 <div class="cell">
-<details>
+<details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>dplyr<span class="sc">::</span><span class="fu">tbl</span>(con, <span class="st">"tokens"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">filter</span>(</span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    <span class="sc">!</span><span class="fu">is.na</span>(original),</span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    <span class="sc">!</span>pos <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"その他"</span>, <span class="st">"名詞B"</span>, <span class="st">"動詞B"</span>, <span class="st">"形容詞B"</span>, <span class="st">"副詞B"</span>, <span class="st">"否定助動詞"</span>, <span class="st">"形容詞（非自立）"</span>)</span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="at">token =</span> dplyr<span class="sc">::</span><span class="fu">if_else</span>(<span class="fu">is.na</span>(original), token, original)) <span class="sc">|&gt;</span></span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">count</span>(token, pos) <span class="sc">|&gt;</span></span>
-<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">slice_max</span>(n, <span class="at">n =</span> <span class="dv">150</span>) <span class="sc">|&gt;</span></span>
-<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">collect</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>dplyr<span class="sc">::</span><span class="fu">tbl</span>(con, <span class="st">"tokens"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">filter</span>(</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    <span class="sc">!</span><span class="fu">is.na</span>(original),</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    <span class="sc">!</span>pos <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"その他"</span>, <span class="st">"名詞B"</span>, <span class="st">"動詞B"</span>, <span class="st">"形容詞B"</span>, <span class="st">"副詞B"</span>, <span class="st">"否定助動詞"</span>, <span class="st">"形容詞（非自立）"</span>)</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="at">token =</span> dplyr<span class="sc">::</span><span class="fu">if_else</span>(<span class="fu">is.na</span>(original), token, original)) <span class="sc">|&gt;</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">count</span>(token, pos) <span class="sc">|&gt;</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">slice_max</span>(n, <span class="at">n =</span> <span class="dv">150</span>) <span class="sc">|&gt;</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">collect</span>()</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 152 × 3</span></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    token  pos       n</span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    &lt;chr&gt;  &lt;chr&gt; &lt;dbl&gt;</span></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  1 先生   名詞    595</span></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  2 奥さん 名詞    388</span></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  3 思う   動詞    293</span></span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  4 父     名詞C   269</span></span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  5 自分   名詞    264</span></span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  6 見る   動詞    225</span></span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  7 聞く   動詞    218</span></span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  8 出る   動詞    179</span></span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  9 人     名詞C   176</span></span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 10 母     名詞C   170</span></span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # ℹ 142 more rows</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
-<div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 152 × 3
-   token  pos       n
-   &lt;chr&gt;  &lt;chr&gt; &lt;dbl&gt;
- 1 先生   名詞    595
- 2 奥さん 名詞    388
- 3 思う   動詞    293
- 4 父     名詞C   269
- 5 自分   名詞    264
- 6 見る   動詞    225
- 7 聞く   動詞    218
- 8 出る   動詞    179
- 9 人     名詞C   176
-10 母     名詞C   170
-# ℹ 142 more rows</code></pre>
-</div>
 </div>
 </section>
 </section>
@@ -456,87 +463,157 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 data-number="1.5" class="anchored" data-anchor-id="文書抽出語表a.3.5"><span class="header-section-number">1.5</span> 「文書・抽出語」表（A.3.5）</h2>
 <p>いわゆる文書単語行列の例。<code>dplyr::collect</code>した後に<code>tidyr::pivot_wider()</code>などで横に展開してもよいが、多くの場合、疎行列のオブジェクトにしてしまったほうが、この後にRでの解析に用いる上では扱いやすいと思われる。quantedaの<code>dfm</code>オブジェクトをふつうの密な行列にしたいときは、<code>as.matrix(dfm)</code>すればよい。</p>
 <div class="cell">
-<details>
+<details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>dfm <span class="ot">&lt;-</span></span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">tbl</span>(con, <span class="st">"tokens"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">filter</span>(</span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>    <span class="sc">!</span><span class="fu">is.na</span>(original),</span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>    <span class="sc">!</span>pos <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"その他"</span>, <span class="st">"名詞B"</span>, <span class="st">"動詞B"</span>, <span class="st">"形容詞B"</span>, <span class="st">"副詞B"</span>, <span class="st">"否定助動詞"</span>, <span class="st">"形容詞（非自立）"</span>)</span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
-<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(</span>
-<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">token =</span> dplyr<span class="sc">::</span><span class="fu">if_else</span>(<span class="fu">is.na</span>(original), token, original),</span>
-<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">token =</span> <span class="fu">paste</span>(token, pos, <span class="at">sep =</span> <span class="st">"/"</span>)</span>
-<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
-<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">count</span>(doc_id, token) <span class="sc">|&gt;</span></span>
-<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">collect</span>() <span class="sc">|&gt;</span></span>
-<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>  tidytext<span class="sc">::</span><span class="fu">cast_dfm</span>(doc_id, token, n) <span class="sc">|&gt;</span></span>
-<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>  quanteda<span class="sc">::</span><span class="fu">dfm_trim</span>(<span class="at">min_termfreq =</span> <span class="dv">75</span>, <span class="at">termfreq_type =</span> <span class="st">"rank"</span>)</span>
-<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>quanteda<span class="sc">::</span><span class="fu">docvars</span>(dfm, <span class="st">"section"</span>) <span class="ot">&lt;-</span></span>
-<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">filter</span>(tbl, doc_id <span class="sc">%in%</span> quanteda<span class="sc">::</span><span class="fu">docnames</span>(dfm)) <span class="sc">|&gt;</span></span>
-<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">pull</span>(<span class="st">"section"</span>)</span>
-<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a>dfm</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>dfm <span class="ot">&lt;-</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">tbl</span>(con, <span class="st">"tokens"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">filter</span>(</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    <span class="sc">!</span><span class="fu">is.na</span>(original),</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    <span class="sc">!</span>pos <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"その他"</span>, <span class="st">"名詞B"</span>, <span class="st">"動詞B"</span>, <span class="st">"形容詞B"</span>, <span class="st">"副詞B"</span>, <span class="st">"否定助動詞"</span>, <span class="st">"形容詞（非自立）"</span>)</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">token =</span> dplyr<span class="sc">::</span><span class="fu">if_else</span>(<span class="fu">is.na</span>(original), token, original),</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">token =</span> <span class="fu">paste</span>(token, pos, <span class="at">sep =</span> <span class="st">"/"</span>)</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">count</span>(doc_id, token) <span class="sc">|&gt;</span></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">collect</span>() <span class="sc">|&gt;</span></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>  tidytext<span class="sc">::</span><span class="fu">cast_dfm</span>(doc_id, token, n) <span class="sc">|&gt;</span></span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>  quanteda<span class="sc">::</span><span class="fu">dfm_trim</span>(<span class="at">min_termfreq =</span> <span class="dv">75</span>, <span class="at">termfreq_type =</span> <span class="st">"rank"</span>)</span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>quanteda<span class="sc">::</span><span class="fu">docvars</span>(dfm, <span class="st">"section"</span>) <span class="ot">&lt;-</span></span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">filter</span>(tbl, doc_id <span class="sc">%in%</span> quanteda<span class="sc">::</span><span class="fu">docnames</span>(dfm)) <span class="sc">|&gt;</span></span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">pull</span>(<span class="st">"section"</span>)</span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>dfm</span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Document-feature matrix of: 1,185 documents, 78 features (93.19% sparse) and 1 docvar.</span></span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     features</span></span>
+<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; docs 急/形容動詞 手/名詞C 男/名詞C 間/名詞C 出す/動詞 頭/名詞C 帰る/動詞</span></span>
+<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    1           0        0        0        0         0        0         0</span></span>
+<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    2           1        0        0        0         0        0         4</span></span>
+<span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    3           0        0        1        0         0        0         1</span></span>
+<span id="cb6-27"><a href="#cb6-27" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    4           0        1        0        0         0        0         0</span></span>
+<span id="cb6-28"><a href="#cb6-28" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    5           0        0        1        1         0        1         0</span></span>
+<span id="cb6-29"><a href="#cb6-29" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    6           0        0        0        1         0        0         0</span></span>
+<span id="cb6-30"><a href="#cb6-30" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     features</span></span>
+<span id="cb6-31"><a href="#cb6-31" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; docs 先生/名詞 来る/動詞 外/名詞C</span></span>
+<span id="cb6-32"><a href="#cb6-32" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    1         3         0        0</span></span>
+<span id="cb6-33"><a href="#cb6-33" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    2         1         2        0</span></span>
+<span id="cb6-34"><a href="#cb6-34" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    3         0         0        0</span></span>
+<span id="cb6-35"><a href="#cb6-35" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    4         0         0        0</span></span>
+<span id="cb6-36"><a href="#cb6-36" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    5         0         1        0</span></span>
+<span id="cb6-37"><a href="#cb6-37" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    6         1         0        1</span></span>
+<span id="cb6-38"><a href="#cb6-38" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [ reached max_ndoc ... 1,179 more documents, reached max_nfeat ... 68 more features ]</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
-<div class="cell-output cell-output-stdout">
-<pre><code>Document-feature matrix of: 1,185 documents, 78 features (93.19% sparse) and 1 docvar.
-    features
-docs 先生/名詞 取る/動詞 思う/動詞 女/名詞C 知れる/動詞 立つ/動詞 来る/動詞
-   1         3         0         0        0           0         0         0
-   2         1         0         0        0           0         0         2
-   3         0         0         0        0           0         0         0
-   4         0         1         0        0           0         0         0
-   5         0         0         1        1           0         0         1
-   6         1         0         0        0           0         0         0
-    features
-docs 見る/動詞 置く/動詞 頭/名詞C
-   1         0         0        0
-   2         0         0        0
-   3         0         0        0
-   4         0         0        0
-   5         0         0        1
-   6         0         0        0
-[ reached max_ndoc ... 1,179 more documents, reached max_nfeat ... 68 more features ]</code></pre>
-</div>
 </div>
 </section>
 <section id="文書コード表a.3.6" class="level2" data-number="1.6">
 <h2 data-number="1.6" class="anchored" data-anchor-id="文書コード表a.3.6"><span class="header-section-number">1.6</span> 「文書・コード」表（A.3.6）</h2>
 <p>「文書・コード」行列の例。コードの出現頻度ではなく「コードの有無をあらわす2値変数」を出力する。</p>
 <div class="cell">
-<details>
+<details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>dfm <span class="ot">&lt;-</span> codes <span class="sc">|&gt;</span></span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">count</span>(doc_id, code) <span class="sc">|&gt;</span></span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  tidytext<span class="sc">::</span><span class="fu">cast_dfm</span>(doc_id, code, n) <span class="sc">|&gt;</span></span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>  quanteda<span class="sc">::</span><span class="fu">dfm_weight</span>(<span class="at">scheme =</span> <span class="st">"boolean"</span>)</span>
-<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>quanteda<span class="sc">::</span><span class="fu">docvars</span>(dfm, <span class="st">"section"</span>) <span class="ot">&lt;-</span></span>
-<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">filter</span>(tbl, doc_id <span class="sc">%in%</span> quanteda<span class="sc">::</span><span class="fu">docnames</span>(dfm)) <span class="sc">|&gt;</span></span>
-<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">pull</span>(<span class="st">"section"</span>)</span>
-<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>dfm</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>dfm <span class="ot">&lt;-</span> codes <span class="sc">|&gt;</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">count</span>(doc_id, code) <span class="sc">|&gt;</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  tidytext<span class="sc">::</span><span class="fu">cast_dfm</span>(doc_id, code, n) <span class="sc">|&gt;</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  quanteda<span class="sc">::</span><span class="fu">dfm_weight</span>(<span class="at">scheme =</span> <span class="st">"boolean"</span>)</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>quanteda<span class="sc">::</span><span class="fu">docvars</span>(dfm, <span class="st">"section"</span>) <span class="ot">&lt;-</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">filter</span>(tbl, doc_id <span class="sc">%in%</span> quanteda<span class="sc">::</span><span class="fu">docnames</span>(dfm)) <span class="sc">|&gt;</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">pull</span>(<span class="st">"section"</span>)</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>dfm</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Document-feature matrix of: 294 documents, 5 features (76.19% sparse) and 1 docvar.</span></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     features</span></span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; docs 信用・不信 友情 病気 人の死 恋愛</span></span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   2           1    1    1      0    0</span></span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   3           0    1    0      0    0</span></span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   19          1    0    0      0    0</span></span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   21          0    0    0      1    0</span></span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   37          0    0    0      1    0</span></span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   49          0    1    0      0    0</span></span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [ reached max_ndoc ... 288 more documents ]</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
-<div class="cell-output cell-output-stdout">
-<pre><code>Document-feature matrix of: 294 documents, 5 features (76.19% sparse) and 1 docvar.
-    features
-docs 信用・不信 友情 病気 人の死 恋愛
-  2           1    1    1      0    0
-  3           0    1    0      0    0
-  19          1    0    0      0    0
-  21          0    0    0      1    0
-  37          0    0    0      1    0
-  49          0    1    0      0    0
-[ reached max_ndoc ... 288 more documents ]</code></pre>
-</div>
 </div>
 <hr>
 <div class="cell">
-<details>
+<details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>duckdb<span class="sc">::</span><span class="fu">dbDisconnect</span>(con)</span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>duckdb<span class="sc">::</span><span class="fu">duckdb_shutdown</span>(drv)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>duckdb<span class="sc">::</span><span class="fu">dbDisconnect</span>(con)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>duckdb<span class="sc">::</span><span class="fu">duckdb_shutdown</span>(drv)</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>sessioninfo<span class="sc">::</span><span class="fu">session_info</span>(<span class="at">info =</span> <span class="st">"packages"</span>)</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ═ Session info ═══════════════════════════════════════════════════════════════</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ─ Packages ───────────────────────────────────────────────────────────────────</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  package      * version    date (UTC) lib source</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  audubon        0.5.1.9001 2023-09-03 [1] https://paithiov909.r-universe.dev (R 4.3.1)</span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  blob           1.2.4      2023-03-17 [1] RSPM (R 4.3.0)</span></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  cachem         1.0.8      2023-05-01 [1] CRAN (R 4.3.0)</span></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  cellranger     1.1.0      2016-07-27 [1] RSPM (R 4.3.0)</span></span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  cli            3.6.2      2023-12-11 [1] RSPM (R 4.3.0)</span></span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  curl           5.2.0      2023-12-08 [1] CRAN (R 4.3.2)</span></span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  DBI          * 1.2.2      2024-02-16 [1] CRAN (R 4.3.2)</span></span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  dbplyr         2.4.0      2023-10-26 [1] RSPM (R 4.3.0)</span></span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  digest         0.6.34     2024-01-11 [1] CRAN (R 4.3.2)</span></span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  dplyr          1.1.4      2023-11-17 [1] CRAN (R 4.3.2)</span></span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  duckdb       * 0.9.2-1    2023-11-28 [1] RSPM (R 4.3.2)</span></span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  evaluate       0.23       2023-11-01 [1] CRAN (R 4.3.1)</span></span>
+<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  fansi          1.0.6      2023-12-08 [1] CRAN (R 4.3.2)</span></span>
+<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  fastmap        1.1.1      2023-02-24 [1] CRAN (R 4.3.0)</span></span>
+<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  fastmatch      1.1-4      2023-08-18 [1] RSPM (R 4.3.0)</span></span>
+<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  fs             1.6.3      2023-07-20 [1] RSPM (R 4.3.1)</span></span>
+<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  generics       0.1.3      2022-07-05 [1] CRAN (R 4.3.0)</span></span>
+<span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  gibasa         1.1.0      2024-02-17 [1] https://paithiov909.r-universe.dev (R 4.3.2)</span></span>
+<span id="cb8-26"><a href="#cb8-26" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  glue           1.7.0      2024-01-09 [1] CRAN (R 4.3.2)</span></span>
+<span id="cb8-27"><a href="#cb8-27" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  htmltools      0.5.7      2023-11-03 [1] RSPM (R 4.3.0)</span></span>
+<span id="cb8-28"><a href="#cb8-28" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  htmlwidgets    1.6.4      2023-12-06 [1] RSPM (R 4.3.0)</span></span>
+<span id="cb8-29"><a href="#cb8-29" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  httpgd         1.3.1      2023-01-30 [1] CRAN (R 4.3.0)</span></span>
+<span id="cb8-30"><a href="#cb8-30" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  janeaustenr    1.0.0      2022-08-26 [1] RSPM (R 4.3.0)</span></span>
+<span id="cb8-31"><a href="#cb8-31" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  jsonlite       1.8.8      2023-12-04 [1] CRAN (R 4.3.2)</span></span>
+<span id="cb8-32"><a href="#cb8-32" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  knitr          1.45       2023-10-30 [1] CRAN (R 4.3.1)</span></span>
+<span id="cb8-33"><a href="#cb8-33" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  later          1.3.2      2023-12-06 [1] RSPM (R 4.3.0)</span></span>
+<span id="cb8-34"><a href="#cb8-34" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  lattice        0.22-5     2023-10-24 [4] CRAN (R 4.3.1)</span></span>
+<span id="cb8-35"><a href="#cb8-35" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  lifecycle      1.0.4      2023-11-07 [1] RSPM (R 4.3.0)</span></span>
+<span id="cb8-36"><a href="#cb8-36" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  magrittr       2.0.3      2022-03-30 [1] CRAN (R 4.3.0)</span></span>
+<span id="cb8-37"><a href="#cb8-37" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Matrix         1.6-3      2023-11-14 [4] CRAN (R 4.3.2)</span></span>
+<span id="cb8-38"><a href="#cb8-38" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  memoise        2.0.1      2021-11-26 [1] CRAN (R 4.3.0)</span></span>
+<span id="cb8-39"><a href="#cb8-39" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  pillar         1.9.0      2023-03-22 [1] CRAN (R 4.3.0)</span></span>
+<span id="cb8-40"><a href="#cb8-40" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  pkgconfig      2.0.3      2019-09-22 [1] CRAN (R 4.3.0)</span></span>
+<span id="cb8-41"><a href="#cb8-41" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  purrr          1.0.2      2023-08-10 [1] RSPM (R 4.3.0)</span></span>
+<span id="cb8-42"><a href="#cb8-42" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  quanteda       3.3.1      2023-05-18 [1] RSPM (R 4.3.0)</span></span>
+<span id="cb8-43"><a href="#cb8-43" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  R.cache        0.16.0     2022-07-21 [1] CRAN (R 4.3.0)</span></span>
+<span id="cb8-44"><a href="#cb8-44" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  R.methodsS3    1.8.2      2022-06-13 [1] CRAN (R 4.3.0)</span></span>
+<span id="cb8-45"><a href="#cb8-45" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  R.oo           1.26.0     2024-01-24 [1] RSPM (R 4.3.0)</span></span>
+<span id="cb8-46"><a href="#cb8-46" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  R.utils        2.12.3     2023-11-18 [1] CRAN (R 4.3.2)</span></span>
+<span id="cb8-47"><a href="#cb8-47" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  R6             2.5.1      2021-08-19 [1] CRAN (R 4.3.0)</span></span>
+<span id="cb8-48"><a href="#cb8-48" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Rcpp           1.0.12     2024-01-09 [1] RSPM (R 4.3.0)</span></span>
+<span id="cb8-49"><a href="#cb8-49" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  RcppParallel   5.1.7      2023-02-27 [1] CRAN (R 4.3.0)</span></span>
+<span id="cb8-50"><a href="#cb8-50" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  readxl         1.4.3      2023-07-06 [1] RSPM (R 4.3.0)</span></span>
+<span id="cb8-51"><a href="#cb8-51" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  rlang          1.1.3      2024-01-10 [1] CRAN (R 4.3.2)</span></span>
+<span id="cb8-52"><a href="#cb8-52" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  rmarkdown      2.25       2023-09-18 [1] RSPM (R 4.3.0)</span></span>
+<span id="cb8-53"><a href="#cb8-53" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  sessioninfo    1.2.2      2021-12-06 [1] RSPM (R 4.3.0)</span></span>
+<span id="cb8-54"><a href="#cb8-54" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  SnowballC      0.7.1      2023-04-25 [1] RSPM (R 4.3.0)</span></span>
+<span id="cb8-55"><a href="#cb8-55" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  stopwords      2.3        2021-10-28 [1] RSPM (R 4.3.0)</span></span>
+<span id="cb8-56"><a href="#cb8-56" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  stringi        1.8.3      2024-01-28 [1] https://gagolews.r-universe.dev (R 4.3.2)</span></span>
+<span id="cb8-57"><a href="#cb8-57" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  styler         1.10.2     2023-08-29 [1] RSPM (R 4.3.0)</span></span>
+<span id="cb8-58"><a href="#cb8-58" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  systemfonts    1.0.5      2023-10-09 [1] RSPM (R 4.3.0)</span></span>
+<span id="cb8-59"><a href="#cb8-59" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  tibble         3.2.1      2023-03-20 [1] CRAN (R 4.3.0)</span></span>
+<span id="cb8-60"><a href="#cb8-60" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  tidyr          1.3.1      2024-01-24 [1] RSPM (R 4.3.0)</span></span>
+<span id="cb8-61"><a href="#cb8-61" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  tidyselect     1.2.0      2022-10-10 [1] CRAN (R 4.3.0)</span></span>
+<span id="cb8-62"><a href="#cb8-62" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  tidytext       0.4.1      2023-01-07 [1] RSPM (R 4.3.0)</span></span>
+<span id="cb8-63"><a href="#cb8-63" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  tokenizers     0.3.0      2022-12-22 [1] RSPM (R 4.3.0)</span></span>
+<span id="cb8-64"><a href="#cb8-64" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  utf8           1.2.4      2023-10-22 [1] RSPM (R 4.3.0)</span></span>
+<span id="cb8-65"><a href="#cb8-65" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  V8             4.4.2      2024-02-15 [1] CRAN (R 4.3.2)</span></span>
+<span id="cb8-66"><a href="#cb8-66" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  vctrs          0.6.5      2023-12-01 [1] CRAN (R 4.3.2)</span></span>
+<span id="cb8-67"><a href="#cb8-67" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  withr          3.0.0      2024-01-16 [1] RSPM (R 4.3.0)</span></span>
+<span id="cb8-68"><a href="#cb8-68" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  xfun           0.42       2024-02-08 [1] CRAN (R 4.3.2)</span></span>
+<span id="cb8-69"><a href="#cb8-69" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  yaml           2.3.8      2023-12-11 [1] RSPM (R 4.3.0)</span></span>
+<span id="cb8-70"><a href="#cb8-70" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb8-71"><a href="#cb8-71" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [1] /home/paithiov909/R/x86_64-pc-linux-gnu-library/4.3</span></span>
+<span id="cb8-72"><a href="#cb8-72" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [2] /usr/local/lib/R/site-library</span></span>
+<span id="cb8-73"><a href="#cb8-73" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [3] /usr/lib/R/site-library</span></span>
+<span id="cb8-74"><a href="#cb8-74" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [4] /usr/lib/R/library</span></span>
+<span id="cb8-75"><a href="#cb8-75" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb8-76"><a href="#cb8-76" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ──────────────────────────────────────────────────────────────────────────────</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 
@@ -623,10 +700,9 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     // clear code selection
     e.clearSelection();
   });
-  function tippyHover(el, contentFn) {
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
     const config = {
       allowHTML: true,
-      content: contentFn,
       maxWidth: 500,
       delay: 100,
       arrow: false,
@@ -636,8 +712,17 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       interactive: true,
       interactiveBorder: 10,
       theme: 'quarto',
-      placement: 'bottom-start'
+      placement: 'bottom-start',
     };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
     window.tippy(el, config); 
   }
   const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
@@ -650,6 +735,125 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       const id = href.replace(/^#\/?/, "");
       const note = window.document.getElementById(id);
       return note.innerHTML;
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
     });
   }
       let selectedAnnoteEl;
@@ -693,6 +897,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
             }
             div.style.top = top - 2 + "px";
             div.style.height = height + 4 + "px";
+            div.style.left = 0;
             let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
             if (gutterDiv === null) {
               gutterDiv = window.document.createElement("div");
@@ -718,6 +923,32 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
         });
         selectedAnnoteEl = undefined;
       };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
       // Attach click handler to the DT
       const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
       for (const annoteDlNode of annoteDls) {
@@ -779,19 +1010,22 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <script src="https://giscus.app/client.js" data-repo="paithiov909/textvis-recipes" data-repo-id="R_kgDOLWfubw" data-category="Announcements" data-category-id="DIC_kwDOLWfub84Cdg5_" data-mapping="pathname" data-reactions-enabled="1" data-emit-metadata="0" data-input-position="top" data-theme="light" data-lang="ja" crossorigin="anonymous" data-loading="lazy" async="">
 </script>
+<input type="hidden" id="giscus-base-theme" value="light">
+<input type="hidden" id="giscus-alt-theme" value="dark">
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./index.html" class="pagination-link">
+      <a href="./index.html" class="pagination-link" aria-label="Preface">
         <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Preface</span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./plot-words.html" class="pagination-link">
+      <a href="./plot-words.html" class="pagination-link" aria-label="抽出語メニュー">
         <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">抽出語メニュー</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
 </div> <!-- /content -->
+
 
 
 

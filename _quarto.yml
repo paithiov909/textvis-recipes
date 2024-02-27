@@ -44,3 +44,9 @@ format:
     mainfont: |
       -apple-system, "BlinkMacSystemFont", "Helvetica Neue", Helvetica, "Arial", "ヒラギノ角ゴ ProN W3", "Hiragino Kaku Gothic ProN", "メイリオ", Meiryo, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"
     code-fold: true
+
+knitr:
+  opts_chunk:
+    tidy: "styler"
+    collapse: true
+    comment: "#>"

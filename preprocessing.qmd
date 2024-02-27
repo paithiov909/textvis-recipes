@@ -5,6 +5,7 @@
 KH Coderの[チュートリアル](https://khcoder.net/tutorial.html)用のデータを使う。`tutorial_data_3x.zip`の中に含まれている`tutorial_jp/kokoro.xls`というxlsファイルを次のように読み込んでおく。
 
 ```{r}
+#| label: load-data
 tbl <-
   readxl::read_xls("tutorial_jp/kokoro.xls",
     col_names = c("text", "section", "chapter", "label"),
@@ -35,6 +36,7 @@ KH Coderでは、IPA辞書の品詞体系をもとに変更した品詞体系が
 また、このデータを使っているチュートリアルでは、強制抽出する語として「一人」「二人」という語を指定している。こうした語についてはMeCabのユーザー辞書に追加してしまったほうがよいが、簡単に処理するために、ここではgibasaの制約付き解析機能によって「タグ」として抽出している（KH Coderは強制抽出した語に対して「タグ」という品詞名を与える）。
 
 ```{r}
+#| label: prep-db
 suppressPackageStartupMessages({
   library(duckdb)
 })
@@ -112,6 +114,7 @@ if (!fs::file_exists("tutorial_jp/kokoro.duckdb")) {
 KH Coderの強力な機能のひとつとして、「コーディングルール」によるトークンへのタグ付けというのがある。KH Coderのコーディングルールはかなり複雑な記法を扱うため、Rで完璧に再現するには相応の手間がかかる。一方で、コードを与えるべき抽出語を基本形とマッチングする程度であれば、次のように比較的少ないコード量で似たようなことを実現できる。
 
 ```{r}
+#| label: coding-rules
 rules <- list(
   "人の死" = c("死後", "死病", "死期", "死因", "死骸", "生死", "自殺", "殉死", "頓死", "変死", "亡", "死ぬ", "亡くなる", "殺す", "亡くす", "死"),
   "恋愛" = c("愛", "恋", "愛す", "愛情", "恋人", "愛人", "恋愛", "失恋", "恋しい"),
@@ -146,6 +149,7 @@ Excel向けの出力は見やすいようにカラムを分けているが、R�
 ### 品詞別・上位15語
 
 ```{r}
+#| label: freq-top15-by-pos
 dplyr::tbl(con, "tokens") |>
   dplyr::filter(
     !pos %in% c("その他", "名詞B", "動詞B", "形容詞B", "副詞B", "否定助動詞", "形容詞（非自立）")
@@ -159,6 +163,7 @@ dplyr::tbl(con, "tokens") |>
 ### 頻出150語
 
 ```{r}
+#| label: freq-top150
 dplyr::tbl(con, "tokens") |>
   dplyr::filter(
     !is.na(original),
@@ -175,6 +180,7 @@ dplyr::tbl(con, "tokens") |>
 いわゆる文書単語行列の例。`dplyr::collect`した後に`tidyr::pivot_wider()`などで横に展開してもよいが、多くの場合、疎行列のオブジェクトにしてしまったほうが、この後にRでの解析に用いる上では扱いやすいと思われる。quantedaの`dfm`オブジェクトをふつうの密な行列にしたいときは、`as.matrix(dfm)`すればよい。
 
 ```{r}
+#| label: create-dfm-1
 dfm <-
   dplyr::tbl(con, "tokens") |>
   dplyr::filter(
@@ -202,6 +208,7 @@ dfm
 「文書・コード」行列の例。コードの出現頻度ではなく「コードの有無をあらわす2値変数」を出力する。
 
 ```{r}
+#| label: create-dfm-2
 dfm <- codes |>
   dplyr::count(doc_id, code) |>
   tidytext::cast_dfm(doc_id, code, n) |>
@@ -217,6 +224,9 @@ dfm
 ---
 
 ```{r}
+#| label: cleanup
 duckdb::dbDisconnect(con)
 duckdb::duckdb_shutdown(drv)
+
+sessioninfo::session_info(info = "packages")
 ```
