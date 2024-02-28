@@ -5,6 +5,8 @@
 suppressPackageStartupMessages({
   library(ggplot2)
   library(duckdb)
+  library(arules)
+  library(arulesViz)
   library(ca)
 })
 drv <- duckdb::duckdb()
@@ -143,11 +145,227 @@ dat |>
 
 ## KWIC（A.5.5）
 
+### コンコーダンス
+
+コンコーダンスは`quanteda::kwic()`で確認できる。もっとも、KH Coderの提供するコンコーダンス検索やコロケーション統計のほうが明らかにリッチなのと、Rのコンソールは日本語の長めの文字列を表示するのにあまり向いていないというのがあるので、このあたりの機能が必要ならKH Coderを利用したほうがよい。
+
+```{r}
+#| label: kwic
+dat <-
+  dplyr::tbl(con, "tokens") |>
+  dplyr::filter(section == "[1]上_先生と私") |>
+  dplyr::select(label, token) |>
+  dplyr::collect() |>
+  dplyr::reframe(token = list(token), .by = label) |>
+  tibble::deframe() |>
+  quanteda::as.tokens() |>
+  quanteda::tokens_select("[[:punct:]]", selection = "remove", valuetype = "regex", padding = FALSE) |>
+  quanteda::tokens_select("^[\\p{Hiragana}]{1,2}$", selection = "remove", valuetype = "regex", padding = TRUE)
+
+quanteda::kwic(dat, pattern = "^向[いくけこ]$", window = 5, valuetype = "regex")
+```
+
+なお、上の例ではひらがな1～2文字の語をpaddingしつつ除外したので、一部の助詞などは表示されていない（それぞれの窓のなかでトークンとして数えられてはいる）。
+
+### コロケーション
+
+たとえば、前後5個のwindow内のコロケーション（nodeを含めて11語の窓ということ）の合計については次のように確認できる。
+
+```{r}
+#| label: collocation-1
+dat |>
+  quanteda::fcm(context = "window", window = 5) |>
+  tidytext::tidy() |>
+  dplyr::rename(node = document, term = term) |>
+  dplyr::filter(node == "向い") |>
+  dplyr::slice_max(count, n = 10)
+```
+
+「左合計」や「右合計」については、たとえば次のようにして確認できる。paddingしなければ`tidyr::separate_wider_delim()`で展開して位置ごとに集計することもできそう。
+
+```{r}
+#| label: collocation-2
+dat |>
+  quanteda::kwic(pattern = "^向[いくけこ]$", window = 5, valuetype = "regex") |>
+  dplyr::as_tibble() |>
+  dplyr::select(docname, keyword, pre, post) |>
+  tidyr::pivot_longer(
+    c(pre, post),
+    names_to = "window",
+    values_to = "term",
+    values_transform = ~ strsplit(., " ", fixed = TRUE)
+  ) |>
+  tidyr::unnest(term) |>
+  dplyr::count(window, term, sort = TRUE)
+```
+
 ## 関連語検索（A.5.6）
+
+### 関連語のリスト
+
+「確率差」や「確率比」については、いちおう計算はできた気がするが、あっているのかよくわからない。また、このやり方はそれなりの数の共起について計算をしなければならず、共起行列が大きくなると大変そう。
+
+```{r}
+#| label: calc-co-measures
+dfm <-
+  dplyr::tbl(con, "tokens") |>
+  dplyr::filter(
+    section == "[1]上_先生と私",
+    pos %in% c(
+      "名詞", #"名詞B", "名詞C",
+      "地名", "人名", "組織名", "固有名詞",
+      "動詞", "未知語", "タグ"
+    )
+  ) |>
+  dplyr::mutate(
+    token = dplyr::if_else(is.na(original), token, original),
+    token = paste(token, pos, sep = "/")
+  ) |>
+  dplyr::count(doc_id, token) |>
+  dplyr::collect() |>
+  tidytext::cast_dfm(doc_id, token, n) |>
+  quanteda::dfm_weight(scheme = "boolean")
+
+dat <- dfm |>
+  quanteda::fcm() |>
+  tidytext::tidy() |>
+  dplyr::rename(target = document, co_occur = count) |>
+  dplyr::reframe(
+    term = term,
+    target_occur = quanteda::colSums(dfm)[target],
+    term_occur = quanteda::colSums(dfm)[term],
+    co_occur = co_occur,
+    .by = target
+  ) |>
+  dplyr::mutate(
+    p_x = target_occur / quanteda::ndoc(dfm),
+    p_y = term_occur / quanteda::ndoc(dfm),
+    p_xy = (co_occur / quanteda::ndoc(dfm)) / p_x,
+    differential = p_xy - p_y, # 確率差
+    lift = p_xy / p_y, # 確率比（リフト）,
+    jaccard = co_occur / (target_occur + term_occur - co_occur),
+    dice = 2 * co_occur / (target_occur + term_occur)
+  ) |>
+  dplyr::select(target, term, differential, lift, jaccard, dice)
+
+dat
+```
+
+### 共起ネットワーク
+
+「先生/名詞」と関連の強そうな語の共起を図示した例。
+
+「先生/名詞」と共起している語のうち、出現回数が上位20位以内である語が`target`である共起を抽出したうえで、それらのなかからJaccard係数が大きい順に75個だけ残している。「先生/名詞」という語そのものは図に含めていない。
+
+```{r}
+#| label: plot-co-measures
+dat |>
+  dplyr::inner_join(
+    dplyr::filter(dat, target == "先生/名詞") |> dplyr::select(term),
+    by = dplyr::join_by(target == term)
+  ) |>
+  dplyr::filter(target %in% names(quanteda::topfeatures(dfm, 20))) |>
+  dplyr::slice_max(jaccard, n = 75) |>
+  tidygraph::as_tbl_graph(directed = FALSE) |>
+  tidygraph::to_minimum_spanning_tree() |>
+  purrr::pluck("mst") |>
+  dplyr::mutate(
+    community = tidygraph::group_leading_eigen()
+  ) |>
+  dplyr::mutate(community = factor(community)) |>
+  ggraph::ggraph(layout = "fr") +
+  ggraph::geom_edge_link(aes(width = sqrt(lift), alpha = jaccard)) +
+  ggraph::geom_node_point(aes(colour = community), show.legend = FALSE) +
+  ggraph::geom_node_text(aes(label = name, colour = community), repel = TRUE, show.legend = FALSE) +
+  ggraph::theme_graph()
+```
+
+### アソシエーション分析🍳
+
+英語だとこのメニューの名前は「Word Association」となっているので、ふつうにアソシエーション分析すればいいと思った。
+
+arulesの`transactions`オブジェクトをつくるには、quantedaの`fcm`オブジェクトから変換すればよい（arulesをアタッチしている必要がある）。
+
+```{r}
+#| label: create-transactions
+library(arules)
+library(arulesViz)
+
+dat <-
+  dplyr::tbl(con, "tokens") |>
+  dplyr::filter(
+    pos %in% c(
+      "名詞", #"名詞B", "名詞C",
+      "地名", "人名", "組織名", "固有名詞",
+      "動詞", "未知語", "タグ"
+    )
+  ) |>
+  dplyr::mutate(
+    token = dplyr::if_else(is.na(original), token, original),
+    token = paste(token, pos, sep = "/")
+  ) |>
+  dplyr::count(doc_id, token) |>
+  dplyr::collect() |>
+  tidytext::cast_dfm(doc_id, token, n) |>
+  quanteda::dfm_weight(scheme = "boolean") |>
+  quanteda::fcm() |>
+  as("nMatrix") |>
+  as("transactions")
+```
+
+`arules::apriori()`でアソシエーションルールを抽出する。
+
+```{r}
+#| label: apriori
+#| cache: true
+rules <-
+  arules::apriori(
+    dat,
+    parameter = list(
+      support = 0.075,
+      confidence = 0.8,
+      minlen = 2,
+      maxlen = 2, # LHS+RHSの長さ。変えないほうがよい
+      maxtime = 5
+    ),
+    control = list(verbose = FALSE)
+  )
+```
+
+この形式のオブジェクトは`as(rules, "data.frame")`のようにしてデータフレームに変換できる。`tibble`にしたい場合には次のようにすればよい。
+
+```{r}
+#| label: glimpse-rules
+as(rules, "data.frame") |>
+  dplyr::mutate(across(where(is.numeric), ~ signif(., digits = 3))) |>
+  tidyr::separate_wider_delim(rules, delim = " => ", names = c("lhs", "rhs")) |>
+  dplyr::arrange(desc(lift))
+```
+
+### 散布図🍳
+
+```{r}
+#| label: plot-rules-scatter
+plot(rules, engine = "html")
+```
+
+### バルーンプロット🍳
+
+```{r}
+#| label: plot-rules-grouped
+plot(rules, method = "grouped", engine = "html")
+```
+
+### ネットワーク図🍳
+
+```{r}
+#| label: plot-rules-graph
+plot(rules, method = "graph", engine = "html")
+```
 
 ## 対応分析（A.5.7）
 
-### 文書・抽出語行列
+### コレスポンデンス分析
 
 段落（`doc_id`）内の頻度で語彙を削ってから部（`section`）ごとに集計するために、ややめんどうなことをしている。
 
@@ -179,15 +397,9 @@ dfm <-
 
 こうして`doc_id`ごとに集計した`dfm`オブジェクトを一度`tidytext::tidy()`して3つ組のデータフレームに戻し、`section`のラベルを結合する。このデータフレームをもう一度`tidytext::cast_dfm()`で疎行列に変換して、`quanteda.textmodels::textmodel_ca()`を使って対応分析にかける。
 
-この関数は疎行列に対して計算をおこなえるため、比較的大きな行列を渡しても大丈夫。
-
-### バイプロット
-
 ```{r}
 #| label: fit-ca
 #| cache: true
-library(ca)
-
 ca_fit <- dfm |>
   tidytext::tidy() |>
   dplyr::left_join(
@@ -196,11 +408,19 @@ ca_fit <- dfm |>
   ) |>
   tidytext::cast_dfm(section, term, count) |>
   quanteda.textmodels::textmodel_ca(nd = 2, sparse = TRUE)
-
-dat <- plot(ca_fit)
 ```
 
+この関数は疎行列に対して計算をおこなえるため、比較的大きな行列を渡しても大丈夫。
+
+### バイプロット
+
 caパッケージを読み込んでいると`plot()`でバイプロットを描ける。`factoextra::fviz_ca_biplot()`でも描けるが、見た目は`plot()`のとあまり変わらない。
+
+```{r}
+#| label: plot-ca-1
+library(ca)
+dat <- plot(ca_fit)
+```
 
 ### バイプロット（バブルプロット）
 
@@ -209,7 +429,7 @@ ggplot2でバイプロットを描画するには、たとえば次のように�
 なお、このコードは[Correspondence Analysis visualization using ggplot | R-bloggers](https://www.r-bloggers.com/2019/08/correspondence-analysis-visualization-using-ggplot/)を参考にした。
 
 ```{r}
-#| label: plot-ca
+#| label: plot-ca-2
 tf <- dfm |>
   tidytext::tidy() |>
   dplyr::left_join(
@@ -341,12 +561,12 @@ dat |>
 
 ## 階層的クラスター分析（A.5.9）
 
-### 非類似度のヒートマップ📌
+### 非類似度のヒートマップ🍳
 
 Jaccard係数を指定して非類似度のヒートマップを描くと、そもそもパターンが何も見えなかった。
 
 ```{r}
-#| label: heatmap
+#| label: plot-heatmap
 dat <- dfm |>
   quanteda::dfm_trim(min_termfreq = 30, termfreq_type = "rank") |>
   quanteda::dfm_weight(scheme = "boolean") |>
@@ -365,10 +585,10 @@ clusters <-
   hclust(method = "ward.D2")
 ```
 
-### シルエット分析📌
+### シルエット分析🍳
 
 ```{r}
-#| label: hclust-avg-silhoutte
+#| label: plot-hclust-silhoutte-1
 factoextra::fviz_nbclust(
   as.matrix(dat),
   FUNcluster = factoextra::hcut,
@@ -377,7 +597,7 @@ factoextra::fviz_nbclust(
 ```
 
 ```{r}
-#| label: hclust-silhoutte
+#| label: plot-hclust-silhoutte-2
 cluster::silhouette(cutree(clusters, k = 4), dist = dat) |>
   factoextra::fviz_silhouette(print.summary = FALSE) +
   theme_classic()
@@ -388,7 +608,7 @@ cluster::silhouette(cutree(clusters, k = 4), dist = dat) |>
 デンドログラムについては、似たような表現を手軽に実現できる方法が見つけられない。ラベルの位置が左右反転しているが、`factoextra::fviz_dend(horiz = TRUE)`とするのが簡単かもしれない。
 
 ```{r}
-#| label: hclust-factoextra
+#| label: plot-hclust-factoextra
 factoextra::fviz_dend(clusters, h = 1.0, horiz = TRUE, labels_track_height = 0.3)
 ```
 
@@ -397,7 +617,7 @@ factoextra::fviz_dend(clusters, h = 1.0, horiz = TRUE, labels_track_height = 0.3
 KH Coderのソースコードを見た感じ、デンドログラムと一緒に語の出現回数を描いている表現は、やや独特なことをしている。むしろ語の出現回数のほうが主な情報になってよいなら、ふつうの棒グラフの横に`ggh4x::scale_y_dendrogram()`でデンドログラムを描くことができる。
 
 ```{r}
-#| label: hclust-ggplot2
+#| label: plot-hclust-ggplot2
 dfm |>
   quanteda::dfm_trim(min_termfreq = 30, termfreq_type = "rank") |>
   quanteda::colSums() |>

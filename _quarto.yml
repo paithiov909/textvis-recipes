@@ -10,9 +10,9 @@ book:
   title: "Cookbook to Draw KHCoder-like Visualizations Using R"
   author: "Akiru Kato"
   description: "RによるKH Coder風の可視化のレシピ集"
-  cover-image: cover.png
+  cover-image: cooking.png
   cover-image-alt: "Cookbook to Draw KHCoder-like Visualizations Using R"
-  image: cover.png
+  image: cooking.png
   favicon: favicon.ico
   open-graph:
     locale: ja

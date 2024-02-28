@@ -1,5 +1,7 @@
 # Preface {.unnumbered}
 
+**[Cooking icons](https://www.flaticon.com/free-icons/cooking) created by Freepik - Flaticon**
+
 > まだ書きかけです……
 >
 > ちょっとずつ内容が追加されるよ!!
@@ -8,4 +10,4 @@
 
 なんとなく似たような表現をめざしているだけで、KH Coderでおこなわれている処理をRで再実装することをめざすものではありません。
 
-KH Coderでの可視化をもとにしているのではない表現については、小見出しに「📌」という絵文字を付けています。
+KH Coderでの可視化をもとにしているのではない表現については、小見出しに🍳という絵文字を付けています。
