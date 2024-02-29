@@ -166,7 +166,6 @@ dplyr::tbl(con, "tokens") |>
 #| label: freq-top150
 dplyr::tbl(con, "tokens") |>
   dplyr::filter(
-    !is.na(original),
     !pos %in% c("その他", "名詞B", "動詞B", "形容詞B", "副詞B", "否定助動詞", "形容詞（非自立）")
   ) |>
   dplyr::mutate(token = dplyr::if_else(is.na(original), token, original)) |>
@@ -184,7 +183,6 @@ dplyr::tbl(con, "tokens") |>
 dfm <-
   dplyr::tbl(con, "tokens") |>
   dplyr::filter(
-    !is.na(original),
     !pos %in% c("その他", "名詞B", "動詞B", "形容詞B", "副詞B", "否定助動詞", "形容詞（非自立）")
   ) |>
   dplyr::mutate(

@@ -1,4 +1,14 @@
 # References {.unnumbered}
 
-::: {#refs}
+:::{.callout-tip}
+本文に関連して参考になる情報をまとめたリストです。いわゆる「参考文献リスト」ではありません
+:::
+
+:::{#refs}
+
+- 自己組織化マップ
+  - [aweSOM](https://cran.r-project.org/web/packages/aweSOM/vignettes/aweSOM.html)
+  - [自己組織化マップ入門](https://www.brain.kyutech.ac.jp/~furukawa/data/som.html)
+  - [自己組織化マップ - 脳科学辞典](https://bsd.neuroinf.jp/wiki/%E8%87%AA%E5%B7%B1%E7%B5%84%E7%B9%94%E5%8C%96%E3%83%9E%E3%83%83%E3%83%97)
+
 :::

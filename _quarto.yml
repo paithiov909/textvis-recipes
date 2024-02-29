@@ -35,10 +35,9 @@ book:
       loading: lazy
       language: ja
 
-bibliography: references.bib
-
 format:
   html:
+    # lang: ja
     theme:
       - cosmo
     mainfont: |

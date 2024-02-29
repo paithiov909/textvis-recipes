@@ -131,6 +131,7 @@ dat |>
 
 ```{r}
 #| label: plot-tf-df
+#| cache: true
 dat |>
   ggplot(aes(x = frequency, y = docfreq)) +
   geom_jitter() +
@@ -259,6 +260,7 @@ dat
 
 ```{r}
 #| label: plot-co-measures
+#| cache: true
 dat |>
   dplyr::inner_join(
     dplyr::filter(dat, target == "先生/名詞") |> dplyr::select(term),
@@ -270,9 +272,8 @@ dat |>
   tidygraph::to_minimum_spanning_tree() |>
   purrr::pluck("mst") |>
   dplyr::mutate(
-    community = tidygraph::group_leading_eigen()
+    community = factor(tidygraph::group_leading_eigen())
   ) |>
-  dplyr::mutate(community = factor(community)) |>
   ggraph::ggraph(layout = "fr") +
   ggraph::geom_edge_link(aes(width = sqrt(lift), alpha = jaccard)) +
   ggraph::geom_node_point(aes(colour = community), show.legend = FALSE) +
@@ -500,7 +501,7 @@ dat |>
 
 ## 多次元尺度構成法（A.5.8）
 
-### 2次元・バブルプロット
+### MDS・バブルプロット
 
 `MASS::isoMDS`より`MASS::sammon`のほうがたぶん見やすい。
 
@@ -537,7 +538,7 @@ dat |>
   theme_classic()
 ```
 
-### 3次元プロット
+### MDS・3次元プロット
 
 rglではなくplotlyで試してみたが、とくに見やすいということはなかったかもしれない。
 
@@ -635,8 +636,100 @@ dfm |>
 
 ## 共起ネットワーク
 
-## 自己組織化マップ（SOM）
+## 自己組織化マップ（A.5.10）
 
+### 自己組織化マップ（SOM）
+
+SOMの実装としては、KH Coderは[som](https://cran.r-project.org/package=som)を使っているようだが、[kohonen](https://cran.r-project.org/package=kohonen)を使ったほうがよい。行列が非常に大きい場合には`kohonen::som(mode = "online")`としてもよいのかもしれないが、一般にバッチ型のほうが収束が早く、数十ステップ程度回せば十分である。
+
+与える単語文書行列は、ここでは`tidytext::bind_tf_idf()`を使ってTF-IDFで重みづけし、上位100語ほど抽出する。
+
+```{r}
+#| label: fit-som
+#| cache: true
+dat <-
+  dplyr::tbl(con, "tokens") |>
+  dplyr::filter(
+    pos %in% c(
+      "名詞", #"名詞B", "名詞C",
+      "地名", "人名", "組織名", "固有名詞",
+      "動詞", "未知語", "タグ"
+    )
+  ) |>
+  dplyr::mutate(
+    token = dplyr::if_else(is.na(original), token, original),
+    token = paste(token, pos, sep = "/")
+  ) |>
+  dplyr::count(doc_id, token) |>
+  dplyr::collect() |>
+  tidytext::bind_tf_idf(token, doc_id, n) |>
+  tidytext::cast_dfm(doc_id, token, tf_idf) |>
+  quanteda::dfm_trim(
+    min_termfreq = 100,
+    termfreq_type = "rank"
+  ) |>
+  as.matrix() |>
+  scale() |>
+  t()
+
+som_fit <-
+  kohonen::som(
+    dat,
+    grid = kohonen::somgrid(16, 12, "hexagonal"),
+    rlen = 50, # 学習回数
+    alpha = c(0.05, 0.01),
+    radius = 6,
+    dist.fcts = "sumofsquares",
+    mode = "pbatch",
+    init = aweSOM::somInit(dat, 16, 12)
+  )
+```
+
+```{r}
+#| label: quality-som
+aweSOM::somQuality(som_fit, dat)
+```
+
+### U-Matrix
+
+U-matrixは「各ノードの参照ベクトルが近傍ノードと異なる度合いで色づけする方法」（[自己組織化マップ入門](https://www.brain.kyutech.ac.jp/~furukawa/data/SOMtext.pdf)）。暖色の箇所はデータ密度が低い「山間部」で、寒色の箇所はデータ密度が高い「平野部」みたいなイメージ、写像の勾配が急峻になっている箇所を境にしてクラスタが分かれていると判断するみたいな見方をする。
+
+```{r}
+#| label: plot-umatrix
+aweSOM::aweSOMsmoothdist(som_fit)
+```
+
+```{r}
+#| label: plot-umatrix-interactive
+aweSOM::aweSOMplot(
+  som_fit,
+  data = dat,
+  type = "UMatrix"
+)
+```
+
+### ヒットマップ🍳
+
+`clusters::pam()`でクラスタリングして色を付ける。「山間部」に囲まれた一部の「盆地」がクラスタになって、後はその他の部分みたいな感じに分かれるようだが、解釈するのに便利な感じで分かれてはくれなかった。
+
+```{r}
+#| label: cluster-som
+clusters <- som_fit |>
+  purrr::pluck("codes", 1) |> # 参照ベクトル（codebook vectors）は`codes`にリストとして格納されている
+  cluster::pam(k = 8)
+```
+
+ヒットマップ（hitmap, proportion map）は以下のような可視化の方法。ノードの中の六角形は各ノードが保持する参照ベクトルの数（比率）を表している。ノードの背景色が上のコードで得たクラスタに対応する。
+
+```{r}
+#| label: plot-hitmap
+aweSOM::aweSOMplot(
+  som_fit,
+  data = dat,
+  type = "Hitmap",
+  superclass = clusters[["clustering"]]
+)
+```
 ---
 
 ```{r}
