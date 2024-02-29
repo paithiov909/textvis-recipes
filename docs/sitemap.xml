@@ -2,18 +2,26 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://paithiov909.github.io/textvis-recipes/index.html</loc>
-    <lastmod>2024-02-29T05:10:35.204Z</lastmod>
+    <lastmod>2024-02-29T10:47:55.484Z</lastmod>
   </url>
   <url>
-    <loc>https://paithiov909.github.io/textvis-recipes/preprocessing.html</loc>
-    <lastmod>2024-02-28T16:50:06.491Z</lastmod>
+    <loc>https://paithiov909.github.io/textvis-recipes/preproc-menu.html</loc>
+    <lastmod>2024-02-29T11:47:24.500Z</lastmod>
   </url>
   <url>
-    <loc>https://paithiov909.github.io/textvis-recipes/plot-words.html</loc>
-    <lastmod>2024-02-29T05:51:16.910Z</lastmod>
+    <loc>https://paithiov909.github.io/textvis-recipes/words-menu-1.html</loc>
+    <lastmod>2024-02-29T12:07:37.256Z</lastmod>
+  </url>
+  <url>
+    <loc>https://paithiov909.github.io/textvis-recipes/words-menu-2.html</loc>
+    <lastmod>2024-02-29T12:08:45.646Z</lastmod>
+  </url>
+  <url>
+    <loc>https://paithiov909.github.io/textvis-recipes/words-menu-3.html</loc>
+    <lastmod>2024-02-29T12:15:03.048Z</lastmod>
   </url>
   <url>
     <loc>https://paithiov909.github.io/textvis-recipes/references.html</loc>
-    <lastmod>2024-02-29T05:09:24.569Z</lastmod>
+    <lastmod>2024-02-29T10:45:21.731Z</lastmod>
   </url>
 </urlset>

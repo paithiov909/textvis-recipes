@@ -1,0 +1,1120 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.4.550">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="description" content="RによるKH Coder風の可視化のレシピ集">
+
+<title>Cookbook to Draw KHCoder-like Visualizations Using R - 4&nbsp; 抽出語メニュー3</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./references.html" rel="next">
+<link href="./words-menu-2.html" rel="prev">
+<link href="./favicon.ico" rel="icon">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script src="site_libs/htmlwidgets-1.6.4/htmlwidgets.js"></script>
+<script src="site_libs/d3-3.5.14/d3.min.js"></script>
+<script src="site_libs/aweSOMwidget-binding-1.3/aweSOMwidget.js"></script>
+
+
+<meta property="og:title" content="Cookbook to Draw KHCoder-like Visualizations Using R - 4&nbsp; 抽出語メニュー3">
+<meta property="og:description" content="RによるKH Coder風の可視化のレシピ集">
+<meta property="og:image" content="https://paithiov909.github.io/textvis-recipes/cooking.png">
+<meta property="og:site_name" content="Cookbook to Draw KHCoder-like Visualizations Using R">
+<meta property="og:locale" content="ja">
+<meta property="og:image:height" content="512">
+<meta property="og:image:width" content="512">
+<meta name="twitter:title" content="Cookbook to Draw KHCoder-like Visualizations Using R - 4&nbsp; 抽出語メニュー3">
+<meta name="twitter:description" content="RによるKH Coder風の可視化のレシピ集">
+<meta name="twitter:image" content="https://paithiov909.github.io/textvis-recipes/cooking.png">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image-height" content="512">
+<meta name="twitter:image-width" content="512">
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./words-menu-3.html"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">抽出語メニュー3</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Cookbook to Draw KHCoder-like Visualizations Using R</a> 
+        <div class="sidebar-tools-main">
+    <a href="https://github.com/paithiov909/textvis-recipes" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Preface</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./preproc-menu.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">前処理メニュー</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./words-menu-1.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">抽出語メニュー1</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./words-menu-2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">抽出語メニュー2</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./words-menu-3.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">抽出語メニュー3</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">References</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#階層的クラスター分析a.5.9" id="toc-階層的クラスター分析a.5.9" class="nav-link active" data-scroll-target="#階層的クラスター分析a.5.9"><span class="header-section-number">4.1</span> 階層的クラスター分析（A.5.9）</a>
+  <ul class="collapse">
+  <li><a href="#非類似度のヒートマップ" id="toc-非類似度のヒートマップ" class="nav-link" data-scroll-target="#非類似度のヒートマップ"><span class="header-section-number">4.1.1</span> 非類似度のヒートマップ🍳</a></li>
+  <li><a href="#階層的クラスタリング" id="toc-階層的クラスタリング" class="nav-link" data-scroll-target="#階層的クラスタリング"><span class="header-section-number">4.1.2</span> 階層的クラスタリング</a></li>
+  <li><a href="#シルエット分析" id="toc-シルエット分析" class="nav-link" data-scroll-target="#シルエット分析"><span class="header-section-number">4.1.3</span> シルエット分析🍳</a></li>
+  <li><a href="#デンドログラム" id="toc-デンドログラム" class="nav-link" data-scroll-target="#デンドログラム"><span class="header-section-number">4.1.4</span> デンドログラム</a></li>
+  <li><a href="#デンドログラムと棒グラフ" id="toc-デンドログラムと棒グラフ" class="nav-link" data-scroll-target="#デンドログラムと棒グラフ"><span class="header-section-number">4.1.5</span> デンドログラムと棒グラフ</a></li>
+  </ul></li>
+  <li><a href="#共起ネットワークa.5.10" id="toc-共起ネットワークa.5.10" class="nav-link" data-scroll-target="#共起ネットワークa.5.10"><span class="header-section-number">4.2</span> 共起ネットワーク（A.5.10）</a></li>
+  <li><a href="#自己組織化マップa.5.11" id="toc-自己組織化マップa.5.11" class="nav-link" data-scroll-target="#自己組織化マップa.5.11"><span class="header-section-number">4.3</span> 自己組織化マップ（A.5.11）</a>
+  <ul class="collapse">
+  <li><a href="#自己組織化マップsom" id="toc-自己組織化マップsom" class="nav-link" data-scroll-target="#自己組織化マップsom"><span class="header-section-number">4.3.1</span> 自己組織化マップ（SOM）</a></li>
+  <li><a href="#u-matrix" id="toc-u-matrix" class="nav-link" data-scroll-target="#u-matrix"><span class="header-section-number">4.3.2</span> U-Matrix</a></li>
+  <li><a href="#ヒットマップ" id="toc-ヒットマップ" class="nav-link" data-scroll-target="#ヒットマップ"><span class="header-section-number">4.3.3</span> ヒットマップ🍳</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">抽出語メニュー3</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">suppressPackageStartupMessages</span>({</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">library</span>(ggplot2)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">library</span>(duckdb)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>drv <span class="ot">&lt;-</span> duckdb<span class="sc">::</span><span class="fu">duckdb</span>()</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>con <span class="ot">&lt;-</span> duckdb<span class="sc">::</span><span class="fu">dbConnect</span>(drv, <span class="at">dbdir =</span> <span class="st">"tutorial_jp/kokoro.duckdb"</span>, <span class="at">read_only =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>tbl <span class="ot">&lt;-</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>  readxl<span class="sc">::</span><span class="fu">read_xls</span>(<span class="st">"tutorial_jp/kokoro.xls"</span>,</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">col_names =</span> <span class="fu">c</span>(<span class="st">"text"</span>, <span class="st">"section"</span>, <span class="st">"chapter"</span>, <span class="st">"label"</span>),</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">skip =</span> <span class="dv">1</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">doc_id =</span> <span class="fu">factor</span>(dplyr<span class="sc">::</span><span class="fu">row_number</span>()),</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>    dplyr<span class="sc">::</span><span class="fu">across</span>(<span class="fu">where</span>(is.character), <span class="sc">~</span> audubon<span class="sc">::</span><span class="fu">strj_normalize</span>(.))</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">filter</span>(<span class="sc">!</span>gibasa<span class="sc">::</span><span class="fu">is_blank</span>(text)) <span class="sc">|&gt;</span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">relocate</span>(doc_id, text, section, label, chapter)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<section id="階層的クラスター分析a.5.9" class="level2" data-number="4.1">
+<h2 data-number="4.1" class="anchored" data-anchor-id="階層的クラスター分析a.5.9"><span class="header-section-number">4.1</span> 階層的クラスター分析（A.5.9）</h2>
+<section id="非類似度のヒートマップ" class="level3" data-number="4.1.1">
+<h3 data-number="4.1.1" class="anchored" data-anchor-id="非類似度のヒートマップ"><span class="header-section-number">4.1.1</span> 非類似度のヒートマップ🍳</h3>
+<p>Jaccard係数を指定して非類似度のヒートマップを描くと、そもそもパターンが何も見えなかった。</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>dfm <span class="ot">&lt;-</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">tbl</span>(con, <span class="st">"tokens"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">filter</span>(</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    pos <span class="sc">%in%</span> <span class="fu">c</span>(</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>      <span class="st">"名詞"</span>, <span class="co"># "名詞B", "名詞C",</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>      <span class="st">"地名"</span>, <span class="st">"人名"</span>, <span class="st">"組織名"</span>, <span class="st">"固有名詞"</span>,</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>      <span class="st">"動詞"</span>, <span class="st">"未知語"</span>, <span class="st">"タグ"</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">token =</span> dplyr<span class="sc">::</span><span class="fu">if_else</span>(<span class="fu">is.na</span>(original), token, original),</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">token =</span> <span class="fu">paste</span>(token, pos, <span class="at">sep =</span> <span class="st">"/"</span>)</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">count</span>(doc_id, token) <span class="sc">|&gt;</span></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">collect</span>() <span class="sc">|&gt;</span></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>  tidytext<span class="sc">::</span><span class="fu">cast_dfm</span>(doc_id, token, n)</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> dfm <span class="sc">|&gt;</span></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>  quanteda<span class="sc">::</span><span class="fu">dfm_trim</span>(<span class="at">min_termfreq =</span> <span class="dv">30</span>, <span class="at">termfreq_type =</span> <span class="st">"rank"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>  quanteda<span class="sc">::</span><span class="fu">dfm_weight</span>(<span class="at">scheme =</span> <span class="st">"boolean"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>  proxyC<span class="sc">::</span><span class="fu">simil</span>(<span class="at">margin =</span> <span class="dv">2</span>, <span class="at">method =</span> <span class="st">"dice"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>  rlang<span class="sc">::</span><span class="fu">as_function</span>(<span class="sc">~</span> <span class="dv">1</span> <span class="sc">-</span> .)()</span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>factoextra<span class="sc">::</span><span class="fu">fviz_dist</span>(<span class="fu">as.dist</span>(dat))</span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in vp$just: 'just' の 'justification' への部分的マッチ</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="words-menu-3_files/figure-html/plot-heatmap-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="階層的クラスタリング" class="level3" data-number="4.1.2">
+<h3 data-number="4.1.2" class="anchored" data-anchor-id="階層的クラスタリング"><span class="header-section-number">4.1.2</span> 階層的クラスタリング</h3>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>clusters <span class="ot">&lt;-</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.dist</span>(dat) <span class="sc">|&gt;</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">hclust</span>(<span class="at">method =</span> <span class="st">"ward.D2"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</section>
+<section id="シルエット分析" class="level3" data-number="4.1.3">
+<h3 data-number="4.1.3" class="anchored" data-anchor-id="シルエット分析"><span class="header-section-number">4.1.3</span> シルエット分析🍳</h3>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>factoextra<span class="sc">::</span><span class="fu">fviz_nbclust</span>(</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.matrix</span>(dat),</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">FUNcluster =</span> factoextra<span class="sc">::</span>hcut,</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">k.max =</span> <span class="fu">ceiling</span>(<span class="fu">sqrt</span>(<span class="fu">nrow</span>(dat)))</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="words-menu-3_files/figure-html/plot-hclust-silhoutte-1-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>cluster<span class="sc">::</span><span class="fu">silhouette</span>(<span class="fu">cutree</span>(clusters, <span class="at">k =</span> <span class="dv">4</span>), <span class="at">dist =</span> dat) <span class="sc">|&gt;</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  factoextra<span class="sc">::</span><span class="fu">fviz_silhouette</span>(<span class="at">print.summary =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_classic</span>()</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in vp$just: 'just' の 'justification' への部分的マッチ</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="words-menu-3_files/figure-html/plot-hclust-silhoutte-2-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="デンドログラム" class="level3" data-number="4.1.4">
+<h3 data-number="4.1.4" class="anchored" data-anchor-id="デンドログラム"><span class="header-section-number">4.1.4</span> デンドログラム</h3>
+<p>デンドログラムについては、似たような表現を手軽に実現できる方法が見つけられない。ラベルの位置が左右反転しているが、<code>factoextra::fviz_dend(horiz = TRUE)</code>とするのが簡単かもしれない。</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>factoextra<span class="sc">::</span><span class="fu">fviz_dend</span>(clusters, <span class="at">h =</span> <span class="fl">1.0</span>, <span class="at">horiz =</span> <span class="cn">TRUE</span>, <span class="at">labels_track_height =</span> <span class="fl">0.3</span>)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in seq.default(15, 375, length = k + 1): 'length' の 'length.out'</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; への部分的な引数のマッチング</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning: The `&lt;scale&gt;` argument of `guides()` cannot be `FALSE`. Use "none" instead as</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; of ggplot2 3.3.4.</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ℹ The deprecated feature was likely used in the factoextra package.</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   Please report the issue at &lt;https://github.com/kassambara/factoextra/issues&gt;.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="words-menu-3_files/figure-html/plot-hclust-factoextra-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="デンドログラムと棒グラフ" class="level3" data-number="4.1.5">
+<h3 data-number="4.1.5" class="anchored" data-anchor-id="デンドログラムと棒グラフ"><span class="header-section-number">4.1.5</span> デンドログラムと棒グラフ</h3>
+<p>KH Coderのソースコードを見た感じ、デンドログラムと一緒に語の出現回数を描いている表現は、やや独特なことをしている。むしろ語の出現回数のほうが主な情報になってよいなら、ふつうの棒グラフの横に<code>ggh4x::scale_y_dendrogram()</code>でデンドログラムを描くことができる。</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>dfm <span class="sc">|&gt;</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  quanteda<span class="sc">::</span><span class="fu">dfm_trim</span>(<span class="at">min_termfreq =</span> <span class="dv">30</span>, <span class="at">termfreq_type =</span> <span class="st">"rank"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  quanteda<span class="sc">::</span><span class="fu">colSums</span>() <span class="sc">|&gt;</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  tibble<span class="sc">::</span><span class="fu">enframe</span>() <span class="sc">|&gt;</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">clust =</span> (clusters <span class="sc">|&gt;</span> <span class="fu">cutree</span>(<span class="at">h =</span> <span class="fl">1.0</span>))[name]</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> value, <span class="at">y =</span> name, <span class="at">fill =</span> <span class="fu">factor</span>(clust))) <span class="sc">+</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">stat =</span> <span class="st">"identity"</span>, <span class="at">show.legend =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_sqrt</span>() <span class="sc">+</span></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>  ggh4x<span class="sc">::</span><span class="fu">scale_y_dendrogram</span>(<span class="at">hclust =</span> clusters) <span class="sc">+</span></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"出現回数"</span>, <span class="at">y =</span> <span class="fu">element_blank</span>()) <span class="sc">+</span></span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>()</span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning: The S3 guide system was deprecated in ggplot2 3.5.0.</span></span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ℹ It has been replaced by a ggproto system that can be extended.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="words-menu-3_files/figure-html/plot-hclust-ggplot2-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="共起ネットワークa.5.10" class="level2" data-number="4.2">
+<h2 data-number="4.2" class="anchored" data-anchor-id="共起ネットワークa.5.10"><span class="header-section-number">4.2</span> 共起ネットワーク（A.5.10）</h2>
+<blockquote class="blockquote">
+<p>TODO: 共起ネットワーク</p>
+</blockquote>
+</section>
+<section id="自己組織化マップa.5.11" class="level2" data-number="4.3">
+<h2 data-number="4.3" class="anchored" data-anchor-id="自己組織化マップa.5.11"><span class="header-section-number">4.3</span> 自己組織化マップ（A.5.11）</h2>
+<section id="自己組織化マップsom" class="level3" data-number="4.3.1">
+<h3 data-number="4.3.1" class="anchored" data-anchor-id="自己組織化マップsom"><span class="header-section-number">4.3.1</span> 自己組織化マップ（SOM）</h3>
+<p>SOMの実装としては、KH Coderは<a href="https://cran.r-project.org/package=som">som</a>を使っているようだが、<a href="https://cran.r-project.org/package=kohonen">kohonen</a>を使ったほうがよい。行列が非常に大きい場合には<code>kohonen::som(mode = "online")</code>としてもよいのかもしれないが、一般にバッチ型のほうが収束が早く、数十ステップ程度回せば十分である。</p>
+<p>与える単語文書行列は、ここでは<code>tidytext::bind_tf_idf()</code>を使ってTF-IDFで重みづけし、上位100語ほど抽出する。</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">tbl</span>(con, <span class="st">"tokens"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">filter</span>(</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    pos <span class="sc">%in%</span> <span class="fu">c</span>(</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>      <span class="st">"名詞"</span>, <span class="co"># "名詞B", "名詞C",</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>      <span class="st">"地名"</span>, <span class="st">"人名"</span>, <span class="st">"組織名"</span>, <span class="st">"固有名詞"</span>,</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>      <span class="st">"動詞"</span>, <span class="st">"未知語"</span>, <span class="st">"タグ"</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(</span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">token =</span> dplyr<span class="sc">::</span><span class="fu">if_else</span>(<span class="fu">is.na</span>(original), token, original),</span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">token =</span> <span class="fu">paste</span>(token, pos, <span class="at">sep =</span> <span class="st">"/"</span>)</span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">count</span>(doc_id, token) <span class="sc">|&gt;</span></span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">collect</span>() <span class="sc">|&gt;</span></span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>  tidytext<span class="sc">::</span><span class="fu">bind_tf_idf</span>(token, doc_id, n) <span class="sc">|&gt;</span></span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>  tidytext<span class="sc">::</span><span class="fu">cast_dfm</span>(doc_id, token, tf_idf) <span class="sc">|&gt;</span></span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>  quanteda<span class="sc">::</span><span class="fu">dfm_trim</span>(</span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">min_termfreq =</span> <span class="dv">100</span>,</span>
+<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">termfreq_type =</span> <span class="st">"rank"</span></span>
+<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.matrix</span>() <span class="sc">|&gt;</span></span>
+<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale</span>() <span class="sc">|&gt;</span></span>
+<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">t</span>()</span>
+<span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-26"><a href="#cb8-26" aria-hidden="true" tabindex="-1"></a>som_fit <span class="ot">&lt;-</span></span>
+<span id="cb8-27"><a href="#cb8-27" aria-hidden="true" tabindex="-1"></a>  kohonen<span class="sc">::</span><span class="fu">som</span>(</span>
+<span id="cb8-28"><a href="#cb8-28" aria-hidden="true" tabindex="-1"></a>    dat,</span>
+<span id="cb8-29"><a href="#cb8-29" aria-hidden="true" tabindex="-1"></a>    <span class="at">grid =</span> kohonen<span class="sc">::</span><span class="fu">somgrid</span>(<span class="dv">16</span>, <span class="dv">12</span>, <span class="st">"hexagonal"</span>),</span>
+<span id="cb8-30"><a href="#cb8-30" aria-hidden="true" tabindex="-1"></a>    <span class="at">rlen =</span> <span class="dv">50</span>, <span class="co"># 学習回数</span></span>
+<span id="cb8-31"><a href="#cb8-31" aria-hidden="true" tabindex="-1"></a>    <span class="at">alpha =</span> <span class="fu">c</span>(<span class="fl">0.05</span>, <span class="fl">0.01</span>),</span>
+<span id="cb8-32"><a href="#cb8-32" aria-hidden="true" tabindex="-1"></a>    <span class="at">radius =</span> <span class="dv">6</span>,</span>
+<span id="cb8-33"><a href="#cb8-33" aria-hidden="true" tabindex="-1"></a>    <span class="at">dist.fcts =</span> <span class="st">"sumofsquares"</span>,</span>
+<span id="cb8-34"><a href="#cb8-34" aria-hidden="true" tabindex="-1"></a>    <span class="at">mode =</span> <span class="st">"pbatch"</span>,</span>
+<span id="cb8-35"><a href="#cb8-35" aria-hidden="true" tabindex="-1"></a>    <span class="at">init =</span> aweSOM<span class="sc">::</span><span class="fu">somInit</span>(dat, <span class="dv">16</span>, <span class="dv">12</span>)</span>
+<span id="cb8-36"><a href="#cb8-36" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb8-37"><a href="#cb8-37" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in seq.default(along = data): 'along' の 'along.with'</span></span>
+<span id="cb8-38"><a href="#cb8-38" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; への部分的な引数のマッチング</span></span>
+<span id="cb8-39"><a href="#cb8-39" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in seq.default(along = whatmap): 'along' の 'along.with'</span></span>
+<span id="cb8-40"><a href="#cb8-40" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; への部分的な引数のマッチング</span></span>
+<span id="cb8-41"><a href="#cb8-41" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in seq.default(along = data): 'along' の 'along.with'</span></span>
+<span id="cb8-42"><a href="#cb8-42" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; への部分的な引数のマッチング</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>aweSOM<span class="sc">::</span><span class="fu">somQuality</span>(som_fit, dat)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ## Quality measures:</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  * Quantization error     :  336.8614 </span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  * (% explained variance) :  69.98 </span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  * Topographic error      :  0.25 </span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  * Kaski-Lagus error      :  37.66651 </span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  </span></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ## Number of obs. per map cell:</span></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   1   2   3   4   5   6   7   8   9  10  11  12  13  14  15  16  17  18  19  20 </span></span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   1   2   1   0   1   2   0   0   2   3   0   0   2   0   0   2   0   0   0   0 </span></span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  21  22  23  24  25  26  27  28  29  30  31  32  33  34  35  36  37  38  39  40 </span></span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   2   2   0 </span></span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  41  42  43  44  45  46  47  48  49  50  51  52  53  54  55  56  57  58  59  60 </span></span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   0   0   2   2   0   0   2   1   2   0   1   1   0   0   2   0   1   0   0   1 </span></span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  61  62  63  64  65  66  67  68  69  70  71  72  73  74  75  76  77  78  79  80 </span></span>
+<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   0   0   1   0   1   0   1   1   0   0   0   0   2   0   0   1   2   0   0   3 </span></span>
+<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  81  82  83  84  85  86  87  88  89  90  91  92  93  94  95  96  97  98  99 100 </span></span>
+<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   1   0   0   0   0   2   0   0   1   0   0   0   2   1   0   0   0   0   0   1 </span></span>
+<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 101 102 103 104 105 106 107 108 109 110 111 112 113 114 115 116 117 118 119 120 </span></span>
+<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   0   0   0   0   0   0   1   0   0   0   0   0   3   0   2   0   1   1   0   0 </span></span>
+<span id="cb9-22"><a href="#cb9-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 121 122 123 124 125 126 127 128 129 130 131 132 133 134 135 136 137 138 139 140 </span></span>
+<span id="cb9-23"><a href="#cb9-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   0   0   1   2   0   0   1   1   0   0   0   2   1   0   0   1   0   0   2   0 </span></span>
+<span id="cb9-24"><a href="#cb9-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 141 142 143 144 145 146 147 148 149 150 151 152 153 154 155 156 157 158 159 160 </span></span>
+<span id="cb9-25"><a href="#cb9-25" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   0   0   0   1   2   0   0   1   0   0   0   2   1   0   0   0   1   0   2   0 </span></span>
+<span id="cb9-26"><a href="#cb9-26" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 161 162 163 164 165 166 167 168 169 170 171 172 173 174 175 176 177 178 179 180 </span></span>
+<span id="cb9-27"><a href="#cb9-27" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   0   0   0   0   0   0   0   1   0   0   0   1   0   0   0   2   1   0   1   1 </span></span>
+<span id="cb9-28"><a href="#cb9-28" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 181 182 183 184 185 186 187 188 189 190 191 192 </span></span>
+<span id="cb9-29"><a href="#cb9-29" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   1   0   1   0   1   0   2   1   2   0   0   1</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</section>
+<section id="u-matrix" class="level3" data-number="4.3.2">
+<h3 data-number="4.3.2" class="anchored" data-anchor-id="u-matrix"><span class="header-section-number">4.3.2</span> U-Matrix</h3>
+<p>U-matrixは「各ノードの参照ベクトルが近傍ノードと異なる度合いで色づけする方法」（<a href="https://www.brain.kyutech.ac.jp/~furukawa/data/SOMtext.pdf">自己組織化マップ入門</a>）。暖色の箇所はデータ密度が低い「山間部」で、寒色の箇所はデータ密度が高い「平野部」みたいなイメージ、写像の勾配が急峻になっている箇所を境にしてクラスタが分かれていると判断するみたいな見方をする。</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>aweSOM<span class="sc">::</span><span class="fu">aweSOMsmoothdist</span>(som_fit)</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in vp$just: 'just' の 'justification' への部分的マッチ</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="words-menu-3_files/figure-html/plot-umatrix-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>aweSOM<span class="sc">::</span><span class="fu">aweSOMplot</span>(</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  som_fit,</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> dat,</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="st">"UMatrix"</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<h4 id="aweSOMwidget-a8b482fef2b93cf78dda-info" class="anchored"></h4>
+<h4 id="aweSOMwidget-a8b482fef2b93cf78dda-message" class="anchored"></h4>
+<div id="aweSOMwidget-a8b482fef2b93cf78dda" class="aweSOMwidget html-widget" style="width:400px;height:auto;display:block; margin:auto; margin-top:5px; margin-bottom:5px;"></div>
+<p id="aweSOMwidget-a8b482fef2b93cf78dda-names"></p>
+<svg id="aweSOMwidget-a8b482fef2b93cf78dda-placeHolder"></svg>
+<script type="application/json" data-for="aweSOMwidget-a8b482fef2b93cf78dda">{"x":{"plotType":"Color","sizeInfo":400,"gridInfo":{"nbLines":12,"nbColumns":16,"topology":"hexagonal"},"superclass":[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],"superclassColor":["#8DD3C7"],"cellNames":["K/未知語","二人/タグ, お嬢さん/名詞","帰る/動詞","","態度/名詞","起る/動詞, 入れる/動詞","","","答える/動詞, 寝る/動詞","向く/動詞, 財産/名詞, 地面/名詞","","","世間/名詞, 奥さん/名詞","","","食う/動詞, 小食/名詞","","","","","","","","","","","","","","","","","","","","","","困る/動詞, 理屈/名詞","歩く/動詞, 見える/動詞","","","","坐る/動詞, 傾く/動詞","先生/名詞, 知る/動詞","","","夫婦/名詞, 受ける/動詞","驚かす/動詞","自分/名詞, 眺める/動詞","","医者/名詞","驚く/動詞","","","会う/動詞, ー/未知語","","人間/名詞","","","答え/名詞","","","言葉/名詞","","付く/動詞","","利く/動詞","呼ぶ/動詞","","","","","悟る/動詞, 止す/動詞","","","天子/名詞","聞く/動詞, 笑う/動詞","","","雑司ケ谷/固有名詞, 亡くなる/動詞, 召し上がる/動詞","落ちる/動詞","","","","","知れる/動詞, お父さん/名詞","","","心持/名詞","","","","黙る/動詞, 売る/動詞","聞こえる/動詞","","","","","","気分/名詞","","","","","","","動く/動詞","","","","","","解る/動詞, 一つ/名詞, 掛ける/動詞","","違う/動詞, 変る/動詞","","身体/名詞","暴力/名詞","","","","","調子/名詞","子供/名詞, 叔父/名詞","","","田舎/名詞","嫌う/動詞","","","","行く/動詞, 東京/地名","友達/名詞","","","死ぬ/動詞","","","分る/動詞, 生きる/動詞","","","","","一人/タグ","隠す/動詞, 休む/動詞","","","得る/動詞","","","","持つ/動詞, 話す/動詞","墓参り/名詞","","","","思う/動詞","","貰う/動詞, 大学/名詞","","","","","","","","","考える/動詞","","","","来る/動詞","","","","出す/動詞, 止める/動詞","出る/動詞","","構う/動詞","立つ/動詞","頼む/動詞","","通り/名詞","","見る/動詞","","様子/名詞, お母さん/名詞","読む/動詞","書く/動詞, 手紙/名詞","","","罪悪/名詞"],"clustering":[44,13,157,144,86,180,172,10,185,3,2,115,6,132,13,177,63,187,93,5,9,153,80,168,77,77,55,68,176,139,60,9,148,73,113,44,113,47,107,39,39,52,192,43,49,115,145,136,49,6,189,55,145,132,152,43,51,118,94,89,10,183,86,113,127,81,152,179,73,189,38,80,57,139,16,133,76,47,188,181,67,100,124,65,124,117,93,48,2,123,159,1,10,128,187,38,159,176,16,80],"cellPop":[1,2,1,0,1,2,0,0,2,3,0,0,2,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,2,0,0,0,2,2,0,0,2,1,2,0,1,1,0,0,2,0,1,0,0,1,0,0,1,0,1,0,1,1,0,0,0,0,2,0,0,1,2,0,0,3,1,0,0,0,0,2,0,0,1,0,0,0,2,1,0,0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,3,0,2,0,1,1,0,0,0,0,1,2,0,0,1,1,0,0,0,2,1,0,0,1,0,0,2,0,0,0,0,1,2,0,0,1,0,0,0,2,1,0,0,0,1,0,2,0,0,0,0,0,0,0,0,1,0,0,0,1,0,0,0,2,1,0,1,1,1,0,1,0,1,0,2,1,2,0,0,1],"showAxes":true,"transparency":true,"showNames":true,"legendPos":"beside","legendFontsize":14,"legendReverse":false,"label":["(36.4,41]","(31.8,36.4]","(27.2,31.8]","(22.6,27.2]","(18,22.6]","(13.5,18]","(8.89,13.5]","(4.27,8.89]"],"normalizedValues":["#9FDA3A","#4AC16D","#4AC16D","#277F8E","#4AC16D","#1FA187","#365C8D","#46337E","#1FA187","#277F8E","#440154","#46337E","#1FA187","#46337E","#46337E","#277F8E","#365C8D","#46337E","#277F8E","#277F8E","#365C8D","#277F8E","#277F8E","#46337E","#46337E","#277F8E","#365C8D","#365C8D","#277F8E","#365C8D","#365C8D","#277F8E","#46337E","#365C8D","#277F8E","#365C8D","#46337E","#1FA187","#1FA187","#365C8D","#365C8D","#277F8E","#4AC16D","#1FA187","#46337E","#365C8D","#4AC16D","#9FDA3A","#1FA187","#1FA187","#FDE725","#FDE725","#277F8E","#277F8E","#1FA187","#277F8E","#9FDA3A","#277F8E","#277F8E","#FDE725","#277F8E","#365C8D","#9FDA3A","#1FA187","#FDE725","#4AC16D","#FDE725","#FDE725","#1FA187","#365C8D","#46337E","#277F8E","#4AC16D","#46337E","#46337E","#FDE725","#4AC16D","#277F8E","#365C8D","#365C8D","#9FDA3A","#365C8D","#365C8D","#1FA187","#277F8E","#277F8E","#46337E","#365C8D","#9FDA3A","#4AC16D","#46337E","#277F8E","#4AC16D","#9FDA3A","#365C8D","#46337E","#365C8D","#365C8D","#277F8E","#1FA187","#1FA187","#277F8E","#365C8D","#1FA187","#4AC16D","#1FA187","#9FDA3A","#277F8E","#365C8D","#277F8E","#277F8E","#365C8D","#46337E","#365C8D","#1FA187","#1FA187","#9FDA3A","#9FDA3A","#365C8D","#365C8D","#1FA187","#365C8D","#4AC16D","#4AC16D","#46337E","#365C8D","#9FDA3A","#9FDA3A","#365C8D","#365C8D","#277F8E","#9FDA3A","#FDE725","#277F8E","#277F8E","#9FDA3A","#1FA187","#277F8E","#1FA187","#277F8E","#365C8D","#365C8D","#1FA187","#4AC16D","#277F8E","#365C8D","#365C8D","#9FDA3A","#277F8E","#365C8D","#46337E","#4AC16D","#FDE725","#365C8D","#46337E","#1FA187","#9FDA3A","#277F8E","#277F8E","#1FA187","#277F8E","#365C8D","#277F8E","#1FA187","#277F8E","#365C8D","#277F8E","#FDE725","#277F8E","#46337E","#277F8E","#FDE725","#1FA187","#277F8E","#277F8E","#4AC16D","#4AC16D","#277F8E","#9FDA3A","#FDE725","#4AC16D","#277F8E","#1FA187","#1FA187","#9FDA3A","#365C8D","#1FA187","#FDE725","#4AC16D","#365C8D","#277F8E","#4AC16D"],"realValues":[32.5763,29.3084,31.5894,21.224,31.049,26.1679,14.3645,9.272399999999999,23.3491,20.4005,4.3116,13.0304,24.5761,9.453200000000001,12.0524,19.176,13.8373,12.6066,18.7708,18.2591,14.7449,19.134,20.0728,11.2979,13.0391,19.0088,15.1577,13.78,20.5937,15.6883,13.599,20.7105,9.419700000000001,15.0799,21.2655,14.6195,11.8271,26.883,25.6149,17.9367,16.2801,19.833,27.5666,25.2617,11.8311,16.9001,29.375,33.2809,25.2873,23.241,37.1355,38.5212,18.6237,20.3826,25.8298,22.6144,34.7085,18.6875,19.5665,37.5956,19.7832,14.0984,31.9988,23.4813,38.7826,27.7192,37.2676,38.2354,24.604,17.841,11.0541,21.0538,28.5444,12.1728,13.3122,37.5678,28.5832,20.7924,16.117,15.979,34.689,17.6756,15.7171,23.8815,21.9166,21.3205,12.95,15.3192,35.6268,27.3047,13.2482,21.8514,30.4713,34.4389,17.7471,11.007,17.3012,15.3246,19.5096,24.0619,22.8644,20.7449,17.0784,25.6607,29.6546,23.8301,34.6352,19.2115,15.1239,21.4081,19.0578,16.4911,13.1328,15.9366,26.4776,26.9836,35.0197,35.9463,17.5008,17.5026,23.8405,16.8277,30.6134,28.4642,10.9586,13.7243,35.7969,35.5067,14.9406,17.6102,21.8081,32.3977,37.5286,19.3312,18.2102,34.4281,25.6984,19.8573,25.9456,20.3092,14.743,17.2706,24.0023,28.8971,18.415,13.5746,14.7046,33.5422,21.2858,15.4009,13.0856,28.1152,36.8719,14.5994,10.7693,23.0313,35.9958,19.4663,19.5135,23.2233,18.5484,17.0037,21.8042,25.8668,20.7752,16.5183,21.864,39.0352,21.2431,11.041,19.8693,38.3078,23.926,19.1431,19.92,29.2822,28.1988,22.0644,33.5572,40.9417,30.7563,22.3847,27.1403,26.3256,33.1719,17.5587,24.2784,40.4222,27.9269,15.6356,18.1702,31.2577],"isCatBarplot":false,"showSC":true,"labelColor":["#FDE725","#9FDA3A","#4AC16D","#1FA187","#277F8E","#365C8D","#46337E","#440154"],"colorVarName":"Mean distance to neighbors"},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+</section>
+<section id="ヒットマップ" class="level3" data-number="4.3.3">
+<h3 data-number="4.3.3" class="anchored" data-anchor-id="ヒットマップ"><span class="header-section-number">4.3.3</span> ヒットマップ🍳</h3>
+<p><code>clusters::pam()</code>でクラスタリングして色を付ける。一部の「山間部」や「盆地」がクラスタになって、後はその他の部分みたいな感じに分かれるようだが、解釈するのに便利な感じで分かれてはくれなかった。</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>clusters <span class="ot">&lt;-</span> som_fit <span class="sc">|&gt;</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  purrr<span class="sc">::</span><span class="fu">pluck</span>(<span class="st">"codes"</span>, <span class="dv">1</span>) <span class="sc">|&gt;</span> <span class="co"># 参照ベクトル（codebook vectors）は`codes`にリストとして格納されている</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  cluster<span class="sc">::</span><span class="fu">pam</span>(<span class="at">k =</span> <span class="dv">8</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>ヒットマップ（hitmap, proportion map）は以下のような可視化の方法。ノードの中の六角形は各ノードが保持する参照ベクトルの数（比率）を表している。ノードの背景色が上のコードで得たクラスタに対応する。</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>aweSOM<span class="sc">::</span><span class="fu">aweSOMplot</span>(</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  som_fit,</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> dat,</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="st">"Hitmap"</span>,</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">superclass =</span> clusters[[<span class="st">"clustering"</span>]]</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<h4 id="aweSOMwidget-d452f18ea44378e4ecd3-info" class="anchored"></h4>
+<h4 id="aweSOMwidget-d452f18ea44378e4ecd3-message" class="anchored"></h4>
+<div id="aweSOMwidget-d452f18ea44378e4ecd3" class="aweSOMwidget html-widget" style="width:400px;height:auto;display:block; margin:auto; margin-top:5px; margin-bottom:5px;"></div>
+<p id="aweSOMwidget-d452f18ea44378e4ecd3-names"></p>
+<svg id="aweSOMwidget-d452f18ea44378e4ecd3-placeHolder"></svg>
+<script type="application/json" data-for="aweSOMwidget-d452f18ea44378e4ecd3">{"x":{"plotType":"Hitmap","sizeInfo":400,"gridInfo":{"nbLines":12,"nbColumns":16,"topology":"hexagonal"},"superclass":[1,1,2,2,2,3,3,3,3,3,3,3,4,4,4,3,1,1,1,2,2,2,3,3,3,3,3,3,4,4,4,4,1,1,2,2,2,2,3,3,3,3,3,4,4,4,4,4,1,1,1,2,2,2,5,5,3,6,6,6,4,4,4,4,1,3,3,2,2,5,5,5,6,6,6,6,4,4,4,3,3,2,3,3,5,5,5,5,5,6,6,6,3,3,3,3,2,3,3,3,5,5,5,5,3,6,6,3,3,3,3,3,3,3,2,3,7,3,7,7,7,3,3,3,3,3,3,3,3,3,3,3,8,8,8,7,7,7,7,3,3,3,3,3,3,3,3,8,8,8,8,8,7,7,7,7,3,3,3,3,3,3,3,8,8,8,8,2,7,7,7,3,3,3,3,3,3,3,3,3,8,8,8,8,7,7,7,7,3,3,3,4],"superclassColor":["#8DD3C7","#FFFFB3","#BEBADA","#FB8072","#80B1D3","#FDB462","#B3DE69","#FCCDE5"],"cellNames":["K/未知語","二人/タグ, お嬢さん/名詞","帰る/動詞","","態度/名詞","起る/動詞, 入れる/動詞","","","答える/動詞, 寝る/動詞","向く/動詞, 財産/名詞, 地面/名詞","","","世間/名詞, 奥さん/名詞","","","食う/動詞, 小食/名詞","","","","","","","","","","","","","","","","","","","","","","困る/動詞, 理屈/名詞","歩く/動詞, 見える/動詞","","","","坐る/動詞, 傾く/動詞","先生/名詞, 知る/動詞","","","夫婦/名詞, 受ける/動詞","驚かす/動詞","自分/名詞, 眺める/動詞","","医者/名詞","驚く/動詞","","","会う/動詞, ー/未知語","","人間/名詞","","","答え/名詞","","","言葉/名詞","","付く/動詞","","利く/動詞","呼ぶ/動詞","","","","","悟る/動詞, 止す/動詞","","","天子/名詞","聞く/動詞, 笑う/動詞","","","雑司ケ谷/固有名詞, 亡くなる/動詞, 召し上がる/動詞","落ちる/動詞","","","","","知れる/動詞, お父さん/名詞","","","心持/名詞","","","","黙る/動詞, 売る/動詞","聞こえる/動詞","","","","","","気分/名詞","","","","","","","動く/動詞","","","","","","解る/動詞, 一つ/名詞, 掛ける/動詞","","違う/動詞, 変る/動詞","","身体/名詞","暴力/名詞","","","","","調子/名詞","子供/名詞, 叔父/名詞","","","田舎/名詞","嫌う/動詞","","","","行く/動詞, 東京/地名","友達/名詞","","","死ぬ/動詞","","","分る/動詞, 生きる/動詞","","","","","一人/タグ","隠す/動詞, 休む/動詞","","","得る/動詞","","","","持つ/動詞, 話す/動詞","墓参り/名詞","","","","思う/動詞","","貰う/動詞, 大学/名詞","","","","","","","","","考える/動詞","","","","来る/動詞","","","","出す/動詞, 止める/動詞","出る/動詞","","構う/動詞","立つ/動詞","頼む/動詞","","通り/名詞","","見る/動詞","","様子/名詞, お母さん/名詞","読む/動詞","書く/動詞, 手紙/名詞","","","罪悪/名詞"],"clustering":[44,13,157,144,86,180,172,10,185,3,2,115,6,132,13,177,63,187,93,5,9,153,80,168,77,77,55,68,176,139,60,9,148,73,113,44,113,47,107,39,39,52,192,43,49,115,145,136,49,6,189,55,145,132,152,43,51,118,94,89,10,183,86,113,127,81,152,179,73,189,38,80,57,139,16,133,76,47,188,181,67,100,124,65,124,117,93,48,2,123,159,1,10,128,187,38,159,176,16,80],"cellPop":[1,2,1,0,1,2,0,0,2,3,0,0,2,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,2,0,0,0,2,2,0,0,2,1,2,0,1,1,0,0,2,0,1,0,0,1,0,0,1,0,1,0,1,1,0,0,0,0,2,0,0,1,2,0,0,3,1,0,0,0,0,2,0,0,1,0,0,0,2,1,0,0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,3,0,2,0,1,1,0,0,0,0,1,2,0,0,1,1,0,0,0,2,1,0,0,1,0,0,2,0,0,0,0,1,2,0,0,1,0,0,0,2,1,0,0,0,1,0,2,0,0,0,0,0,0,0,0,1,0,0,0,1,0,0,0,2,1,0,1,1,1,0,1,0,1,0,2,1,2,0,0,1],"showAxes":true,"transparency":true,"showNames":true,"legendPos":"beside","legendFontsize":14,"legendReverse":false,"normalizedValues":[0.5196152422706632,0.7348469228349536,0.5196152422706632,0,0.5196152422706632,0.7348469228349536,0,0,0.7348469228349536,0.9,0,0,0.7348469228349536,0,0,0.7348469228349536,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0.7348469228349536,0.7348469228349536,0,0,0,0.7348469228349536,0.7348469228349536,0,0,0.7348469228349536,0.5196152422706632,0.7348469228349536,0,0.5196152422706632,0.5196152422706632,0,0,0.7348469228349536,0,0.5196152422706632,0,0,0.5196152422706632,0,0,0.5196152422706632,0,0.5196152422706632,0,0.5196152422706632,0.5196152422706632,0,0,0,0,0.7348469228349536,0,0,0.5196152422706632,0.7348469228349536,0,0,0.9,0.5196152422706632,0,0,0,0,0.7348469228349536,0,0,0.5196152422706632,0,0,0,0.7348469228349536,0.5196152422706632,0,0,0,0,0,0.5196152422706632,0,0,0,0,0,0,0.5196152422706632,0,0,0,0,0,0.9,0,0.7348469228349536,0,0.5196152422706632,0.5196152422706632,0,0,0,0,0.5196152422706632,0.7348469228349536,0,0,0.5196152422706632,0.5196152422706632,0,0,0,0.7348469228349536,0.5196152422706632,0,0,0.5196152422706632,0,0,0.7348469228349536,0,0,0,0,0.5196152422706632,0.7348469228349536,0,0,0.5196152422706632,0,0,0,0.7348469228349536,0.5196152422706632,0,0,0,0.5196152422706632,0,0.7348469228349536,0,0,0,0,0,0,0,0,0.5196152422706632,0,0,0,0.5196152422706632,0,0,0,0.7348469228349536,0.5196152422706632,0,0.5196152422706632,0.5196152422706632,0.5196152422706632,0,0.5196152422706632,0,0.5196152422706632,0,0.7348469228349536,0.5196152422706632,0.7348469228349536,0,0,0.5196152422706632],"realValues":[1,2,1,0,1,2,0,0,2,3,0,0,2,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,2,0,0,0,2,2,0,0,2,1,2,0,1,1,0,0,2,0,1,0,0,1,0,0,1,0,1,0,1,1,0,0,0,0,2,0,0,1,2,0,0,3,1,0,0,0,0,2,0,0,1,0,0,0,2,1,0,0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,3,0,2,0,1,1,0,0,0,0,1,2,0,0,1,1,0,0,0,2,1,0,0,1,0,0,2,0,0,0,0,1,2,0,0,1,0,0,0,2,1,0,0,0,1,0,2,0,0,0,0,0,0,0,0,1,0,0,0,1,0,0,0,2,1,0,1,1,1,0,1,0,1,0,2,1,2,0,0,1]},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+<hr>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>duckdb<span class="sc">::</span><span class="fu">dbDisconnect</span>(con)</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>duckdb<span class="sc">::</span><span class="fu">duckdb_shutdown</span>(drv)</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>sessioninfo<span class="sc">::</span><span class="fu">session_info</span>(<span class="at">info =</span> <span class="st">"packages"</span>)</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ═ Session info ═══════════════════════════════════════════════════════════════</span></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ─ Packages ───────────────────────────────────────────────────────────────────</span></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  package      * version    date (UTC) lib source</span></span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  abind          1.4-5      2016-07-21 [1] RSPM (R 4.3.0)</span></span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  audubon        0.5.1.9001 2023-09-03 [1] https://paithiov909.r-universe.dev (R 4.3.1)</span></span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  aweSOM         1.3        2022-08-30 [1] RSPM (R 4.3.0)</span></span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  backports      1.4.1      2021-12-13 [1] CRAN (R 4.3.0)</span></span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  blob           1.2.4      2023-03-17 [1] RSPM (R 4.3.0)</span></span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  broom          1.0.5      2023-06-09 [1] RSPM (R 4.3.0)</span></span>
+<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  cachem         1.0.8      2023-05-01 [1] CRAN (R 4.3.0)</span></span>
+<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  car            3.1-2      2023-03-30 [1] RSPM (R 4.3.0)</span></span>
+<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  carData        3.0-5      2022-01-06 [1] RSPM (R 4.3.0)</span></span>
+<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  cellranger     1.1.0      2016-07-27 [1] RSPM (R 4.3.0)</span></span>
+<span id="cb14-18"><a href="#cb14-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  class          7.3-22     2023-05-03 [4] CRAN (R 4.3.1)</span></span>
+<span id="cb14-19"><a href="#cb14-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  cli            3.6.2      2023-12-11 [1] RSPM (R 4.3.0)</span></span>
+<span id="cb14-20"><a href="#cb14-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  cluster        2.1.6      2023-12-01 [4] CRAN (R 4.3.2)</span></span>
+<span id="cb14-21"><a href="#cb14-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  colorspace     2.1-0      2023-01-23 [1] RSPM (R 4.3.0)</span></span>
+<span id="cb14-22"><a href="#cb14-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  curl           5.2.0      2023-12-08 [1] CRAN (R 4.3.2)</span></span>
+<span id="cb14-23"><a href="#cb14-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  DBI          * 1.2.2      2024-02-16 [1] CRAN (R 4.3.2)</span></span>
+<span id="cb14-24"><a href="#cb14-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  dbplyr         2.4.0      2023-10-26 [1] RSPM (R 4.3.0)</span></span>
+<span id="cb14-25"><a href="#cb14-25" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  dendextend     1.17.1     2023-03-25 [1] RSPM (R 4.3.0)</span></span>
+<span id="cb14-26"><a href="#cb14-26" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  digest         0.6.34     2024-01-11 [1] CRAN (R 4.3.2)</span></span>
+<span id="cb14-27"><a href="#cb14-27" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  dotCall64      1.1-1      2023-11-28 [1] RSPM (R 4.3.0)</span></span>
+<span id="cb14-28"><a href="#cb14-28" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  dplyr          1.1.4      2023-11-17 [1] CRAN (R 4.3.2)</span></span>
+<span id="cb14-29"><a href="#cb14-29" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  duckdb       * 0.9.2-1    2023-11-28 [1] RSPM (R 4.3.2)</span></span>
+<span id="cb14-30"><a href="#cb14-30" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  e1071          1.7-14     2023-12-06 [1] RSPM (R 4.3.0)</span></span>
+<span id="cb14-31"><a href="#cb14-31" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  ellipsis       0.3.2      2021-04-29 [1] CRAN (R 4.3.0)</span></span>
+<span id="cb14-32"><a href="#cb14-32" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  evaluate       0.23       2023-11-01 [1] CRAN (R 4.3.1)</span></span>
+<span id="cb14-33"><a href="#cb14-33" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  factoextra     1.0.7      2020-04-01 [1] RSPM (R 4.3.2)</span></span>
+<span id="cb14-34"><a href="#cb14-34" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  fansi          1.0.6      2023-12-08 [1] CRAN (R 4.3.2)</span></span>
+<span id="cb14-35"><a href="#cb14-35" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  farver         2.1.1      2022-07-06 [1] RSPM (R 4.3.0)</span></span>
+<span id="cb14-36"><a href="#cb14-36" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  fastmap        1.1.1      2023-02-24 [1] CRAN (R 4.3.0)</span></span>
+<span id="cb14-37"><a href="#cb14-37" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  fastmatch      1.1-4      2023-08-18 [1] RSPM (R 4.3.0)</span></span>
+<span id="cb14-38"><a href="#cb14-38" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  fields         15.2       2023-08-17 [1] RSPM (R 4.3.0)</span></span>
+<span id="cb14-39"><a href="#cb14-39" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  generics       0.1.3      2022-07-05 [1] CRAN (R 4.3.0)</span></span>
+<span id="cb14-40"><a href="#cb14-40" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  ggdendro       0.2.0      2024-02-23 [1] CRAN (R 4.3.2)</span></span>
+<span id="cb14-41"><a href="#cb14-41" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  ggh4x          0.2.8      2024-01-23 [1] RSPM (R 4.3.0)</span></span>
+<span id="cb14-42"><a href="#cb14-42" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  ggplot2      * 3.5.0      2024-02-23 [1] CRAN (R 4.3.2)</span></span>
+<span id="cb14-43"><a href="#cb14-43" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  ggpubr         0.6.0      2023-02-10 [1] RSPM (R 4.3.0)</span></span>
+<span id="cb14-44"><a href="#cb14-44" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  ggrepel        0.9.5      2024-01-10 [1] CRAN (R 4.3.2)</span></span>
+<span id="cb14-45"><a href="#cb14-45" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  ggsignif       0.6.4      2022-10-13 [1] RSPM (R 4.3.0)</span></span>
+<span id="cb14-46"><a href="#cb14-46" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  gibasa         1.1.0      2024-02-17 [1] https://paithiov909.r-universe.dev (R 4.3.2)</span></span>
+<span id="cb14-47"><a href="#cb14-47" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  glue           1.7.0      2024-01-09 [1] CRAN (R 4.3.2)</span></span>
+<span id="cb14-48"><a href="#cb14-48" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  gridExtra      2.3        2017-09-09 [1] RSPM (R 4.3.0)</span></span>
+<span id="cb14-49"><a href="#cb14-49" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  gtable         0.3.4      2023-08-21 [1] CRAN (R 4.3.1)</span></span>
+<span id="cb14-50"><a href="#cb14-50" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  htmltools      0.5.7      2023-11-03 [1] RSPM (R 4.3.0)</span></span>
+<span id="cb14-51"><a href="#cb14-51" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  htmlwidgets    1.6.4      2023-12-06 [1] RSPM (R 4.3.0)</span></span>
+<span id="cb14-52"><a href="#cb14-52" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  httpgd         1.3.1      2023-01-30 [1] CRAN (R 4.3.0)</span></span>
+<span id="cb14-53"><a href="#cb14-53" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  httpuv         1.6.14     2024-01-26 [1] RSPM (R 4.3.0)</span></span>
+<span id="cb14-54"><a href="#cb14-54" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  isoband        0.2.7      2022-12-20 [1] RSPM (R 4.3.0)</span></span>
+<span id="cb14-55"><a href="#cb14-55" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  janeaustenr    1.0.0      2022-08-26 [1] RSPM (R 4.3.0)</span></span>
+<span id="cb14-56"><a href="#cb14-56" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  jsonlite       1.8.8      2023-12-04 [1] CRAN (R 4.3.2)</span></span>
+<span id="cb14-57"><a href="#cb14-57" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  knitr          1.45       2023-10-30 [1] CRAN (R 4.3.1)</span></span>
+<span id="cb14-58"><a href="#cb14-58" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  kohonen        3.0.12     2023-06-09 [1] RSPM (R 4.3.0)</span></span>
+<span id="cb14-59"><a href="#cb14-59" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  labeling       0.4.3      2023-08-29 [1] RSPM (R 4.3.0)</span></span>
+<span id="cb14-60"><a href="#cb14-60" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  later          1.3.2      2023-12-06 [1] RSPM (R 4.3.0)</span></span>
+<span id="cb14-61"><a href="#cb14-61" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  lattice        0.22-5     2023-10-24 [4] CRAN (R 4.3.1)</span></span>
+<span id="cb14-62"><a href="#cb14-62" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  lifecycle      1.0.4      2023-11-07 [1] RSPM (R 4.3.0)</span></span>
+<span id="cb14-63"><a href="#cb14-63" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  magrittr       2.0.3      2022-03-30 [1] CRAN (R 4.3.0)</span></span>
+<span id="cb14-64"><a href="#cb14-64" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  maps           3.4.2      2023-12-15 [1] RSPM (R 4.3.0)</span></span>
+<span id="cb14-65"><a href="#cb14-65" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  MASS           7.3-60     2023-05-04 [4] CRAN (R 4.3.1)</span></span>
+<span id="cb14-66"><a href="#cb14-66" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Matrix         1.6-3      2023-11-14 [4] CRAN (R 4.3.2)</span></span>
+<span id="cb14-67"><a href="#cb14-67" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  memoise        2.0.1      2021-11-26 [1] CRAN (R 4.3.0)</span></span>
+<span id="cb14-68"><a href="#cb14-68" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  mime           0.12       2021-09-28 [1] CRAN (R 4.3.0)</span></span>
+<span id="cb14-69"><a href="#cb14-69" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  munsell        0.5.0      2018-06-12 [1] RSPM (R 4.3.0)</span></span>
+<span id="cb14-70"><a href="#cb14-70" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  pillar         1.9.0      2023-03-22 [1] CRAN (R 4.3.0)</span></span>
+<span id="cb14-71"><a href="#cb14-71" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  pkgconfig      2.0.3      2019-09-22 [1] CRAN (R 4.3.0)</span></span>
+<span id="cb14-72"><a href="#cb14-72" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  plyr           1.8.9      2023-10-02 [1] RSPM (R 4.3.0)</span></span>
+<span id="cb14-73"><a href="#cb14-73" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  promises       1.2.1      2023-08-10 [1] RSPM (R 4.3.0)</span></span>
+<span id="cb14-74"><a href="#cb14-74" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  proxy          0.4-27     2022-06-09 [1] RSPM (R 4.3.0)</span></span>
+<span id="cb14-75"><a href="#cb14-75" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  proxyC         0.3.4      2023-10-25 [1] RSPM (R 4.3.0)</span></span>
+<span id="cb14-76"><a href="#cb14-76" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  purrr          1.0.2      2023-08-10 [1] RSPM (R 4.3.0)</span></span>
+<span id="cb14-77"><a href="#cb14-77" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  quanteda       3.3.1      2023-05-18 [1] RSPM (R 4.3.0)</span></span>
+<span id="cb14-78"><a href="#cb14-78" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  R.cache        0.16.0     2022-07-21 [1] CRAN (R 4.3.0)</span></span>
+<span id="cb14-79"><a href="#cb14-79" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  R.methodsS3    1.8.2      2022-06-13 [1] CRAN (R 4.3.0)</span></span>
+<span id="cb14-80"><a href="#cb14-80" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  R.oo           1.26.0     2024-01-24 [1] RSPM (R 4.3.0)</span></span>
+<span id="cb14-81"><a href="#cb14-81" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  R.utils        2.12.3     2023-11-18 [1] CRAN (R 4.3.2)</span></span>
+<span id="cb14-82"><a href="#cb14-82" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  R6             2.5.1      2021-08-19 [1] CRAN (R 4.3.0)</span></span>
+<span id="cb14-83"><a href="#cb14-83" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  RColorBrewer   1.1-3      2022-04-03 [1] RSPM (R 4.3.0)</span></span>
+<span id="cb14-84"><a href="#cb14-84" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Rcpp           1.0.12     2024-01-09 [1] RSPM (R 4.3.0)</span></span>
+<span id="cb14-85"><a href="#cb14-85" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  RcppParallel   5.1.7      2023-02-27 [1] CRAN (R 4.3.0)</span></span>
+<span id="cb14-86"><a href="#cb14-86" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  readxl         1.4.3      2023-07-06 [1] RSPM (R 4.3.0)</span></span>
+<span id="cb14-87"><a href="#cb14-87" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  reshape2       1.4.4      2020-04-09 [1] RSPM (R 4.3.0)</span></span>
+<span id="cb14-88"><a href="#cb14-88" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  rlang          1.1.3      2024-01-10 [1] CRAN (R 4.3.2)</span></span>
+<span id="cb14-89"><a href="#cb14-89" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  rmarkdown      2.25       2023-09-18 [1] RSPM (R 4.3.0)</span></span>
+<span id="cb14-90"><a href="#cb14-90" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  rstatix        0.7.2      2023-02-01 [1] RSPM (R 4.3.0)</span></span>
+<span id="cb14-91"><a href="#cb14-91" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  scales         1.3.0      2023-11-28 [1] RSPM (R 4.3.0)</span></span>
+<span id="cb14-92"><a href="#cb14-92" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  sessioninfo    1.2.2      2021-12-06 [1] RSPM (R 4.3.0)</span></span>
+<span id="cb14-93"><a href="#cb14-93" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  shiny          1.8.0      2023-11-17 [1] CRAN (R 4.3.2)</span></span>
+<span id="cb14-94"><a href="#cb14-94" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  SnowballC      0.7.1      2023-04-25 [1] RSPM (R 4.3.0)</span></span>
+<span id="cb14-95"><a href="#cb14-95" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  spam           2.10-0     2023-10-23 [1] RSPM (R 4.3.0)</span></span>
+<span id="cb14-96"><a href="#cb14-96" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  stopwords      2.3        2021-10-28 [1] RSPM (R 4.3.0)</span></span>
+<span id="cb14-97"><a href="#cb14-97" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  stringi        1.8.3      2024-01-28 [1] https://gagolews.r-universe.dev (R 4.3.2)</span></span>
+<span id="cb14-98"><a href="#cb14-98" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  stringr        1.5.1      2023-11-14 [1] RSPM (R 4.3.0)</span></span>
+<span id="cb14-99"><a href="#cb14-99" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  styler         1.10.2     2023-08-29 [1] RSPM (R 4.3.0)</span></span>
+<span id="cb14-100"><a href="#cb14-100" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  systemfonts    1.0.5      2023-10-09 [1] RSPM (R 4.3.0)</span></span>
+<span id="cb14-101"><a href="#cb14-101" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  tibble         3.2.1      2023-03-20 [1] CRAN (R 4.3.0)</span></span>
+<span id="cb14-102"><a href="#cb14-102" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  tidyr          1.3.1      2024-01-24 [1] RSPM (R 4.3.0)</span></span>
+<span id="cb14-103"><a href="#cb14-103" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  tidyselect     1.2.0      2022-10-10 [1] CRAN (R 4.3.0)</span></span>
+<span id="cb14-104"><a href="#cb14-104" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  tidytext       0.4.1      2023-01-07 [1] RSPM (R 4.3.0)</span></span>
+<span id="cb14-105"><a href="#cb14-105" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  tokenizers     0.3.0      2022-12-22 [1] RSPM (R 4.3.0)</span></span>
+<span id="cb14-106"><a href="#cb14-106" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  utf8           1.2.4      2023-10-22 [1] RSPM (R 4.3.0)</span></span>
+<span id="cb14-107"><a href="#cb14-107" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  V8             4.4.2      2024-02-15 [1] CRAN (R 4.3.2)</span></span>
+<span id="cb14-108"><a href="#cb14-108" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  vctrs          0.6.5      2023-12-01 [1] CRAN (R 4.3.2)</span></span>
+<span id="cb14-109"><a href="#cb14-109" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  viridis        0.6.5      2024-01-29 [1] RSPM (R 4.3.0)</span></span>
+<span id="cb14-110"><a href="#cb14-110" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  viridisLite    0.4.2      2023-05-02 [1] RSPM (R 4.3.0)</span></span>
+<span id="cb14-111"><a href="#cb14-111" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  withr          3.0.0      2024-01-16 [1] RSPM (R 4.3.0)</span></span>
+<span id="cb14-112"><a href="#cb14-112" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  xfun           0.42       2024-02-08 [1] CRAN (R 4.3.2)</span></span>
+<span id="cb14-113"><a href="#cb14-113" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  xtable         1.8-4      2019-04-21 [1] RSPM (R 4.3.0)</span></span>
+<span id="cb14-114"><a href="#cb14-114" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  yaml           2.3.8      2023-12-11 [1] RSPM (R 4.3.0)</span></span>
+<span id="cb14-115"><a href="#cb14-115" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb14-116"><a href="#cb14-116" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [1] /home/paithiov909/R/x86_64-pc-linux-gnu-library/4.3</span></span>
+<span id="cb14-117"><a href="#cb14-117" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [2] /usr/local/lib/R/site-library</span></span>
+<span id="cb14-118"><a href="#cb14-118" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [3] /usr/lib/R/site-library</span></span>
+<span id="cb14-119"><a href="#cb14-119" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [4] /usr/lib/R/library</span></span>
+<span id="cb14-120"><a href="#cb14-120" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb14-121"><a href="#cb14-121" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ──────────────────────────────────────────────────────────────────────────────</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<script src="https://giscus.app/client.js" data-repo="paithiov909/textvis-recipes" data-repo-id="R_kgDOLWfubw" data-category="Announcements" data-category-id="DIC_kwDOLWfub84Cdg5_" data-mapping="pathname" data-reactions-enabled="1" data-emit-metadata="0" data-input-position="top" data-theme="light" data-lang="ja" crossorigin="anonymous" data-loading="lazy" async="">
+</script>
+<input type="hidden" id="giscus-base-theme" value="light">
+<input type="hidden" id="giscus-alt-theme" value="dark">
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./words-menu-2.html" class="pagination-link" aria-label="抽出語メニュー2">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">抽出語メニュー2</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./references.html" class="pagination-link" aria-label="References">
+        <span class="nav-page-text">References</span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

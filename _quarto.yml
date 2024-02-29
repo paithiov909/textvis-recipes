@@ -20,8 +20,10 @@ book:
     card-style: summary
   chapters:
     - index.qmd
-    - preprocessing.qmd
-    - plot-words.qmd
+    - preproc-menu.qmd
+    - words-menu-1.qmd
+    - words-menu-2.qmd
+    - words-menu-3.qmd
     - references.qmd
   comments:
     giscus:

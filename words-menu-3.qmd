@@ -1,0 +1,223 @@
+# 抽出語メニュー3
+
+```{r}
+#| label: setup
+suppressPackageStartupMessages({
+  library(ggplot2)
+  library(duckdb)
+})
+drv <- duckdb::duckdb()
+con <- duckdb::dbConnect(drv, dbdir = "tutorial_jp/kokoro.duckdb", read_only = TRUE)
+
+tbl <-
+  readxl::read_xls("tutorial_jp/kokoro.xls",
+    col_names = c("text", "section", "chapter", "label"),
+    skip = 1
+  ) |>
+  dplyr::mutate(
+    doc_id = factor(dplyr::row_number()),
+    dplyr::across(where(is.character), ~ audubon::strj_normalize(.))
+  ) |>
+  dplyr::filter(!gibasa::is_blank(text)) |>
+  dplyr::relocate(doc_id, text, section, label, chapter)
+```
+
+## 階層的クラスター分析（A.5.9）
+
+### 非類似度のヒートマップ🍳
+
+Jaccard係数を指定して非類似度のヒートマップを描くと、そもそもパターンが何も見えなかった。
+
+```{r}
+#| label: plot-heatmap
+dfm <-
+  dplyr::tbl(con, "tokens") |>
+  dplyr::filter(
+    pos %in% c(
+      "名詞", #"名詞B", "名詞C",
+      "地名", "人名", "組織名", "固有名詞",
+      "動詞", "未知語", "タグ"
+    )
+  ) |>
+  dplyr::mutate(
+    token = dplyr::if_else(is.na(original), token, original),
+    token = paste(token, pos, sep = "/")
+  ) |>
+  dplyr::count(doc_id, token) |>
+  dplyr::collect() |>
+  tidytext::cast_dfm(doc_id, token, n)
+
+dat <- dfm |>
+  quanteda::dfm_trim(min_termfreq = 30, termfreq_type = "rank") |>
+  quanteda::dfm_weight(scheme = "boolean") |>
+  proxyC::simil(margin = 2, method = "dice") |>
+  rlang::as_function(~ 1 - .)()
+
+factoextra::fviz_dist(as.dist(dat))
+```
+
+### 階層的クラスタリング
+
+```{r}
+#| label: hclust
+clusters <-
+  as.dist(dat) |>
+  hclust(method = "ward.D2")
+```
+
+### シルエット分析🍳
+
+```{r}
+#| label: plot-hclust-silhoutte-1
+factoextra::fviz_nbclust(
+  as.matrix(dat),
+  FUNcluster = factoextra::hcut,
+  k.max = ceiling(sqrt(nrow(dat)))
+)
+```
+
+```{r}
+#| label: plot-hclust-silhoutte-2
+cluster::silhouette(cutree(clusters, k = 4), dist = dat) |>
+  factoextra::fviz_silhouette(print.summary = FALSE) +
+  theme_classic()
+```
+
+### デンドログラム
+
+デンドログラムについては、似たような表現を手軽に実現できる方法が見つけられない。ラベルの位置が左右反転しているが、`factoextra::fviz_dend(horiz = TRUE)`とするのが簡単かもしれない。
+
+```{r}
+#| label: plot-hclust-factoextra
+factoextra::fviz_dend(clusters, h = 1.0, horiz = TRUE, labels_track_height = 0.3)
+```
+
+### デンドログラムと棒グラフ
+
+KH Coderのソースコードを見た感じ、デンドログラムと一緒に語の出現回数を描いている表現は、やや独特なことをしている。むしろ語の出現回数のほうが主な情報になってよいなら、ふつうの棒グラフの横に`ggh4x::scale_y_dendrogram()`でデンドログラムを描くことができる。
+
+```{r}
+#| label: plot-hclust-ggplot2
+dfm |>
+  quanteda::dfm_trim(min_termfreq = 30, termfreq_type = "rank") |>
+  quanteda::colSums() |>
+  tibble::enframe() |>
+  dplyr::mutate(
+    clust = (clusters |> cutree(h = 1.0))[name]
+  ) |>
+  ggplot(aes(x = value, y = name, fill = factor(clust))) +
+  geom_bar(stat = "identity", show.legend = FALSE) +
+  scale_x_sqrt() +
+  ggh4x::scale_y_dendrogram(hclust = clusters) +
+  labs(x = "出現回数", y = element_blank()) +
+  theme_bw()
+```
+
+## 共起ネットワーク（A.5.10）
+
+> TODO: 共起ネットワーク
+
+## 自己組織化マップ（A.5.11）
+
+### 自己組織化マップ（SOM）
+
+SOMの実装としては、KH Coderは[som](https://cran.r-project.org/package=som)を使っているようだが、[kohonen](https://cran.r-project.org/package=kohonen)を使ったほうがよい。行列が非常に大きい場合には`kohonen::som(mode = "online")`としてもよいのかもしれないが、一般にバッチ型のほうが収束が早く、数十ステップ程度回せば十分である。
+
+与える単語文書行列は、ここでは`tidytext::bind_tf_idf()`を使ってTF-IDFで重みづけし、上位100語ほど抽出する。
+
+```{r}
+#| label: fit-som
+#| cache: true
+dat <-
+  dplyr::tbl(con, "tokens") |>
+  dplyr::filter(
+    pos %in% c(
+      "名詞", #"名詞B", "名詞C",
+      "地名", "人名", "組織名", "固有名詞",
+      "動詞", "未知語", "タグ"
+    )
+  ) |>
+  dplyr::mutate(
+    token = dplyr::if_else(is.na(original), token, original),
+    token = paste(token, pos, sep = "/")
+  ) |>
+  dplyr::count(doc_id, token) |>
+  dplyr::collect() |>
+  tidytext::bind_tf_idf(token, doc_id, n) |>
+  tidytext::cast_dfm(doc_id, token, tf_idf) |>
+  quanteda::dfm_trim(
+    min_termfreq = 100,
+    termfreq_type = "rank"
+  ) |>
+  as.matrix() |>
+  scale() |>
+  t()
+
+som_fit <-
+  kohonen::som(
+    dat,
+    grid = kohonen::somgrid(16, 12, "hexagonal"),
+    rlen = 50, # 学習回数
+    alpha = c(0.05, 0.01),
+    radius = 6,
+    dist.fcts = "sumofsquares",
+    mode = "pbatch",
+    init = aweSOM::somInit(dat, 16, 12)
+  )
+```
+
+```{r}
+#| label: quality-som
+aweSOM::somQuality(som_fit, dat)
+```
+
+### U-Matrix
+
+U-matrixは「各ノードの参照ベクトルが近傍ノードと異なる度合いで色づけする方法」（[自己組織化マップ入門](https://www.brain.kyutech.ac.jp/~furukawa/data/SOMtext.pdf)）。暖色の箇所はデータ密度が低い「山間部」で、寒色の箇所はデータ密度が高い「平野部」みたいなイメージ、写像の勾配が急峻になっている箇所を境にしてクラスタが分かれていると判断するみたいな見方をする。
+
+```{r}
+#| label: plot-umatrix
+aweSOM::aweSOMsmoothdist(som_fit)
+```
+
+```{r}
+#| label: plot-umatrix-interactive
+aweSOM::aweSOMplot(
+  som_fit,
+  data = dat,
+  type = "UMatrix"
+)
+```
+
+### ヒットマップ🍳
+
+`clusters::pam()`でクラスタリングして色を付ける。一部の「山間部」や「盆地」がクラスタになって、後はその他の部分みたいな感じに分かれるようだが、解釈するのに便利な感じで分かれてはくれなかった。
+
+```{r}
+#| label: cluster-som
+clusters <- som_fit |>
+  purrr::pluck("codes", 1) |> # 参照ベクトル（codebook vectors）は`codes`にリストとして格納されている
+  cluster::pam(k = 8)
+```
+
+ヒットマップ（hitmap, proportion map）は以下のような可視化の方法。ノードの中の六角形は各ノードが保持する参照ベクトルの数（比率）を表している。ノードの背景色が上のコードで得たクラスタに対応する。
+
+```{r}
+#| label: plot-hitmap
+aweSOM::aweSOMplot(
+  som_fit,
+  data = dat,
+  type = "Hitmap",
+  superclass = clusters[["clustering"]]
+)
+```
+
+---
+
+```{r}
+#| label: cleanup
+duckdb::dbDisconnect(con)
+duckdb::duckdb_shutdown(drv)
+
+sessioninfo::session_info(info = "packages")
+```
