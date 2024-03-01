@@ -256,7 +256,9 @@ dat |>
 
 ### 自己組織化マップ（SOM）
 
-SOMの実装としては、KH Coderは[som](https://cran.r-project.org/package=som)を使っているようだが、[kohonen](https://cran.r-project.org/package=kohonen)を使ったほうがよい。行列が非常に大きい場合には`kohonen::som(mode = "online")`としてもよいのかもしれないが、一般にバッチ型のほうが収束が早く、数十ステップ程度回せば十分である。
+SOMの実装としては、KH Coderは[som](https://cran.r-project.org/package=som)を使っているようだが、[kohonen](https://cran.r-project.org/package=kohonen)を使ったほうがよい。
+
+行列が非常に大きい場合には`kohonen::som(mode = "online")`としてもよいのかもしれないが、一般にバッチ型のほうが収束が早く、数十ステップ程度回せば十分とされる。
 
 与える単語文書行列は、ここでは`tidytext::bind_tf_idf()`を使ってTF-IDFで重みづけし、上位100語ほど抽出する。
 
@@ -291,13 +293,13 @@ dat <-
 som_fit <-
   kohonen::som(
     dat,
-    grid = kohonen::somgrid(16, 12, "hexagonal"),
+    grid = kohonen::somgrid(20, 16, "hexagonal"),
     rlen = 50, # 学習回数
     alpha = c(0.05, 0.01),
-    radius = 6,
+    radius = 8,
     dist.fcts = "sumofsquares",
-    mode = "pbatch",
-    init = aweSOM::somInit(dat, 16, 12)
+    mode = "batch",
+    init = aweSOM::somInit(dat, 20, 16)
   )
 ```
 
@@ -326,13 +328,15 @@ aweSOM::aweSOMplot(
 
 ### ヒットマップ🍳
 
-`clusters::pam()`でクラスタリングして色を付ける。一部の「山間部」や「盆地」がクラスタになって、後はその他の部分みたいな感じに分かれるようだが、解釈するのに便利な感じで分かれてはくれなかった。
+色を付けるためのクラスタリングをしておく。一部の「山間部」や「盆地」がクラスタになって、後はその他の部分みたいな感じに分かれるようだが、解釈するのに便利な感じで分かれてはくれなかったりする。
 
 ```{r}
 #| label: cluster-som
 clusters <- som_fit |>
   purrr::pluck("codes", 1) |> # 参照ベクトル（codebook vectors）は`codes`にリストとして格納されている
-  cluster::pam(k = 8)
+  dist() |>
+  hclust(method = "ward.D2") |>
+  cutree(k = 10)
 ```
 
 ヒットマップ（hitmap, proportion map）は以下のような可視化の方法。ノードの中の六角形は各ノードが保持する参照ベクトルの数（比率）を表している。ノードの背景色が上のコードで得たクラスタに対応する。
@@ -343,7 +347,7 @@ aweSOM::aweSOMplot(
   som_fit,
   data = dat,
   type = "Hitmap",
-  superclass = clusters[["clustering"]]
+  superclass = clusters
 )
 ```
 
