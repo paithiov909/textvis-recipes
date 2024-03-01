@@ -91,15 +91,14 @@ dat |>
 
 ## 文書数の分布（A.5.3）
 
+### ヒストグラム🍳
+
 段落（`doc_id`）ではなく、章ラベル（`label`）でグルーピングして集計している。`docfreq`について上でやったのと同様に処理すれば度数分布表にできる。
 
 ```{r}
 #| label: calc-df
 dat <-
   dplyr::tbl(con, "tokens") |>
-  dplyr::filter(
-    !pos %in% c("その他", "名詞B", "動詞B", "形容詞B", "副詞B", "否定助動詞", "形容詞（非自立）")
-  ) |>
   dplyr::mutate(token = paste(token, pos, sep = "/")) |>
   dplyr::count(label, token) |>
   dplyr::collect() |>
@@ -120,6 +119,21 @@ dat |>
   scale_y_sqrt() +
   theme_bw() +
   labs(x = "文書数", y = "度数")
+```
+
+### Zip's law🍳
+
+よく見かけるグラフ。[言語処理100本ノック 2020](https://nlp100.github.io/ja/ch04.html#39-zipf%E3%81%AE%E6%B3%95%E5%89%87)の39はこれにあたる。
+
+```{r}
+#| label: plot-zipf
+dat |>
+  ggplot(aes(x = rank, y = frequency)) +
+  geom_line() +
+  geom_smooth(method = lm, formula = y ~ x, se = FALSE) +
+  scale_x_log10() +
+  scale_y_log10() +
+  theme_bw()
 ```
 
 ## 出現回数・文書数のプロット（A.5.4）

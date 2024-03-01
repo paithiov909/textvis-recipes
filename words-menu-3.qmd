@@ -26,7 +26,7 @@ tbl <-
 
 ### 非類似度のヒートマップ🍳
 
-Jaccard係数を指定して非類似度のヒートマップを描くと、そもそもパターンが何も見えなかった。
+Jaccard係数を指定して非類似度のヒートマップを描くと、そもそもパターンがほとんど見えなかった。
 
 ```{r}
 #| label: plot-heatmap
@@ -78,7 +78,7 @@ factoextra::fviz_nbclust(
 
 ```{r}
 #| label: plot-hclust-silhoutte-2
-cluster::silhouette(cutree(clusters, k = 4), dist = dat) |>
+cluster::silhouette(cutree(clusters, k = 5), dist = dat) |>
   factoextra::fviz_silhouette(print.summary = FALSE) +
   theme_classic()
 ```
@@ -89,7 +89,7 @@ cluster::silhouette(cutree(clusters, k = 4), dist = dat) |>
 
 ```{r}
 #| label: plot-hclust-factoextra
-factoextra::fviz_dend(clusters, h = 1.0, horiz = TRUE, labels_track_height = 0.3)
+factoextra::fviz_dend(clusters, k = 5, horiz = TRUE, labels_track_height = 0.3)
 ```
 
 ### デンドログラムと棒グラフ
@@ -103,7 +103,7 @@ dfm |>
   quanteda::colSums() |>
   tibble::enframe() |>
   dplyr::mutate(
-    clust = (clusters |> cutree(h = 1.0))[name]
+    clust = (clusters |> cutree(k = 5))[name]
   ) |>
   ggplot(aes(x = value, y = name, fill = factor(clust))) +
   geom_bar(stat = "identity", show.legend = FALSE) +
@@ -115,7 +115,144 @@ dfm |>
 
 ## 共起ネットワーク（A.5.10）
 
-> TODO: 共起ネットワーク
+### グラフの作成
+
+描画するグラフを`tbl_graph`として作成する。
+
+```{r}
+#| label: create-graph
+dfm <-
+  dplyr::tbl(con, "tokens") |>
+  dplyr::filter(
+    pos %in% c(
+      "名詞", #"名詞B", "名詞C",
+      "地名", "人名", "組織名", "固有名詞",
+      "動詞", "未知語", "タグ"
+    )
+  ) |>
+  dplyr::mutate(
+    token = dplyr::if_else(is.na(original), token, original),
+    token = paste(token, pos, sep = "/")
+  ) |>
+  dplyr::count(doc_id, token) |>
+  dplyr::collect() |>
+  tidytext::cast_dfm(doc_id, token, n)
+
+dat <- dfm |>
+  quanteda::dfm_trim(min_termfreq = 45, termfreq_type = "count") |>
+  quanteda::dfm_weight(scheme = "boolean") |>
+  proxyC::simil(margin = 2, method = "jaccard", rank = 3) |>
+  as.matrix() |>
+  tidygraph::as_tbl_graph(directed = FALSE) |>
+  dplyr::distinct() |> # 重複を削除
+  tidygraph::activate(edges) |>
+  dplyr::filter(from != to)
+
+dat
+```
+
+### 相関係数の計算
+
+エッジの`alpha`に渡す相関係数を計算する。このあたりのコードは書くのがなかなか難しかったので、あまりスマートなやり方ではないかもしれない。
+
+KH Coderには、それぞれの共起が文書集合内のどのあたりの位置に出現したかを概観できるようにするために、共起ネットワーク中のエッジについて、共起の出現位置との相関係数によって塗り分ける機能がある。これを実現するには、まずそれぞれの文書について文書集合内での通し番号を振ったうえで、それぞれの文書についてエッジとして描きたい共起の有無を1, 0で表してから、通し番号とのあいだの相関係数を計算するということをやる。
+
+まず、共起ネットワーク中に描きこむ共起と、それらを含む文書番号をリストアップした縦長のデータフレームをつくる。
+
+```{r}
+#| label: calc-correlations-1
+#| cache: true
+nodes <- tidygraph::activate(dat, nodes) |> dplyr::pull("name")
+from <- nodes[tidygraph::activate(dat, edges) |> dplyr::pull("from")]
+to <- nodes[tidygraph::activate(dat, edges) |> dplyr::pull("to")]
+
+has_coocurrences <-
+  dplyr::tbl(con, "tokens") |>
+  dplyr::filter(
+    pos %in% c(
+      "名詞", #"名詞B", "名詞C",
+      "地名", "人名", "組織名", "固有名詞",
+      "動詞", "未知語", "タグ"
+    )
+  ) |>
+  dplyr::mutate(
+    token = dplyr::if_else(is.na(original), token, original),
+    token = paste(token, pos, sep = "/")
+  ) |>
+  dplyr::filter(token %in% nodes) |>
+  dplyr::collect() |>
+  dplyr::reframe(
+    from = from,
+    to = to,
+    has_from = purrr::map_lgl(from, ~ . %in% token),
+    has_to = purrr::map_lgl(to, ~ .%in% token),
+    .by = doc_id
+  ) |>
+  dplyr::filter(has_from & has_to) |>
+  dplyr::group_by(from, to) |>
+  dplyr::reframe(doc_id = doc_id)
+
+has_coocurrences
+```
+
+次に、このデータフレームを共起ごとにグルーピングして、共起の有無と通し番号とのあいだの相関係数を含むデータフレームをつくる。
+
+```{r}
+#| label: calc-correlations-2
+#| cache: true
+correlations <- has_coocurrences |>
+  dplyr::group_by(from, to) |>
+  dplyr::group_map(\(.x, .y) {
+    docs <- seq_len(nrow(tbl))
+    tbl |>
+      dplyr::transmute(
+        doc_id = doc_id,
+        from = which(nodes == .y$from),
+        to = which(nodes == .y$to)
+      ) |>
+      dplyr::group_by(from, to) |>
+      dplyr::reframe(
+        cor = cor(docs, as.numeric(docs %in% .x[["doc_id"]]))
+      )
+  }) |>
+  purrr::list_rbind()
+
+correlations
+```
+
+最後に、相関係数を`tbl_graph`のエッジと結合する。
+
+```{r}
+#| label: join-correlations
+dat <- dat |>
+  tidygraph::activate(edges) |>
+  dplyr::left_join(correlations, by = dplyr::join_by(from == from, to == to))
+```
+
+### 共起ネットワーク
+
+上の処理が間違っていなければ、文書集合の後のほうによく出てくる共起であるほど、エッジの色が濃くなっているはず。
+
+```{r}
+#| label: plot-network
+#| cache: true
+dat |>
+  tidygraph::activate(nodes) |>
+  dplyr::mutate(
+    community = factor(tidygraph::group_leading_eigen())
+  ) |>
+  ggraph::ggraph(layout = "fr") +
+  ggraph::geom_edge_link2(
+    aes(
+      alpha = dplyr::percent_rank(cor) + .01, # パーセンタイルが0だと透明になってしまうので、適当に下駄をはかせる
+      width = dplyr::percent_rank(weight) + 1
+    ),
+    colour = "red"
+  ) +
+  ggraph::geom_node_point(aes(colour = community), show.legend = FALSE) +
+  ggraph::geom_node_label(aes(colour = community, label = name), repel = TRUE, show.legend = FALSE) +
+  ggraph::theme_graph()
+```
 
 ## 自己組織化マップ（A.5.11）
 
