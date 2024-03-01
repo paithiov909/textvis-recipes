@@ -203,16 +203,14 @@ has_coocurrences
 correlations <- has_coocurrences |>
   dplyr::group_by(from, to) |>
   dplyr::group_map(\(.x, .y) {
-    docs <- seq_len(nrow(tbl))
-    tbl |>
-      dplyr::transmute(
-        doc_id = doc_id,
-        from = which(nodes == .y$from),
-        to = which(nodes == .y$to)
-      ) |>
+    tibble::tibble(
+      doc_number = seq_len(nrow(tbl)),
+      from = which(nodes == .y$from),
+      to = which(nodes == .y$to)
+    ) |>
       dplyr::group_by(from, to) |>
       dplyr::reframe(
-        cor = cor(docs, as.numeric(docs %in% .x[["doc_id"]]))
+        cor = cor(doc_number, as.numeric(doc_number %in% .x[["doc_id"]]))
       )
   }) |>
   purrr::list_rbind()
