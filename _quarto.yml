@@ -1,8 +1,8 @@
 project:
   type: book
   output-dir: docs
-  # resources:
-    # - search_console.html
+  resources:
+    - google4a285867c35ac84f.html
 
 book:
   repo-url: https://github.com/paithiov909/textvis-recipes

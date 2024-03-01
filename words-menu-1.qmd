@@ -121,7 +121,7 @@ dat |>
   labs(x = "文書数", y = "度数")
 ```
 
-### Zip's law🍳
+### Zipf's law🍳
 
 よく見かけるグラフ。[言語処理100本ノック 2020](https://nlp100.github.io/ja/ch04.html#39-zipf%E3%81%AE%E6%B3%95%E5%89%87)の39はこれにあたる。
 
