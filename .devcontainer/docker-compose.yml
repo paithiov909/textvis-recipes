@@ -1,0 +1,34 @@
+version: "3"
+services:
+  wd:
+    container_name: "khcoder-app"
+    depends_on:
+      - db
+    build:
+      context: .
+      dockerfile: Dockerfile
+    init: true
+    volumes:
+      - ..:/root/workspace
+    networks:
+      - kh-net
+  db:
+    image: mysql:5.7
+    container_name: "khcoder-mysql-5.7"
+    restart: always
+    ports:
+      - 3306:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: khcoder
+      MYSQL_DATABASE: khcoder
+      MYSQL_USER: khcoder
+      MYSQL_PASSWORD: khcoder
+    # volumes:
+    #   - ./mysql_data:/var/lib/mysql
+    #   - ./conf/my.cnf:/etc/my.cnf
+    networks:
+      - kh-net
+
+networks:
+  kh-net:
+    driver: bridge

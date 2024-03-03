@@ -1,0 +1,3 @@
+[submodule "khcoder"]
+	path = khcoder
+	url = https://github.com/paithiov909/khcoder.git
