@@ -1,4 +1,5 @@
 /.quarto/
+.vscode
 .Rproj.user
 .Rhistory
 tutorial_jp
