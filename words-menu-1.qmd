@@ -42,7 +42,7 @@ reactable::reactable(
   dat,
   filterable = TRUE,
   defaultColDef = reactable::colDef(
-    cell = reactablefmtr::data_bars(dat)
+    cell = reactablefmtr::data_bars(dat, text_position = "outside-base")
   )
 )
 ```

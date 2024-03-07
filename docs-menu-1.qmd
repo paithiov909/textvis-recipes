@@ -64,7 +64,6 @@ dat |>
 dat <-
   dplyr::tbl(con, "tokens") |>
   dplyr::filter(
-    section == "[3]下_先生と遺書",
     pos %in% c(
       "名詞", # "名詞B", "名詞C",
       "地名", "人名", "組織名", "固有名詞",
@@ -263,7 +262,7 @@ cluster::silhouette(clusters$cluster, dist = dat) |>
   theme(axis.text.x = element_blank())
 ```
 
-## トピックモデル（A.6.3）
+## トピックモデル（A.6.3-4）
 
 ### トピック数の探索
 
@@ -366,14 +365,76 @@ reactable::reactable(
   dat,
   filterable = TRUE,
   defaultColDef = reactable::colDef(
-    cell = reactablefmtr::data_bars(dat)
+    cell = reactablefmtr::data_bars(dat, text_position = "outside-base")
   )
 )
 ```
 
-## ナイーブベイズ
+## ナイーブベイズ（A.6.6-8）
 
-> あとで書く
+`quanteda.textmodels::textmodel_nb()`で分類する例。ここでは、LexRankの節で抽出した`scores`の付いている文書を使って学習する。交差検証はしない。
+
+```{r}
+#| label: naive-bayes
+dfm <-
+  dplyr::tbl(con, "tokens") |>
+  dplyr::filter(
+    pos %in% c(
+      "名詞", # "名詞B", "名詞C",
+      "地名", "人名", "組織名", "固有名詞",
+      "動詞", "未知語", "タグ"
+    )
+  ) |>
+  dplyr::mutate(
+    token = dplyr::if_else(is.na(original), token, original),
+    token = paste(token, pos, sep = "/")
+  ) |>
+  dplyr::count(doc_id, token) |>
+  dplyr::collect() |>
+  tidytext::cast_dfm(doc_id, token, n) |>
+  quanteda::dfm_tfidf(scheme_tf = "prop")
+
+labels <- tbl |>
+  dplyr::mutate(section = factor(section, labels = c("上", "中", "下"))) |>
+  dplyr::filter(doc_id %in% quanteda::docnames(dfm)) |>
+  dplyr::pull(section, doc_id)
+
+nb_fit <- dfm |>
+  quanteda::dfm_subset(
+    quanteda::docnames(dfm) %in% names(scores)
+  ) |>
+  rlang::as_function(~ {
+    # dfmに格納すると文書の順番が入れ替わるので、labelsの順番をあわせなければならない
+    quanteda.textmodels::textmodel_nb(., labels[quanteda::docnames(.)])
+  })()
+
+dat <- tbl |>
+  dplyr::mutate(section = factor(section, labels = c("上", "中", "下"))) |>
+  dplyr::filter(doc_id %in% quanteda::docnames(dfm)) |>
+  dplyr::mutate(.pred = predict(nb_fit, dfm)[as.character(doc_id)]) # 予測値の順番をあわせる必要がある
+
+yardstick::conf_mat(dat, section, .pred) # 混同行列
+yardstick::accuracy(dat, section, .pred) # 正解率
+yardstick::f_meas(dat, section, .pred) # F値
+```
+
+精度よく分類することよりも、各カテゴリにおける「スコア」（尤度）の比を見るのが目的でナイーブベイズを使っているはずなので、確認する。
+
+```{r}
+#| label: coef
+dat <-
+  coef(nb_fit) |>
+  dplyr::as_tibble(rownames = "token") |>
+  rlang::as_function(~ {
+    s <- t(coef(nb_fit)) |> colSums()
+    dplyr::mutate(.,
+      across(where(is.numeric), ~ . / s),
+      var = t(coef(nb_fit)) |> cov() |> diag()
+    )
+  })()
+
+dplyr::arrange(dat, desc(var))
+```
 
 ```{r}
 #| label: cleanup
