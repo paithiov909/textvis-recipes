@@ -8,13 +8,11 @@
 
 ## 開発コンテナについて
 
-### .devcontainer
+手もとでKH Coderの図表を確認するために、開発コンテナ内でKH Coderを動かせるようにしています。
 
-手もとで[KH Coder](https://github.com/ko-ichi-h/khcoder)の図表を確認するために、開発コンテナ内でKH Coderを動かせるようにしています。
+具体的には、[Light-weight Desktop (desktop-lite)](https://github.com/devcontainers/features/tree/main/src/desktop-lite) というDev Container Featuresを使っていて、コンテナ内のデスクトップ環境（[Fluxbox](http://fluxbox.org/)）に[noVNC](https://novnc.com/)経由で接続できます。
 
-具体的には、[Light-weight Desktop (desktop-lite)](https://github.com/devcontainers/features/tree/main/src/desktop-lite)という[Dev Container Features](https://containers.dev/features)を使っていて、コンテナ内のデスクトップ環境（[FluxBox](http://fluxbox.org/)）に[noVNC](https://novnc.com/)経由で接続できます。
-
-もっとも、簡単な確認用なので、完全には動かないと思います。また、これはIMEがない環境なので、日本語入力ができません（したがって、語彙の検索などはできない）。あと、Dev Container Featuresを使っているため、コンテナイメージのビルドに時間がかかります。
+もっとも、簡単な確認用なので、完全には動かないと思います。また、これはIMEがない環境なので、日本語入力ができません。
 
 ### 使い方
 

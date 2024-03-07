@@ -24,6 +24,7 @@ book:
     - words-menu-1.qmd
     - words-menu-2.qmd
     - words-menu-3.qmd
+    - docs-menu-1.qmd
     - references.qmd
   comments:
     giscus:

@@ -2,8 +2,6 @@ ARG VARIANT="12"
 FROM debian:${VARIANT}-slim
 ENV PERL_MM_USE_DEFAULT 1
 ENV PYTHONUNBUFFERED 1
-ENV LANG C.UTF-8
-ENV TZ Asia/Tokyo
 RUN apt-get -y update && export DEBIAN_FRONTEND=noninteractive && apt-get -y install \
   cpanminus \
   fonts-ipafont-gothic \

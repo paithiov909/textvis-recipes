@@ -1,7 +1,8 @@
-version: "3"
+version: "3.9"
+name: khcoder
 services:
-  wd:
-    container_name: "khcoder-app"
+  app:
+    container_name: khcoder-app
     depends_on:
       - db
     build:
@@ -12,10 +13,15 @@ services:
       - ..:/root/workspace
     networks:
       - kh-net
+    environment:
+      ENV LANGUAGE: ja_JP.UTF-8
+      ENV LANG: ja_JP.UTF-8
+      ENV LC_ALL: ja_JP.UTF-8
+      ENV TZ: Asia/Tokyo
   db:
     image: mysql:5.7
-    container_name: "khcoder-mysql-5.7"
-    restart: always
+    container_name: khcoder-mysql-5.7
+    restart: unless-stopped
     ports:
       - 3306:3306
     environment:
@@ -23,9 +29,6 @@ services:
       MYSQL_DATABASE: khcoder
       MYSQL_USER: khcoder
       MYSQL_PASSWORD: khcoder
-    # volumes:
-    #   - ./mysql_data:/var/lib/mysql
-    #   - ./conf/my.cnf:/etc/my.cnf
     networks:
       - kh-net
 

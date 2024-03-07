@@ -1,7 +1,7 @@
 {
   "name": "${localWorkspaceFolderBasename}",
   "dockerComposeFile": "docker-compose.yml",
-  "service": "wd",
+  "service": "app",
   "workspaceFolder": "/root/workspace",
   "features": {
     "ghcr.io/devcontainers/features/docker-outside-of-docker:1": {

@@ -4,9 +4,16 @@
 本文の内容に関連する情報をまとめたリストです。いわゆる「参考文献リスト」ではありません
 :::
 
+- クラスター分析
+  - [k-meansの最適なクラスター数を調べる方法 #Python - Qiita](https://qiita.com/deaikei/items/11a10fde5bb47a2cf2c2)
+  - [シルエット分析 | technical-note](https://hkawabata.github.io/technical-note/note/ML/Evaluation/silhouette-analysis.html)
+- LSI
+  - [潜在的意味インデキシング（LSI）徹底入門 - あらびき日記](https://abicky.net/2012/03/24/211818/)
 - アソシエーション分析
   - [Chapter 5 Association Analysis: Basic Concepts and Algorithms | An R Companion for Introduction to Data Mining](https://mhahsler.github.io/Introduction_to_Data_Mining_R_Examples/book/association-analysis-basic-concepts-and-algorithms.html)
   - [R でアソシエーション分析 #R - Qiita](https://qiita.com/inumaru9n/items/b344e6ea1c63cc2467b5)
+- 共起ネットワーク（ネットワーク分析）
+  - [Network Analysis Using R](https://tsubasayamaguchi-jinrui.github.io/Network_Analysis_Using_R/)
 - 自己組織化マップ
   - [aweSOM](https://cran.r-project.org/web/packages/aweSOM/vignettes/aweSOM.html)
   - [自己組織化マップ入門](https://www.brain.kyutech.ac.jp/~furukawa/data/som.html)

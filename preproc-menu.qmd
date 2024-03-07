@@ -219,6 +219,140 @@ quanteda::docvars(dfm, "section") <-
 dfm
 ```
 
+## 「抽出語・文脈ベクトル」表（A.3.7）
+
+### word2vec🍳
+
+:::{.callout-caution}
+以下で扱っているベクトルは、KH Coderにおける「抽出語・文脈ベクトル」とは異なるものです
+:::
+
+KH Coderにおける「文脈ベクトル」は、これを使って抽出語メニューからおこなえるような分析をすることによって、「似たような使われ方をする語を調べる」使い方をするためのものだと思われる。
+
+「似たような使われ方をする語を調べる」ためであれば、単語埋め込みを使ってもよさそう。ただし、KH Coderの「文脈ベクトル」を使う場合の「似たような使われ方をする」が、あくまで**分析対象とする文書のなかで**という意味であるのに対して、単語埋め込みを使う場合では、**埋め込みの学習に使われた文書のなかで**という意味になってしまう点には注意。
+
+試しに、既存のword2vecモデルから単語ベクトルを読み込んでみる。ここでは、[Wikipedia2Vec](https://wikipedia2vec.github.io/wikipedia2vec/pretrained/)の100次元のものを使う。だいぶ古いモデルだが、MeCab+IPA辞書で分かち書きされた語彙を使っていることが確認できる単語埋め込みとなると（[参考](https://github.com/wikipedia2vec/wikipedia2vec/issues/46)）、これくらいの時期につくられたものになりそう。
+
+```{r}
+#| label: read-embeddings
+# word2vecのテキスト形式のファイルは、先頭行に埋め込みの「行数 列数」が書かれている
+readr::read_lines("tutorial_jp/jawiki_20180420_100d.txt.bz2", n_max = 1)
+
+# 下のほうは低頻度語で、全部読み込む必要はないと思われるので、ここでは先頭から1e5行だけ読み込む
+embeddings <-
+  readr::read_delim(
+    "tutorial_jp/jawiki_20180420_100d.txt.bz2",
+    delim = " ",
+    col_names = c("token", paste0("dim_", seq_len(100))),
+    skip = 1,
+    n_max = 1e5,
+    show_col_types = FALSE
+  )
+
+# メモリ上でのサイズ
+lobstr::obj_size(embeddings)
+```
+
+このうち、分析対象の文書に含まれる語彙のベクトルだけを適当に取り出しておく。
+
+```{r}
+#| label: tidy-embeddings
+embeddings <-
+  dplyr::tbl(con, "tokens") |>
+  dplyr::filter(
+    !pos %in% c("その他", "名詞B", "動詞B", "形容詞B", "副詞B", "否定助動詞", "形容詞（非自立）")
+  ) |>
+  dplyr::transmute(
+    doc_id = doc_id,
+    token = token,
+    label = paste(token, pos, sep = "/")
+  ) |>
+  dplyr::distinct(doc_id, token, .keep_all = TRUE) |>
+  dplyr::collect() |>
+  dplyr::inner_join(embeddings, by = dplyr::join_by(token == token))
+
+embeddings
+```
+
+### 独立成分分析（ICA）🍳
+
+word2vecを含む埋め込み表現は、「独立成分分析（ICA）で次元削減することで、人間にとって解釈性の高い成分を取り出すことができる」ことが知られている（[参考](https://qiita.com/otakumesi/items/332004aba132a64f7a26)）。これを応用すると、ICAで取り出した成分をもとにして、コーディングルールにするとよさそうなカテゴリや語彙を探索できるかもしれない。
+
+```{r}
+#| label: ica
+#| cache: true
+ica <- embeddings |>
+  dplyr::select(label, dplyr::starts_with("dim")) |>
+  dplyr::distinct() |>
+  tibble::column_to_rownames("label") |>
+  as.matrix() |>
+  fastICA::fastICA(n.comp = 20)
+
+dat <- ica$S |>
+  rlang::as_function(~ {
+    . * sign(moments::skewness(.)) # 正方向のスコアだけを扱うため、歪度が負の成分を変換する
+  })() |>
+  dplyr::as_tibble(
+    rownames = NA,
+    .name_repair = ~ paste("dim", stringr::str_pad(seq_along(.x), width = 2, pad = "0"), sep = "_")
+  ) |>
+  tibble::rownames_to_column("label") |>
+  tidyr::pivot_longer(cols = !label, names_to = "dim", values_to = "score")
+```
+
+ここでは正方向のスコアだけを扱うため、歪度が負の成分を正方向に変換する処理をしている。もちろん、実際には負の方向のスコアが大きい語彙とあわせて解釈したほうがわかりやすい成分もありそうなことからも、そのあたりも含めてそれぞれの成分を探索し、ほかの分析とも組み合わせながらコーディングルールを考えるべきだろう。
+
+各成分の正方向のスコアが大きい語彙を図示すると次のような感じになる。
+
+```{r}
+#| label: plot-ica
+#| fig-height: 8
+library(ggplot2)
+
+dat |>
+  dplyr::slice_max(score, n = 8, by = dim) |>
+  ggplot(aes(x = reorder(label, score), y = score)) +
+  geom_col() +
+  coord_flip() +
+  facet_wrap(vars(dim), ncol = 4, scales = "free_y") +
+  theme_minimal() +
+  labs(x = NULL, y = NULL)
+```
+
+実際にはこうして得られたスコアの大きい語をそのままコーディングルールとして採用することはしないほうがよいが、ここから次のようにして「文書・コード」表をつくることもできる。
+
+```{r}
+#| label: create-dfm3
+rules <- dat |>
+  dplyr::slice_max(score, n = 10, by = dim) |>
+  dplyr::reframe(
+    label = list(label),
+    .by = dim
+  ) |>
+  tibble::deframe()
+
+codes <-
+  embeddings |>
+  dplyr::select(doc_id, label) |>
+  dplyr::filter(label %in% purrr::flatten_chr(rules)) |>
+  dplyr::mutate(
+    codings = purrr::map(label,
+      ~ purrr::imap(rules, \(.x, .y) tibble::tibble(code = .y, flag = . %in% .x)) |>
+      purrr::list_rbind() |>
+      dplyr::filter(flag == TRUE) |>
+      dplyr::select(!flag)
+    )
+  ) |>
+  tidyr::unnest(codings)
+
+dfm <- codes |>
+  dplyr::count(doc_id, code) |>
+  tidytext::cast_dfm(doc_id, code, n) |>
+  quanteda::dfm_weight(scheme = "boolean")
+
+dfm
+```
+
 ---
 
 ```{r}
