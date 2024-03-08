@@ -153,7 +153,7 @@ dat
 
 ### 相関係数の計算
 
-エッジの`alpha`に渡す相関係数を計算する。このあたりのコードは書くのがなかなか難しかったので、あまりスマートなやり方ではないかもしれない。
+`ggraph::geom_edge_link2()`の`alpha`に渡す相関係数を計算する。このあたりのコードは書くのがなかなか難しかったので、あまりスマートなやり方ではないかもしれない。
 
 KH Coderには、それぞれの共起が文書集合内のどのあたりの位置に出現したかを概観できるようにするために、共起ネットワーク中のエッジについて、共起の出現位置との相関係数によって塗り分ける機能がある。これを実現するには、まずそれぞれの文書について文書集合内での通し番号を振ったうえで、それぞれの文書についてエッジとして描きたい共起の有無を1, 0で表してから、通し番号とのあいだの相関係数を計算するということをやる。
 
@@ -209,8 +209,9 @@ correlations <- has_coocurrences |>
       to = which(nodes == .y$to)
     ) |>
       dplyr::group_by(from, to) |>
-      dplyr::reframe(
-        cor = cor(doc_number, as.numeric(doc_number %in% .x[["doc_id"]]))
+      dplyr::summarise(
+        cor = cor(doc_number, as.numeric(doc_number %in% .x[["doc_id"]])),
+        .groups = "drop"
       )
   }) |>
   purrr::list_rbind()

@@ -293,10 +293,9 @@ dat <- ica$S |>
     . * sign(moments::skewness(.)) # 正方向のスコアだけを扱うため、歪度が負の成分を変換する
   })() |>
   dplyr::as_tibble(
-    rownames = NA,
-    .name_repair = ~ paste("dim", stringr::str_pad(seq_along(.x), width = 2, pad = "0"), sep = "_")
+    .name_repair = ~ paste("dim", stringr::str_pad(seq_along(.), width = 2, pad = "0"), sep = "_"),
+    rownames = "label"
   ) |>
-  tibble::rownames_to_column("label") |>
   tidyr::pivot_longer(cols = !label, names_to = "dim", values_to = "score")
 ```
 

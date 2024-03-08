@@ -138,7 +138,7 @@ dat |>
 
 ## 出現回数・文書数のプロット（A.5.4）
 
-図 A.25のようなグラフの例。ggplot2で`graphics::identify`のようなことをするやり方がわからないので、適当に条件を指定してgghighlightでハイライトしている。
+図 A.25のようなグラフの例。ggplot2で`graphics::identify()`のようなことをするやり方がわからないので、適当に条件を指定してgghighlightでハイライトしている。
 
 ```{r}
 #| label: plot-tf-df

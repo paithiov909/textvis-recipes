@@ -58,13 +58,16 @@ dat <- dfm |>
   quanteda::fcm() |>
   tidytext::tidy() |>
   dplyr::rename(target = document, co_occur = count) |>
-  dplyr::reframe(
-    term = term,
-    target_occur = quanteda::colSums(dfm)[target],
-    term_occur = quanteda::colSums(dfm)[term],
-    co_occur = co_occur,
-    .by = target
-  ) |>
+  rlang::as_function(~ {
+    col_sums <- quanteda::colSums(dfm)
+    dplyr::reframe(.,
+      term = term,
+      target_occur = col_sums[target],
+      term_occur = col_sums[term],
+      co_occur = co_occur,
+      .by = target
+    )
+  })() |>
   dplyr::mutate(
     p_x = target_occur / quanteda::ndoc(dfm),
     p_y = term_occur / quanteda::ndoc(dfm),
@@ -252,7 +255,7 @@ dat <- plot(ca_fit)
 
 ### バイプロット（バブルプロット）
 
-ggplot2でバイプロットを描画するには、たとえば次のようにする。`ggrepel::geom_text_repel`でラベルを出す語彙の選択の仕方はもうすこし工夫したほうがよいかもしれない。
+ggplot2でバイプロットを描画するには、たとえば次のようにする。`ggrepel::geom_text_repel()`でラベルを出す語彙の選択の仕方はもうすこし工夫したほうがよいかもしれない。
 
 なお、このコードは[Correspondence Analysis visualization using ggplot | R-bloggers](https://www.r-bloggers.com/2019/08/correspondence-analysis-visualization-using-ggplot/)を参考にした。
 
@@ -330,7 +333,7 @@ dat |>
 
 ### MDS・バブルプロット
 
-`MASS::isoMDS`より`MASS::sammon`のほうがたぶん見やすい。
+`MASS::isoMDS()`より`MASS::sammon()`のほうがたぶん見やすい。
 
 ```{r}
 #| label: mds-2d
@@ -374,8 +377,10 @@ scatterplot3dではなくplotlyで試してみたが、とくに見やすいと�
 #| cache: true
 dat <- MASS::sammon(1 - simil, k = 3) |>
   purrr::pluck("points") |>
-  as.data.frame() |>
-  tibble::rownames_to_column("label") |>
+  dplyr::as_tibble(
+    .name_repair = ~ paste0("V", seq_along(.)),
+    rownames = "label"
+  ) |>
   dplyr::rename(Dim1 = V1, Dim2 = V2, Dim3 = V3) |>
   dplyr::mutate(term_freq = tf[label])
 ```

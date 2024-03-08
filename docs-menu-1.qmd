@@ -288,7 +288,7 @@ dfm <-
   tidytext::cast_dfm(doc_id, token, n)
 ```
 
-ここでは、トピック数を5から15まで変化させる。`seededlda::textmodel_lda(auto_iter=TRUE)`とすると、ステップが`max_iter`以下であっても条件によってギブスサンプリングを打ち切る（このWebページのレンダリングにかかる時間を短縮するために指定しています）。
+ここでは、トピック数を5から15まで変化させる。`seededlda::textmodel_lda(auto_iter=TRUE)`とすると、ステップが`max_iter`以下であっても条件によってギブスサンプリングを打ち切る挙動になる。
 
 ```{r}
 #| label: divergence
@@ -324,7 +324,7 @@ ggplot(divergence, aes(topics)) +
 #| label: fit-lda
 #| cache: true
 lda_fit <-
-  seededlda::textmodel_lda(dfm, k = 9, batch_size = 0.2, verbose = TRUE)
+  seededlda::textmodel_lda(dfm, k = 9, batch_size = 0.2, verbose = FALSE)
 
 seededlda::sizes(lda_fit)
 ```
@@ -414,7 +414,9 @@ dat <- tbl |>
   dplyr::mutate(.pred = predict(nb_fit, dfm)[as.character(doc_id)]) # 予測値の順番をあわせる必要がある
 
 yardstick::conf_mat(dat, section, .pred) # 混同行列
+
 yardstick::accuracy(dat, section, .pred) # 正解率
+
 yardstick::f_meas(dat, section, .pred) # F値
 ```
 
@@ -429,12 +431,22 @@ dat <-
     s <- t(coef(nb_fit)) |> colSums()
     dplyr::mutate(.,
       across(where(is.numeric), ~ . / s),
-      var = t(coef(nb_fit)) |> cov() |> diag()
+      var = t(coef(nb_fit)) |> cov() |> diag(),
+      across(where(is.numeric), ~ signif(., 3))
     )
-  })()
+  })() |>
+  dplyr::slice_max(var, n = 50)
 
-dplyr::arrange(dat, desc(var))
+reactable::reactable(
+  dat,
+  filterable = TRUE,
+  defaultColDef = reactable::colDef(
+    cell = reactablefmtr::data_bars(dat, text_position = "outside-base")
+  )
+)
 ```
+
+---
 
 ```{r}
 #| label: cleanup
