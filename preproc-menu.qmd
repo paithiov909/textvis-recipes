@@ -114,7 +114,7 @@ if (!fs::file_exists("tutorial_jp/kokoro.duckdb")) {
 KH Coderの強力な機能のひとつとして、「コーディングルール」によるトークンへのタグ付けというのがある。KH Coderのコーディングルールはかなり複雑な記法を扱うため、Rで完璧に再現するには相応の手間がかかる。一方で、コードを与えるべき抽出語を基本形とマッチングする程度であれば、次のように比較的少ないコード量で似たようなことを実現できる。
 
 ```{r}
-#| label: coding-rules
+#| label: coding-rules-1
 rules <- list(
   "人の死" = c("死後", "死病", "死期", "死因", "死骸", "生死", "自殺", "殉死", "頓死", "変死", "亡", "死ぬ", "亡くなる", "殺す", "亡くす", "死"),
   "恋愛" = c("愛", "恋", "愛す", "愛情", "恋人", "愛人", "恋愛", "失恋", "恋しい"),
@@ -138,6 +138,23 @@ codes <-
   tidyr::unnest(codings)
 
 codes
+```
+
+また、集計するだけだったら`quanteda::dictionary()`を使うのが早い。
+
+```{r}
+#| label: coding-rules-2
+rules <- quanteda::dictionary(rules)
+
+dfm <-
+  dplyr::tbl(con, "tokens") |>
+  dplyr::mutate(token = dplyr::if_else(is.na(original), token, original)) |>
+  dplyr::count(doc_id, token) |>
+  dplyr::collect() |>
+  tidytext::cast_dfm(doc_id, token, n) |>
+  quanteda::dfm_lookup(rules)
+
+dfm
 ```
 
 ## 抽出語リスト（A.3.4）

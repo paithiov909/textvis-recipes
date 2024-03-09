@@ -349,9 +349,10 @@ dat <- MASS::sammon(1 - simil, k = 2) |>
 ```{r}
 #| label: plot-mds-2d
 dat <- dat |>
-  as.data.frame() |>
-  tibble::rownames_to_column("label") |>
-  dplyr::rename(Dim1 = V1, Dim2 = V2) |>
+  dplyr::as_tibble(
+    rownames = "label",
+    .name_repair = ~ c("Dim1", "Dim2")
+  ) |>
   dplyr::mutate(
     size = tf[label],
     clust = (hclust(
