@@ -319,7 +319,104 @@ tibble::tibble(
 
 ### 半教師ありトピックモデル🍳
 
-> あとでやる
+コーディングルールを種語（キーワード）と見なして、半教師ありのトピックモデリングをおこなう。
+
+KH Coderのコーディングルールは一つの文書に複数のルールがマッチすることがあると想定しているものなので、トピックモデルとは考え方が異なる点には注意が必要。
+
+```{r}
+#| label: prep-keyatm
+rules <- list(
+  "人の死" = c("死後", "死病", "死期", "死因", "死骸", "生死", "自殺", "殉死", "頓死", "変死", "亡", "死ぬ", "亡くなる", "殺す", "亡くす", "死"),
+  "恋愛" = c("愛", "恋", "愛す", "愛情", "恋人", "愛人", "恋愛", "失恋", "恋しい"),
+  # "友情" = c("友達", "友人", "旧友", "親友", "朋友", "友", "級友"),
+  # "信用・不信" = c("信用", "信じる", "信ずる", "不信", "疑い", "疑惑", "疑念", "猜疑", "狐疑", "疑問", "疑い深い", "疑う", "疑る", "警戒"),
+  "病気" = c("医者", "病人", "病室", "病院", "病症", "病状", "持病", "死病", "主治医", "精神病", "仮病", "病気", "看病", "大病", "病む", "病")
+)
+
+dfm <-
+  dplyr::tbl(con, "tokens") |>
+  dplyr::filter(
+    pos %in% c(
+      "名詞", "名詞B", "名詞C",
+      "地名", "人名", "組織名", "固有名詞",
+      "動詞", "未知語", "タグ"
+    )
+  ) |>
+  dplyr::mutate(
+    token = dplyr::if_else(is.na(original), token, original)
+  ) |>
+  dplyr::count(doc_id, token) |>
+  dplyr::collect() |>
+  tidytext::cast_dfm(doc_id, token, n)
+```
+
+文書集合内でのキーワードの出現割合。
+
+```{r}
+#| label: keywords-prop
+dfm |>
+  keyATM::keyATM_read(check = FALSE) |>
+  keyATM::visualize_keywords(rules)
+```
+
+実装としては、ここでは[keyATM](https://cran.r-project.org/package=keyATM)を使う。`seededlda::textmodel_seededlda()`も試したのだが、あまりいい感じにfitしなかった。
+
+```{r}
+#| label: fit-keyatm
+keyatm_fit <- dfm |>
+  keyATM::keyATM_read(check = FALSE) |>
+  keyATM::keyATM(
+    rules,
+    no_keyword_topics = 6,
+    model = "base",
+    options = list(
+      seed = 123,
+      iterations = 1000,
+      verbose = FALSE
+    )
+  )
+```
+
+ちゃんとfitしているか確認する。
+
+```{r}
+#| label: plot-keyatm-1
+#| fig-height: 8
+patchwork::wrap_plots(
+  keyATM::plot_modelfit(keyatm_fit) |> purrr::pluck("figure"),
+  keyATM::plot_alpha(keyatm_fit) |> purrr::pluck("figure"),
+  nrow = 2
+)
+```
+
+トピックの比率。
+
+```{r}
+#| label: plot-keyatm-2
+keyATM::plot_pi(keyatm_fit)
+```
+
+各トピックにおける生起確率の高い語。
+
+```{r}
+#| label: topwords
+dat <-
+  keyATM::top_words(keyatm_fit, n = 30) |>
+  dplyr::as_tibble() |>
+  tidyr::pivot_longer(everything(), names_to = "topic", values_to = "term") |>
+  dplyr::filter(!stringr::str_starts(topic, "Other")) |>
+  dplyr::mutate(
+    count = quanteda::colSums(dfm)[stringr::str_remove(term, "(\\s\\[.\\])")]
+  )
+
+reactable::reactable(
+  dat,
+  filterable = TRUE,
+  defaultColDef = reactable::colDef(
+    cell = reactablefmtr::data_bars(dat, text_position = "outside-base")
+  )
+)
+```
 
 ---
 

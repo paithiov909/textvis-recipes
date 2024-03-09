@@ -354,7 +354,7 @@ dat |>
 dat <-
   t(lda_fit$phi) |>
   dplyr::as_tibble(
-    .name_repair = ~ paste0("topic", 1:9),
+    .name_repair = ~ paste0("topic", seq_along(.)),
     rownames = "word"
   ) |>
   tidyr::pivot_longer(starts_with("topic"), names_to = "topic", values_to = "phi") |>
