@@ -9,6 +9,7 @@ book:
   site-url: https://paithiov909.github.io/textvis-recipes
   title: "Cookbook to Draw KHCoder-like Visualizations Using R"
   author: "Akiru Kato"
+  date: today
   description: "RによるKH Coder風の可視化のレシピ集"
   cover-image: cooking.png
   cover-image-alt: "Cookbook to Draw KHCoder-like Visualizations Using R"
