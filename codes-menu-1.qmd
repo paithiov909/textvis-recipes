@@ -371,7 +371,7 @@ keyatm_fit <- dfm |>
     model = "base",
     options = list(
       seed = 123,
-      iterations = 1000,
+      iterations = 2000,
       verbose = FALSE
     )
   )

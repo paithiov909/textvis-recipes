@@ -122,10 +122,11 @@ rules <- list(
   "信用・不信" = c("信用", "信じる", "信ずる", "不信", "疑い", "疑惑", "疑念", "猜疑", "狐疑", "疑問", "疑い深い", "疑う", "疑る", "警戒"),
   "病気" = c("医者", "病人", "病室", "病院", "病症", "病状", "持病", "死病", "主治医", "精神病", "仮病", "病気", "看病", "大病", "病む", "病")
 )
+rules_chr <- purrr::flatten_chr(rules)
 
 codes <-
   dplyr::tbl(con, "tokens") |>
-  dplyr::filter(original %in% purrr::flatten_chr(rules)) |>
+  dplyr::filter(original %in% rules_chr) |>
   dplyr::collect() |>
   dplyr::mutate(
     codings = purrr::map(original,
