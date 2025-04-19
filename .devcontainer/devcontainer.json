@@ -1,42 +1,21 @@
 {
-  "name": "${localWorkspaceFolderBasename}",
-  "dockerComposeFile": "docker-compose.yml",
-  "service": "app",
-  "workspaceFolder": "/root/workspace",
-  "features": {
-    "ghcr.io/devcontainers/features/docker-outside-of-docker:1": {
-      "moby": false
+    "name": "${localWorkspaceFolderBasename}",
+    "build": {
+        "dockerfile": "Dockerfile",
+        "args": {
+            "VARIANT": "4"
+        }
     },
-    "ghcr.io/devcontainers/features/desktop-lite:1": {
-      "password": "khcoder"
+    "features": {
+        "ghcr.io/rocker-org/devcontainer-features/r-rig:1": {
+            "version": "none",
+            "installRadian": true,
+            "installVscDebugger": false
+        },
+        "ghcr.io/rocker-org/devcontainer-features/quarto-cli:1": {}
     },
-    "ghcr.io/rocker-org/devcontainer-features/r-rig:1": {
-      "version": "4.3.3",
-      "vscodeRSupport": "lsp",
-      "installRadian": false
-    },
-    "ghcr.io/rocker-org/devcontainer-features/r-packages:1": {
-      "packages": "github::cran/maptools,Cairo,RColorBrewer,proxy,ade4,amap,cowplot,ggdendro,ggnetwork,intergraph,scatterplot3d,som,tm,wordcloud",
-      "installSystemRequirements": true
+    "containerEnv": {
+        "TZ": "Asia/Tokyo",
+        "R_HISTSIZE": "200"
     }
-  },
-  "forwardPorts": [
-    6080
-  ],
-  "containerEnv": {
-    "PERL5LIB": "/usr/share/perl5:$PERL5LIB"
-  },
-  "portsAttributes": {
-    "6080": {
-      "label": "desktop"
-    }
-  },
-  "customizations": {
-    "vscode": {
-      "extensions": [
-        "mtxr.sqltools",
-        "mtxr.sqltools-driver-mysql"
-      ]
-    }
-  }
 }
